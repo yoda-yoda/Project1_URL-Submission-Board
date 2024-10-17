@@ -26,29 +26,18 @@ public class qwer {
 
         System.out.println(qq1.peekLast());;*/
 
-        /*Map<String, String> boardStorage = new HashMap<>();
+        Map<String, String> boardStorage = new HashMap<>();
         boardStorage.put("A", "1");
         boardStorage.put("B", "2");
         boardStorage.put("C", "3");
         boardStorage.put("D", "4");
         boardStorage.put("E", "5");
         System.out.println(boardStorage.get("C"));; //3
-        System.out.println(boardStorage.values());*/
+        boardStorage.remove("E");
+        System.out.println(boardStorage.get("E"));
+        System.out.println(boardStorage.values());
 
 
-        if(true){
-
-            if(false){
-
-            }
-            else if(true){
-
-            }
-
-            else{
-                System.out.println("ㅁㄴㅇ");
-            }
-        }
 
 
 
