@@ -19,14 +19,13 @@ public class qwer {
         storage2.pop();
         System.out.println(storage2.peek());*/
 
-        /*Deque<String> qq1 = new LinkedList<>();
-        qq1.add("1");
-        qq1.add("2");
-        qq1.add("3");
+        Deque<String> qq1 = new LinkedList<>();
+        qq1.push("1");
+        qq1.push("2");
 
-        System.out.println(qq1.peekLast());;*/
+        System.out.println(qq1.getFirst());;
 
-        Map<String, String> boardStorage = new HashMap<>();
+        /*Map<String, String> boardStorage = new HashMap<>();
         boardStorage.put("A", "1");
         boardStorage.put("B", "2");
         boardStorage.put("C", "3");
@@ -35,7 +34,7 @@ public class qwer {
         System.out.println(boardStorage.get("C"));; //3
         boardStorage.remove("E");
         System.out.println(boardStorage.get("E"));
-        System.out.println(boardStorage.values());
+        System.out.println(boardStorage.values());*/
 
 
 
