@@ -28,6 +28,7 @@ public class qwer2 {
                     String value = sc.nextLine();
                     keyIndexStorage.add(key); //key와 index를 저장하기위한 영구저장 역할.
                     boardStorage.put(key, value); //Map에 제목(키), 내용(밸류) 로 저장.
+                    System.out.println();
                     System.out.println("게시물이 저장되었습니다."); //
 
                 } else if (userInput.equals("조회")) {
@@ -35,45 +36,65 @@ public class qwer2 {
                     userInput = sc.nextLine(); //사용자가 꼭 "1번" 처럼 입력해줘야함. 일단 다른방법못찾았음.
                     userInputIndex = userInput.split("번"); // split에서 숫자만 따오고싶기때문.
                     Integer userReadIndex = Integer.parseInt(userInputIndex[0]); // split된 String 숫자를 정수로 활용하고싶어서 정수로 바꿔줌.
-                    System.out.println("글번호 :[" + userReadIndex + "번]");
-                    System.out.println("제목 :[" + keyIndexStorage.get(userReadIndex-1) + "]");
-                    System.out.println("내용 :[" + boardStorage.get(keyIndexStorage.get(userReadIndex-1)) + "]");
-                    
+                    System.out.println();
+                    try{
+                        if(keyIndexStorage.get(userReadIndex-1) != null) {
+                        System.out.println(userReadIndex + "번 게시물");
+                        }
+                        System.out.println("제목 :[" + keyIndexStorage.get(userReadIndex - 1) + "]");
+                        System.out.println("내용 :[" + boardStorage.get(keyIndexStorage.get(userReadIndex - 1)) + "]");
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println(userReadIndex + "번 게시글은 존재하지 않습니다.");
+                    }
 
                 } else if (userInput.equals("삭제")) {
                     System.out.print("어떤 게시물을 삭제할까요? ");
                     userInput = sc.nextLine();
                     userInputIndex = userInput.split("번"); // 숫자만 따오고싶기때문.
                     Integer userReadIndex = Integer.parseInt(userInputIndex[0]); // split된 String 숫자를 정수로 활용해야해서 정수로 바꿔줌.
-                    boardStorage.remove(keyIndexStorage.get(userReadIndex-1));// 해당 인덱스의 해당 키값을 가진 데이터를 Map에서 제거.
-                    keyIndexStorage.remove(userReadIndex-1); // 해당 인덱스의 해당 키값을 가진 데이터를 KeyIndex 에서도 제거.
-                    //그러면 뒤의 인덱스의 키들은 앞자리로 하나씩 당겨짐.
-
-                    System.out.printf("%d번 게시물이 성공적으로 삭제되었습니다!", userReadIndex);
                     System.out.println();
+                    try{
+                        if(keyIndexStorage.get(userReadIndex-1) != null) {
+                            boardStorage.remove(keyIndexStorage.get(userReadIndex - 1));// 해당 인덱스의 해당 키값을 가진 데이터를 Map에서 제거.
+                            keyIndexStorage.remove(userReadIndex - 1); // 해당 인덱스의 해당 키값을 가진 데이터를 KeyIndex 에서도 제거.
+                            //그러면 뒤의 인덱스의 키들은 앞자리로 하나씩 당겨짐.
+                            System.out.printf("%d번 게시물이 성공적으로 삭제되었습니다!", userReadIndex);
+                            System.out.println();
+                        }
+                    } catch (IndexOutOfBoundsException e){
+                        System.out.println(userReadIndex + "번 게시글은 존재하지 않습니다.");
+                    }
 
                 } else if (userInput.equals("수정")) {
                     System.out.print("어떤 게시물을 수정할까요? ");
                     userInput = sc.nextLine();
                     userInputIndex = userInput.split("번"); // 숫자만 따오고싶기때문.
                     Integer userReadIndex = Integer.parseInt(userInputIndex[0]); // split된 String 숫자를 정수로 활용하고싶어서 정수로 바꿔줌.
-                    System.out.printf("%d번 게시물을 수정합니다.", userReadIndex);
                     System.out.println();
-                    //편의를 위해 기존 제목 표시 고려해보기.
 
-                    System.out.print("바꿀 제목 :"); //굳이 userInput말고 다른 변수를 선언한 이유: 내용까지 수정했을때 제목, 내용 둘다 한번에 바꾸기위해서.
-                    // 혹시나 제목, 내용이 전부 수정되지도않았는데 도중에 프로그램이 종료되면 엉키기때문에 한번에 처리하고싶다는 생각이 문득 들었다.
-                    String changeKey = sc.nextLine();
-                    System.out.print("바꿀 내용 :");
-                    String changeValue = sc.nextLine();
+                    try{
+                        if(keyIndexStorage.get(userReadIndex-1) != null){
+                         System.out.printf("%d번 게시물을 수정합니다.", userReadIndex);
+                         System.out.println();
+                         //편의를 위해 기존 제목 표시 고려해보기.
+                         System.out.print("바꿀 제목 :");
+                         String changeKey = sc.nextLine(); //굳이 userInput말고 다른 변수를 선언한 이유: 내용까지 수정했을때 제목, 내용 둘다 한번에 바꾸기위해서.
+                            // 혹시나 제목, 내용이 전부 수정되지도않았는데 도중에 프로그램이 종료되면 엉키기때문에 한번에 처리하고싶다는 생각이 문득 들었다.
+                         System.out.print("바꿀 내용 :");
+                         String changeValue = sc.nextLine();
 
-                    boardStorage.remove(keyIndexStorage.get(userReadIndex-1)); // 수정전 게시글을 Map에서 영구삭제
-                    keyIndexStorage.remove(userReadIndex-1); //보관돼있던 수정전 key도 영구삭제
-                    keyIndexStorage.add(userReadIndex-1, changeKey); // 수정한 key 영구보관
-                    boardStorage.put(keyIndexStorage.get(userReadIndex-1), changeValue); // 수정게시글을 Map에 영구저장
-                    //편의를 위해 기존 내용 보여주기 고려.
-                    System.out.printf("%d번 게시물이 성공적으로 수정되었습니다!", userReadIndex);
-                    System.out.println();
+                         boardStorage.remove(keyIndexStorage.get(userReadIndex-1)); // 수정전 게시글을 Map에서 영구삭제
+                         keyIndexStorage.remove(userReadIndex-1); //보관돼있던 수정전 key도 영구삭제
+                         keyIndexStorage.add(userReadIndex-1, changeKey); // 수정한 key 영구보관
+                         boardStorage.put(keyIndexStorage.get(userReadIndex-1), changeValue); // 수정게시글을 Map에 영구저장
+                         //편의를 위해 기존 내용 보여주기 고려.
+                         System.out.println();
+                         System.out.printf("%d번 게시물이 성공적으로 수정되었습니다!", userReadIndex);
+                         System.out.println();
+                         }
+                    } catch (IndexOutOfBoundsException e){
+                        System.out.println(userReadIndex + "번 게시글은 존재하지 않습니다.");
+                    }
 
                 } else {
                     System.out.println("존재하지 않는 명령어 입니다.");
