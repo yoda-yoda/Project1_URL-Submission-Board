@@ -1,3 +1,4 @@
+import javax.print.DocFlavor;
 import java.util.*;
 
 //마지막 자료부터 뭔가 이뤄진다는걸 보고 스택구조 배운것이 떠올랐음.
@@ -6,24 +7,84 @@ public class qwer {
 
     public static void main(String[] args) {
 
+        Scanner sc = new Scanner(System.in);
+        String userInput;
+        userInput = sc.nextLine();
+        if(userInput == "굿굿"){
+            System.out.println("good");
+        }
+        else {
+            System.out.println("역쉬아니였어");
+        }
+
+
+
+        Map<String, String> boardStorage = new HashMap<>();
+        Deque<String> dequeStorage = new LinkedList<>();
+        Stack<String> stackStorage = new Stack<>();
+
+
+        /*int a = 1;
+        String b = (a+"번");
+        String c = (a+"번");
+        boolean d = b == c;
+        System.out.println("d = " + d);*/
+
+       /* System.out.println(   b  );
+        System.out.println(   (a+"번")   );*/
+
+
+
+        /*if(userInput == (a+"번") && a>=1){
+            System.out.println("축하햐");
+        }
+        else{
+            System.out.println("비완벽적인 실행");
+        }*/
+
+        /*String[] userReadIndex;
+        userInput = sc.nextLine();
+        userReadIndex = userInput.split("번");
+        System.out.println(userReadIndex[0]);
+        System.out.println(userReadIndex[0].getClass()); //String
+        System.out.println(userReadIndex[0].getClass().getName()); //
+        System.out.println(userReadIndex[1]);
+        Integer q = Integer.parseInt(userReadIndex[0]);
+        System.out.println(q.getClass());
+        System.out.println(q.getClass().getName());
+        System.out.println(q);*/
+
+
         /*Map<String, String> storage = new HashMap<>();
         storage.put("제목1", "내용내용내용1");
         storage.put("제목2", "내용내용내용2");
         System.out.println(storage.get("제목1"));
-        System.out.println(storage.get("제목2"));
+        System.out.println(storage.get("제목2"));*/
 
-       Stack<String> storage2 = new Stack<>(); // 여기 저장되면 제일 마지막에 들어간 값을 꺼낼수있음.
+       /*Stack<String> storage2 = new Stack<>(); // 여기 저장되면 제일 마지막에 들어간 값을 꺼낼수있음.
         storage2.push("aaa");
         storage2.push("bbb");
+        storage2.push("ccc");
         System.out.println(storage2.peek());
-        storage2.pop();
-        System.out.println(storage2.peek());*/
+        //storage2.pop();
+       // System.out.println(storage2.peek()); //bbb
+        System.out.println(storage2.indexOf("bbb"));
+        System.out.println(storage2.indexOf("ccc"));
+        storage2.remove("bbb");
+        System.out.println(storage2.indexOf("ccc"));*/
 
-        Deque<String> qq1 = new LinkedList<>();
-        qq1.push("1");
-        qq1.push("2");
 
-        System.out.println(qq1.getFirst());;
+        //System.out.println("테스트 :" + (1+2) +"=3");
+
+
+       /*Deque<String> qq1 = new LinkedList<>();
+        qq1.add("1");
+        qq1.add("2");
+        qq1.add("3");
+
+
+
+        System.out.println(qq1.getFirst());;*/
 
         /*Map<String, String> boardStorage = new HashMap<>();
         boardStorage.put("A", "1");
@@ -34,12 +95,21 @@ public class qwer {
         System.out.println(boardStorage.get("C"));; //3
         boardStorage.remove("E");
         System.out.println(boardStorage.get("E"));
-        System.out.println(boardStorage.values());*/
+        System.out.println(boardStorage.values());
+        */
 
+        /*LinkedList<String> qq1 = new LinkedList<>();
 
+        qq1.add("a");
+        qq1.add("b");
+        qq1.add("c");
+        qq1.add("d");
+        qq1.add("e");
+        System.out.println(qq1.get(2));*/
 
+    }
 
-
+    public void test1(){
 
     }
 

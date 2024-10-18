@@ -6,10 +6,12 @@ public class UserInput {
 
         Scanner sc = new Scanner(System.in);
         String userInput;
+        String[] userInputIndex; // split 한 문자열 저장용.
 
         Map<String, String> boardStorage = new HashMap<>();
-        Deque<String> dequeStorage = new LinkedList<>();
-        Stack<String> stackStorage = new Stack<>();
+        LinkedList<String> keyIndexStorage = new LinkedList<>(); // LinkgedList로 한 이유.
+        // 원랜 Deque 로 만들려했는데, Deque는 인덱스번호만으로 값을가져오는 메서드가 없었음. key값을 직접 입력해야했음.
+
 
         do {
             System.out.print("명령어 > ");
@@ -18,46 +20,63 @@ public class UserInput {
             if (!userInput.equals("종료")) {
 
                 if (userInput.equals("작성")) {
-                    System.out.print("제목을 작성해주세요 :");
-                    userInput = sc.nextLine();
-                    dequeStorage.add(userInput); // 디큐에 제목(key) 저장
-                    stackStorage.push(userInput); // 스택에 제목(key) 저장
-                    //System.out.println("작성한 제목이 저장되었습니다."); //지워도될듯
-                    System.out.print("내용을 작성해주세요 :");
-                    userInput = sc.nextLine();
-                    dequeStorage.add(userInput); //디큐에 내용 저장
-                    boardStorage.put(dequeStorage.getFirst(), dequeStorage.getLast()); //Map에 제목(키), 내용(밸류) 로 저장.
-                    dequeStorage.removeAll(dequeStorage); // 디큐 내용삭제. 작성 명령어가 끝난뒤 다시 작성으로 진입하면 나중에 dequeStorage 에서 값을 꺼내서 Map에 저장할때 다른것이 저장되기때문.
-                    System.out.println("글이 저장되었습니다.");
 
-                } else if (userInput.equals("조회")) { // 스택에 key를 넣은 상태임.
-                    System.out.println("제목 :[" + stackStorage.peek() + "]");
-                    System.out.println("내용 :[" + boardStorage.get(stackStorage.peek()) + "]");
+                    System.out.print("제목을 작성해주세요 :");
+                    String key = sc.nextLine(); //굳이 userInput말고 다른 변수를 선언한 이유: 제목, 내용 둘다 한번에 저장하기위해서.
+                    // 혹시나 제목, 내용이 전부 작성되지도않았는데 도중에 프로그램이 종료되면 엉키기때문에 한번에 처리하고싶다는 생각이 문득 들었다.
+                    System.out.print("내용을 작성해주세요 :");
+                    String value = sc.nextLine();
+                    keyIndexStorage.add(key); //key와 index를 저장하기위한 영구저장 역할.
+                    boardStorage.put(key, value); //Map에 제목(키), 내용(밸류) 로 저장.
+                    System.out.println();
+                    System.out.println("게시물이 저장되었습니다."); //
+
+                } else if (userInput.equals("조회")) {
+                    System.out.print("어떤 게시물을 조회할까요? ");
+                    userInput = sc.nextLine(); //사용자가 꼭 "1번" 처럼 입력해줘야함. 일단 다른방법못찾았음.
+                    userInputIndex = userInput.split("번"); // split에서 숫자만 따오고싶기때문.
+                    Integer userReadIndex = Integer.parseInt(userInputIndex[0]); // split된 String 숫자를 정수로 활용하고싶어서 정수로 바꿔줌.
+                    System.out.println();
+                    System.out.println(userReadIndex + "번 게시물");
+                    System.out.println("제목 :[" + keyIndexStorage.get(userReadIndex-1) + "]");
+                    System.out.println("내용 :[" + boardStorage.get(keyIndexStorage.get(userReadIndex-1)) + "]");
+
 
                 } else if (userInput.equals("삭제")) {
-                    boardStorage.remove(stackStorage.peek());
-                    stackStorage.pop(); //  Map에서는 지워졌지만 Stack에는 남아있으므로 Stack도 삭제.
-                    System.out.println("마지막 글이 삭제되었습니다.");
+                    System.out.print("어떤 게시물을 삭제할까요? ");
+                    userInput = sc.nextLine();
+                    userInputIndex = userInput.split("번"); // 숫자만 따오고싶기때문.
+                    Integer userReadIndex = Integer.parseInt(userInputIndex[0]); // split된 String 숫자를 정수로 활용해야해서 정수로 바꿔줌.
+                    boardStorage.remove(keyIndexStorage.get(userReadIndex-1));// 해당 인덱스의 해당 키값을 가진 데이터를 Map에서 제거.
+                    keyIndexStorage.remove(userReadIndex-1); // 해당 인덱스의 해당 키값을 가진 데이터를 KeyIndex 에서도 제거.
+                    //그러면 뒤의 인덱스의 키들은 앞자리로 하나씩 당겨짐.
+                    System.out.println();
+                    System.out.printf("%d번 게시물이 성공적으로 삭제되었습니다!", userReadIndex);
+                    System.out.println();
 
                 } else if (userInput.equals("수정")) {
-                    System.out.println("마지막 글을 수정합니다. "); // 수정되는 글이 마지막 글이라는것을 표시해줌
-                    System.out.println("기존 제목 :[" + stackStorage.peek() + "]"); // 편의를 위해 기존 제목을 보여줌
-                    System.out.print("바꿀 제목을 입력해주세요 :");
-                    dequeStorage.add(sc.nextLine()); //굳이 이때 수정한 Key를 Stack이 아니라 Deque에 저장한이유: 수정의 순서때문이다.
-                    // 즉 제목(key)을 먼저 수정한다음에 내용(value)을 수정하기때문이다. 먼저 수정한다는 것은 표준입력 엔터를 먼저 한번 받아야한다는말이다.
-                    // 그말은 먼저 새 Key 입력을 한번 저장을 해야한다. 근데 만약 이 시점에 Stack에다 저장했다면 나중에 Map의 내용 삭제가 어렵다.
-                    // 기존의 마지막 Key를 Stack이 보유하고 있어줘야하기때문이다.
-                    //System.out.println("바꾼 제목이 입력되었습니다."); 지워도될듯
-                    System.out.println("기존 내용 :[" + boardStorage.get(stackStorage.peek()) + "]"); // 편의를 위해 기존 내용을 보여줌
-                    System.out.print("바꿀 내용을 입력해주세요 :");
-                    dequeStorage.add(sc.nextLine()); // Deque에 수정한 value 값도 저장
-                    boardStorage.remove(stackStorage.peek()); // 기존 Map의 마지막글(key와 value) 삭제
-                    stackStorage.pop(); // 기존 Stack의 마지막 key 삭제
-                    stackStorage.push(dequeStorage.peek()); // Deque에 저장되어있는 수정된 key를 Stack에 저장한다.
-                    // 그이유는 나중에 게시글의 최근값을 불러올때 Stack의 구조를 활용하기위함.
-                    boardStorage.put(dequeStorage.getFirst(), dequeStorage.getLast());
-                    dequeStorage.removeAll(dequeStorage); // Deque를 깨끗이 삭제해서 비워줌. 그 이유는 작성 시에 Deque가 쓰일때 다른 데이터가 남아있으면 오작동하기때문.
-                    System.out.println("수정이 완료되었습니다.");
+                    System.out.print("어떤 게시물을 수정할까요? ");
+                    userInput = sc.nextLine();
+                    userInputIndex = userInput.split("번"); // 숫자만 따오고싶기때문.
+                    Integer userReadIndex = Integer.parseInt(userInputIndex[0]); // split된 String 숫자를 정수로 활용하고싶어서 정수로 바꿔줌.
+                    System.out.println();
+                    System.out.printf("%d번 게시물을 수정합니다.", userReadIndex);
+                    System.out.println();
+                    //편의를 위해 기존 제목 표시 고려해보기.
+                    System.out.print("바꿀 제목 :"); //굳이 userInput말고 다른 변수를 선언한 이유: 내용까지 수정했을때 제목, 내용 둘다 한번에 바꾸기위해서.
+                    // 혹시나 제목, 내용이 전부 수정되지도않았는데 도중에 프로그램이 종료되면 엉키기때문에 한번에 처리하고싶다는 생각이 문득 들었다.
+                    String changeKey = sc.nextLine();
+                    System.out.print("바꿀 내용 :");
+                    String changeValue = sc.nextLine();
+
+                    boardStorage.remove(keyIndexStorage.get(userReadIndex-1)); // 수정전 게시글을 Map에서 영구삭제
+                    keyIndexStorage.remove(userReadIndex-1); //보관돼있던 수정전 key도 영구삭제
+                    keyIndexStorage.add(userReadIndex-1, changeKey); // 수정한 key 영구보관
+                    boardStorage.put(keyIndexStorage.get(userReadIndex-1), changeValue); // 수정게시글을 Map에 영구저장
+                    //편의를 위해 기존 내용 보여주기 고려.
+                    System.out.println();
+                    System.out.printf("%d번 게시물이 성공적으로 수정되었습니다!", userReadIndex);
+                    System.out.println();
 
                 } else {
                     System.out.println("존재하지 않는 명령어 입니다.");
