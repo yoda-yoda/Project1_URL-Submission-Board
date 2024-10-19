@@ -7,15 +7,23 @@ public class qwer {
 
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+        /*Scanner sc = new Scanner(System.in);
         String userInput;
         userInput = sc.nextLine();
-        if(userInput == "굿굿"){
-            System.out.println("good");
-        }
-        else {
-            System.out.println("역쉬아니였어");
-        }
+        LinkedList<String> keyIndexStorage = new LinkedList<>();
+        keyIndexStorage.add("a");
+        keyIndexStorage.add("b");
+        keyIndexStorage.add("c");
+        System.out.println(keyIndexStorage.get(0));
+        System.out.println(keyIndexStorage.indexOf("a"));*/
+
+
+
+
+
+        /*Integer.parseInt(userInput);
+        System.out.println(userInput);*/
+
 
 
 

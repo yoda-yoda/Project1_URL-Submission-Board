@@ -32,6 +32,12 @@ public class qwer2 {
                     System.out.println("게시물이 저장되었습니다."); //
 
                 } else if (userInput.equals("조회")) {
+
+
+
+
+
+
                     System.out.print("어떤 게시물을 조회할까요? ");
                     userInput = sc.nextLine(); //사용자가 꼭 "1번" 처럼 입력해줘야함. 일단 다른방법못찾았음.
                     userInputIndex = userInput.split("번"); // split에서 숫자만 따오고싶기때문.
