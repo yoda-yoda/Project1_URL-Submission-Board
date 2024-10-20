@@ -12,7 +12,6 @@ public class UserInput {
         LinkedList<String> keyIndexStorage = new LinkedList<>(); // LinkgedList로 한 이유.
         // 원랜 Deque 로 만들려했는데, Deque는 인덱스번호만으로 값을가져오는 메서드가 없었음. key값을 직접 입력해야했음.
 
-
         do {
             System.out.print("명령어 > ");
             userInput = sc.nextLine();
@@ -132,6 +131,19 @@ public class UserInput {
                             System.out.println(userInput + " 게시글은 존재하지 않습니다.");
                         }
                     }
+                }  else if(userInput.equals("목록")){
+                    System.out.printf("총 게시글은 %d개 작성되어있습니다." , keyIndexStorage.size());
+                    System.out.println();
+                    System.out.println();
+
+                    for(int i=1; i<=keyIndexStorage.size(); i++){
+
+                        System.out.println(i + "번 게시물");
+                        System.out.println("제목 :[" + keyIndexStorage.get(i - 1) + "]"); //실제 인덱스는 0부터 세므로 -1을 해줌.
+                        System.out.println("내용 :[" + boardStorage.get(keyIndexStorage.get(i - 1)) + "]");
+                        System.out.println();
+                    }
+
                 } else {
                     System.out.println("존재하지 않는 명령어 입니다.");
                 }

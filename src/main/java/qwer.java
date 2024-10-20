@@ -7,6 +7,12 @@ public class qwer {
 
     public static void main(String[] args) {
 
+
+        LinkedList<String> keyIndexStorage = new LinkedList<>();
+        System.out.println(keyIndexStorage.size());
+
+
+
         /*Scanner sc = new Scanner(System.in);
         String userInput;
         userInput = sc.nextLine();
