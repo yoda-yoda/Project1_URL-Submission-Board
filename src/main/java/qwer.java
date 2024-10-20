@@ -1,7 +1,7 @@
 import javax.print.DocFlavor;
 import java.util.*;
 
-//마지막 자료부터 뭔가 이뤄진다는걸 보고 스택구조 배운것이 떠올랐음.
+
 
 public class qwer {
 
