@@ -1,10 +1,11 @@
 
 
 
+
 import java.lang.reflect.Array;
 import java.util.*;
 
-//241022_~01:30 // 2단계1하는중. 아침부터 그거하면됨. 내가원하는 입력받는패턴 구하기.
+//241023_16:15~ 보트에디트끝.
 public class qwer2 {
 
     public static void main(String[] args) {
@@ -25,11 +26,11 @@ public class qwer2 {
 
 
         Map<String, Map<String, String>> mapStorage = new HashMap<>();// 게시'글'을 저장해두는 게시'판'들의 저장소다. 이렇게 한 이유=>
-        // 게시판 생성에 대해 구현하다가 do {}가 한번 끝나면 생성해둔 게시판이 스코프 문제로 사라져버림.
-        // 그 문제로 고민하다가, 프로그램 종료전까지는 새로 생성해둔 게시'판'을 항상 사용하고싶은 생각에, 맵자체를 저장해두면 어떨까라는 생각이들었음.
-        // 그리고 그 게시판의 이름도 정해야하는것같아서 이름(key)을 붙일수있는 Map 자료구조로 이렇게 만들어봄.
-        LinkedList<LinkedList<String>> mapKeyStorage = new LinkedList<>(); // 만들어진 게시판(Map)의 게시글제목들을 저장할 공간.
-        LinkedList<String> boardKeyStorage = new LinkedList<>(); // 게시판 삭제를 MapStorage에서 게시판을 삭제할때, Key를 알아야하는데 그 key를 저장할 공간.
+        // 고민해보다가 문득 맵속에 맵을 저장하면 게시판의 저장소가 될것같았다. 그리고 메모리 문제로 사라지지않게 최상위에 저장하고 싶었다.
+        // 그리고 그 게시판의 이름도 정해야하는것같아서 이름(key)을 붙일수있는 Map 자료구조로 이렇게 만들었다.
+        LinkedList<LinkedList<String>> mapKeyStorage = new LinkedList<>(); // 만들어진 게시판(Map)의 게시글제목들을 저장할 공간. 인덱스로 몇번째 생성게시판인지 알수있다.
+        LinkedList<String> boardKeyStorage = new LinkedList<>(); // 예를들어 MapStorage에서 게시판을 삭제할때, Key를 알아야하는데 그 key를 저장할 공간.
+        //그리고 이것과 mapKeyStorage도 인덱스를 통해 연결가능하다.
 
 
 
@@ -186,28 +187,37 @@ public class qwer2 {
 
                                         userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
 
-                                        if ( userBoardIdValueInteger > 0 && userBoardIdValueInteger <= mapKeyStorage.size() ) { // 드디어 진입. /boards/edit?boardId=1 처럼.
+                                        if ( userBoardIdValueInteger > 0 && userBoardIdValueInteger <= mapKeyStorage.size() ) { // 드디어 진입. /boards/edit?boardId=1 처럼과같음.
 
                                             // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이면 진입.
                                             // 게시판이 생성되면 mapKeyStorage.size()가 1씩늘어나게되어있기때문이다.
                                             // 그럼 이 공간에서 드디어 해당 게시판을 수정할 수 있도록 진입된다.
 
-                                            //boardId의 게시판 수정진입 성공.
-                                            System.out.printf("%d번 게시판을 수정합니다", userBoardIdValueInteger);
+                                            // 그러면 이제 해당 게시판의 이름을 수정하도록해야겠다. 실험중.
 
+                                            System.out.print("바꿀 게시판 이름: ");
+                                            String afterTitle; // userInput 변수를 안쓰고 새로 name으로 선언해준이유는 만약 "종료" 로 게시판이름을 적으면 반복문이끝나고 프로그램이 종료될까봐.
+                                            String beforeTitle = boardKeyStorage.get(userBoardIdValueInteger-1); // 수정전 게시판 제목(key)
+                                            Map<String, String> beforeMapValue = mapStorage.get(beforeTitle);  // 수정전 게시판의 value. 즉 수정전 게시판의 게시글 제목과 내용 모음들.
+                                            // 그래서 이때 beforeMapValue 는 수정전의 그 게시판 인스턴스의 메모리 주소를 담고있다.
+
+                                            afterTitle = sc.nextLine();
+
+                                            // boardKeyStorage.remove(userBoardIdValueInteger-1);
+                                            mapStorage.put(afterTitle, mapStorage.get(beforeTitle)); // 기존의 게시판 인스턴스 메모리주소를 그대로 복사해서 가져왔기때문에 게시판값이 그대로다.
+                                            mapStorage.remove(beforeTitle); // 맵의 맵에서 기존 key(게시판제목) 를 가진 노드를 삭제. 실험결과 이렇게해도 afterTitle의 밸류는 그대로있음.
+                                            boardKeyStorage.remove(userBoardIdValueInteger-1); // 게시판 제목 보관함에서도 기존것 삭제.
+                                            boardKeyStorage.add(userBoardIdValueInteger-1,afterTitle); // 삭제한 그 인덱스 자리에 새로운 게시판 제목 추가.
+
+                                            System.out.println("해당 게시판 이름이 " + afterTitle  + " 로 변경되었습니다!");
 
                                         }
 
-
                                     }
-
 
                                 }
 
-                                //여기면 오류인가?
-
-
-                            } //오류
+                            }
 
 
                 } else if(userInputPath[0].equals("") && userInputPath[1].equals("boards") &&
@@ -271,9 +281,9 @@ public class qwer2 {
                             } //오류안나면 true
                             // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
                             // 우선유저가  /boards/remove?boardId=1  이런식으로 게시판의 순서를 입력하길원함.
-                            // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판 수정모드로 진입할수있는것이다.
+                            // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판 삭제모드로 진입할수있는것이다.
                             catch (NumberFormatException e) {
-                                System.out.println("수정할 게시판 번호를 입력해주세요.");
+                                System.out.println("삭제할 게시판 번호를 입력해주세요.");
                             }
 
                             if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
@@ -285,18 +295,17 @@ public class qwer2 {
                                     // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이면 진입.
                                     // 게시판이 생성되면 mapKeyStorage.size()가 1씩늘어나게되어있기때문이다.
                                     // boardKeyStorage 도 게시판 생성마다 1씩늘어난다.
-                                    // 그럼 이 공간에서 드디어 해당 게시판을 수정할 수 있도록 진입된다.
+                                    // 그럼 이 공간에서 드디어 해당 게시판을 삭제할 수 있도록 진입된다.
 
                                     //boardId의 게시판 삭제진입 성공.
 
-                                    //실험중. 키가존재안할수도.
                                     String removeKey = boardKeyStorage.get(userBoardIdValueInteger-1);
                                     mapStorage.remove(removeKey); // 해당 게시판의 제목과 내용을 묶어서 저장해놓은 공간을 삭제.
                                     mapKeyStorage.remove(userBoardIdValueInteger-1); // 해당게시판의 게시글 제목들을 순서대로 저장한 공간을 삭제.
                                     boardKeyStorage.remove(userBoardIdValueInteger-1);
                                     //마지막으로, 게시판 생성 순서와 해당 게시판의 제목을 이어서 저장해둔 공간(게시판 순서와, 맵의 키를 이어붙일 용도의 공간)에서 해당 게시판 제목을 삭제.
 
-                                    System.out.printf("%d번 게시판을 삭제합니다", userBoardIdValueInteger); //
+                                    System.out.printf("%d번 게시판을 삭제했습니다!", userBoardIdValueInteger);
 
                                 }
                             }
@@ -342,7 +351,6 @@ public class qwer2 {
                         } // Split의 파라미터이름을 다 뽑아서 전부 parameterNames 라는 링크드리스트에 저장끝.
 
                         boolean okCheck1 = true; // parameterNames 링크드리스트에 저장한 파라미터네임들이 전부 "boardName" 인지 확인하기위해서 만듬.
-                        boolean okCheck2 = false; // 파라미터 value들이 숫자인지(?번 게시판) 확인하기위해서 만듬.
 
                         for (int i=0; i < parameterNames.size(); i++) {
 
@@ -356,62 +364,47 @@ public class qwer2 {
                         if (okCheck1) { // 유저URL 입력이 =>   /boards/view?boardName=aaa&boardName=bbb ... 와 같은 입력만 여기에 진입함.
 
                             String userBoardIdValueString;
-                            Integer userBoardIdValueInteger;
+                            // Integer userBoardIdValueInteger; // boardName 은 숫자가 아니라 String 값으로 받을거고 굳이 이 변수를 위에서처럼 사용안할거니까 주석처리.
 
                             userBoardIdValueString = userInputParameterSplit[(userInputParameterSplit.length) - 1];
                             // 이렇게하면 맨마지막 boardName의 value만 가져올수있다. 입력 URL 파라미터에, 같은 이름의 파라미터가 여러개있을때 맨 마지막 값만 활용하고싶었다.
 
-                            try {
-                                userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString);
-                                okCheck2 = true;
-                            } //오류안나면 true
-                            // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
-                            // 우선유저가  /boards/view?boardName=1  이런식으로 게시판의 순서를 입력하길원함.
-                            // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판 뷰모드로 진입할수있는것이다.
-                            catch (NumberFormatException e) {
-                                System.out.println("목록을 확인할 게시판 번호를 입력해주세요.");
+                            // 우선유저가  /boards/view?boardName=자유게시판  이런식으로 게시판 생성할때 정한 key를 입력하길원함.
+                            // 그럼 이제 userBoardIdValueString 는 뭐냐면, 게시판의 이름(=제목=key)인것이고, 존재한다면 해당 게시판 뷰모드로 진입하게끔 한다.
+
+                            boolean okCheck2 = false;
+                            int boardKeyIndex = 0; // 밑의 for문에서 boardKeyStorage 에서의 어떤 저장된 키 값이 몇번인덱스인지 알고싶었는데 get메서드 인자 타입이 index밖에없어서 어떻게 할까하다가
+                            // for문의 해당 i값을 여기 저장해서 이 변수를 활용하면어떨까 생각이들었다. 0은 초기화안됐다고 오류날까봐 일단 미리 초기화해둔것.
+
+                            for(int i=0; i < boardKeyStorage.size(); i++) { //오류는 구현하고 나중에 체크하자.넘복잡.
+
+                                if( boardKeyStorage.get(i).equals(userBoardIdValueString) ){
+                                    okCheck2 = true; // boardKeyStorage 안의 키값들 중에 입력한 게시판 value 키값이 하나라도 실존한다면 true.
+                                    boardKeyIndex = i; // 실존하는 해당 키 자리의 인덱스번호인 i를 이 변수에 저장. 이 i는 게시판의 생성 순서임. i를 MapKeyStorage 인덱스와 연결하면 그곳의 자료가 곧 그 게시판의 게시글들임.
+                                    break;
+                                }
                             }
 
-                            if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
 
-                                userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
+                            if(okCheck2) { // 드디어 진입. /boards/view?boardName=...&boardName=자유게시판.. 처럼 입력했고, 입력한 그 마지막 게시판 키가 실존해야 진입가능.
 
-                                if ( userBoardIdValueInteger > 0 && userBoardIdValueInteger <= mapKeyStorage.size() ) { // 드디어 진입. /boards/view?boardName=1 처럼입력한값이 들어옴.
+                                int writeNumber = mapKeyStorage.get(boardKeyIndex).size(); // 이러면 이 변수에 해당게시판의 게시물 글 수가 담김.
 
-                                    // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이면 진입.
-                                    // 게시판이 생성되면 mapKeyStorage.size()가 1씩늘어나게되어있기때문이다.
-                                    // boardKeyStorage 도 게시판 생성마다 1씩늘어난다.
-                                    // 그럼 이 공간에서 드디어 해당 게시판 목록을 확인할할 수 있도록 진입된다.
+                                for(int i=0; i<writeNumber; i++) { //해당 게시판의 글 수 만큼 실행하겠다.
 
-                                    //boardName 의 게시판 목록확인 진입 성공.
-
-                                    //실험중
-
-
-
+                                    System.out.print((i + 1) + "번글 / ");
+                                    System.out.print(mapKeyStorage.get(boardKeyIndex).get(i)); // 해당 게시판의 게시글중에 0번째(첫번째) 글제목부터 출력.
+                                    // System.out.print(); //작성일?
+                                    System.out.println();
                                 }
+
                             }
 
                         }
 
                     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                } else if(true){ //낼아침 그거하기. post 들가기전에 board 수정권한 얻고가는건지.
 
                 } else { // @@@@@@@@@@@@@@@@@@@@@@@@@@@
                     System.out.println("존재하지 않는 명령어 입니다.");
@@ -437,6 +430,7 @@ public class qwer2 {
 
 
                 
+
 
 /*
 
@@ -579,4 +573,6 @@ public class qwer2 {
 
     }
 }
+
+
 */

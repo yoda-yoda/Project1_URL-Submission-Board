@@ -7,25 +7,19 @@ public class qwer {
 
     public static void main(String[] args) {
 
-        Map<String, Map<String, String>> MapStorage = new HashMap<>();// 게시'글'을 저장해두는 게시'판'들의 저장소다. 이렇게 한 이유=>
-        // 게시판 생성에 대해 구현하다가 do {}가 한번 끝나면 생성해둔 게시판이 스코프 문제로 사라져버림.
-        // 그 문제로 고민하다가, 프로그램 종료전까지는 새로 생성해둔 게시'판'을 항상 사용하고싶은 생각에, 맵자체를 저장해두면 어떨까라는 생각이들었음.
-        // 그리고 그 게시판의 이름도 정해야하는것같아서 이름(key)을 붙일수있는 Map 자료구조로 이렇게 만들어봄.
-        LinkedList<LinkedList<String>> MapKeyStorage = new LinkedList<>(); // 만들어진 게시판(Map) 각각마다의 인덱스와,
-        // 해당 게시판의 게시글제목(key)들을 인덱스와함께 저장할수있는 것이 필요해서 만들어봄.
-
-        MapStorage.put("1번", new HashMap<>());
-        MapKeyStorage.add(new LinkedList<>()); //MapKeyStorage.get(0)이 맵스토리지의 "1번"과 연결돼야함.
-        // MapKeyStorage.get(0).add("abc");
-        System.out.println(MapStorage.get("1번"));
-        MapStorage.remove(MapKeyStorage.get(0));
-        System.out.println(MapStorage.get("1번"));
-        MapStorage.remove("1번");
-        System.out.println(MapStorage.get("1번"));
+        Map<String, Map<String, String>> MapStorage = new HashMap<>();
+        LinkedList<LinkedList<String>> MapKeyStorage = new LinkedList<>();
+        LinkedList<String> boardKeyStorage = new LinkedList<>();
 
 
- //       MapStorage.remove();
-   //     MapKeyStorage.remove();
+
+        MapStorage.put("자유게시판", new HashMap<>());
+        MapStorage.put("정보게시판", MapStorage.get("자유게시판"));
+        MapStorage.remove("자유게시판");
+
+
+        MapStorage.get("정보게시판").put("제목1","내용1");
+        System.out.println(MapStorage.get("정보게시판"));
 
 
 
