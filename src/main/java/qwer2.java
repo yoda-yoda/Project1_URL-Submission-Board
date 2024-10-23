@@ -38,6 +38,7 @@ public class qwer2 {
         do {
             System.out.print("손님 ");
             userInput = sc.nextLine();
+            System.out.println();
             userInputPath = null;
             userInputCrud = null;
             userInputParameter = null;
@@ -64,7 +65,7 @@ public class qwer2 {
                 if (userInputPath[0].equals("") && userInputPath[1].equals("boards") &&
                         userInputPath[2].equals("add") && userInputPath.length == 3) { //   게시판 작성. /boards/add
 
-                    System.out.println("게시판의 이름을 정해주세요.");
+                    System.out.print("게시판 이름을 입력해주세요 :");
                     userInput = sc.nextLine();
 
                     mapKeyStorage.add(new LinkedList<>()); // 이것으로 방금 만든 게시판이 몇번째 게시판인지 그 인덱스를 활용해 알수있음.
@@ -72,7 +73,8 @@ public class qwer2 {
                     //이제 해당 key(게시판)으로 접근하면, 해당 게시판만의 게시물들을 String타입으로 제목(key)과 내용(vlaue)을 저장할수있음.
                     boardKeyStorage.add(userInput); // 추가한 Map의 키를 저장.
 
-                    System.out.println("게시판이 저장되었습니다.");
+                    System.out.println();
+                    System.out.println("게시판이 성공적으로 저장되었습니다.");
 
 
 
@@ -194,8 +196,9 @@ public class qwer2 {
                                             // 그럼 이 공간에서 드디어 해당 게시판을 수정할 수 있도록 진입된다.
 
                                             // 그러면 이제 해당 게시판의 이름을 수정하도록해야겠다. 실험중.
-
-                                            System.out.print("바꿀 게시판 이름: ");
+                                            System.out.println();
+                                            System.out.print("바꿀 게시판 이름을 입력해주세요 :");
+                                            System.out.println();
                                             String afterTitle; // userInput 변수를 안쓰고 새로 name으로 선언해준이유는 만약 "종료" 로 게시판이름을 적으면 반복문이끝나고 프로그램이 종료될까봐.
                                             String beforeTitle = boardKeyStorage.get(userBoardIdValueInteger-1); // 수정전 게시판 제목(key)
                                             Map<String, String> beforeMapValue = mapStorage.get(beforeTitle);  // 수정전 게시판의 value. 즉 수정전 게시판의 게시글 제목과 내용 모음들.
@@ -209,7 +212,7 @@ public class qwer2 {
                                             boardKeyStorage.remove(userBoardIdValueInteger-1); // 게시판 제목 보관함에서도 기존것 삭제.
                                             boardKeyStorage.add(userBoardIdValueInteger-1,afterTitle); // 삭제한 그 인덱스 자리에 새로운 게시판 제목 추가.
 
-                                            System.out.println("해당 게시판 이름이 " + afterTitle  + " 로 변경되었습니다!");
+                                            System.out.println("게시판 이름이 [" + afterTitle  + "] 로 변경되었습니다!");
 
                                         }
 
@@ -306,6 +309,7 @@ public class qwer2 {
                                     //마지막으로, 게시판 생성 순서와 해당 게시판의 제목을 이어서 저장해둔 공간(게시판 순서와, 맵의 키를 이어붙일 용도의 공간)에서 해당 게시판 제목을 삭제.
 
                                     System.out.printf("%d번 게시판을 삭제했습니다!", userBoardIdValueInteger);
+                                    System.out.println();
 
                                 }
                             }
