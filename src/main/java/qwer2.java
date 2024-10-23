@@ -638,8 +638,7 @@ public class qwer2 {
                                     // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이면 진입.
                                     // 게시판이 생성되면 mapKeyStorage.size()가 1씩늘어나게되어있기때문이다.
 
-                                    // 그러면 이제 해당 게시판의 게시글 수정이다. 실험중.
-
+                                    // 그러면 이제 해당 게시판의 게시글 삭제다. 실험중.
 
                                     String title = boardKeyStorage.get(userBoardIdValueInteger - 1); // 해당 게시판 제목(key)
 
