@@ -517,7 +517,7 @@ public class qwer2 {
                                     mapStorage.get(title).put(key,value); //해당 맵에 제목과 내용 저장완료
                                     originalLocalDate.get(userBoardIdValueInteger-1).add(LocalDate.now()); //게시글의 로컬데이트도 저장완료.
 
-                                    System.out.println(userBoardIdValueInteger-1 + "번 게시판에 게시글이 저장되었습니다.");
+                                    System.out.println(userBoardIdValueInteger + "번 게시판에 게시글이 저장되었습니다.");
                                     System.out.println();
                                     
 
@@ -610,15 +610,20 @@ public class qwer2 {
 
                         if (okCheck1) { // 유저URL 입력이 =>   /posts/remove?postId=aaa&boardId=bbb ... 방식과 같은 입력만 여기에 진입함.
 
+                            String userPostIdValueString;
                             String userBoardIdValueString;
+
+                            Integer userPostIdValueInteger;
                             Integer userBoardIdValueInteger;
 
+                            userPostIdValueString = userInputParameterSplit[1]; // 이렇게하면  /posts/remove?postId=aaa 에서 aaa값이 userPostIdValueString 에 저장.
                             userBoardIdValueString = userInputParameterSplit[(userInputParameterSplit.length) - 1];
                             // 이렇게하면  /posts/remove?postId=aaa&boardId=bbb... 라는 입력값 중에서,
                             // 맨마지막에있는 value만 userBoardIdValueString 에 담는다.
                             // 입력 URL 파라미터에, 같은 이름의 파라미터가 여러개있을때 맨 마지막 값만 활용한다는 규칙을 구현하고싶었다.
 
-                            try { // userBoardIdValueString 이 숫자여야한다.
+                            try { // userPostIdValueString과 userBoardIdValueString 이 숫자여야한다.
+                                userPostIdValueInteger = Integer.parseInt(userPostIdValueString);
                                 userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString);
                                 okCheck2 = true;
                             } //오류안나면 true
@@ -632,27 +637,29 @@ public class qwer2 {
                             if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
 
                                 userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
+                                userPostIdValueInteger = Integer.parseInt(userPostIdValueString);
 
-                                if (userBoardIdValueInteger > 0 && userBoardIdValueInteger <= mapKeyStorage.size()) { // 드디어 진입. /posts/remove?postId=1&boardId=1 같은 형식이 진입.
-                                    //  /posts/remove?postId=1&boardId=12... 형식이면 boardId는 맨 마지막 12로 활용됨.
-                                    // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이면 진입.
-                                    // 게시판이 생성되면 mapKeyStorage.size()가 1씩늘어나게되어있기때문이다.
+                                if (userBoardIdValueInteger > 0 &&  userPostIdValueInteger > 0 &&
+                                        userBoardIdValueInteger <= mapKeyStorage.size() &&
+                                        userPostIdValueInteger <= mapKeyStorage.get(userBoardIdValueInteger-1).size() ) {
+                                    // 드디어 여기서  /posts/remove?postId=1&boardId=1 같은 형식이 진입.
+                                    // 그리고 예를들어 /posts/remove?postId=1&boardId=15&...boardId=12 이런 형식이면  맨 마지막 boardId의 값인 12로 활용됨.
+                                    // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이고,
+                                    // 입력 게시글 번호가 실제 생성되어있는 번호면 진입한것이다.
 
-                                    // 그러면 이제 해당 게시판의 게시글 삭제다. 실험중.
+                                    // 그러면 이제 해당 게시판의 해당 게시글 삭제다. 실험중.
 
-                                    String title = boardKeyStorage.get(userBoardIdValueInteger - 1); // 해당 게시판 제목(key)
+                                    // userBoardIdValueInteger-1  = 해당 게시판의 실제 인덱스번호
+                                    // userPostIdValueInteger-1  = 해당 게시글의 실제 인덱스번호
+                                    
+                                    String title = boardKeyStorage.get(userBoardIdValueInteger-1); // 해당 게시판의 제목키
+                                    String articleKey = mapKeyStorage.get(userBoardIdValueInteger-1).get(userPostIdValueInteger-1); //해당 게시판의 해당 게시글의 제목키
 
-                                    System.out.print("제목을 작성해주세요 :");
-                                    String key = sc.nextLine(); //게시글 제목(key)
-
-                                    System.out.print("내용을 작성해주세요 :");
-                                    String value = sc.nextLine(); //게시글 내용(value)
-
-                                    mapKeyStorage.get(userBoardIdValueInteger - 1).add(key); // 게시글 제목 저장 공간에 제목 저장.
-                                    mapStorage.get(title).put(key, value); //해당 맵에 제목과 내용 저장완료
-                                    originalLocalDate.get(userBoardIdValueInteger - 1).add(LocalDate.now()); //게시글의 로컬데이트도 저장완료.
-
-                                    System.out.println(userBoardIdValueInteger - 1 + "번 게시판에 게시글이 저장되었습니다.");
+                                    mapStorage.get(title).remove(articleKey); // 맵의 해당맵에서 그 게시글(+내용)을 삭제.
+                                    mapKeyStorage.get(userBoardIdValueInteger-1).remove(userPostIdValueInteger-1); // 게시글 제목 저장소에서 해당게시글 삭제.
+                                    originalLocalDate.get(userBoardIdValueInteger-1).remove(userPostIdValueInteger-1); // 시간저장소에서 해당 게시글 original시간도 삭제.
+                                    
+                                    System.out.println(userBoardIdValueInteger + "번 게시판의" + userPostIdValueInteger + "번 게시글이 삭제되었습니다.");
                                     System.out.println();
 
 
@@ -666,10 +673,7 @@ public class qwer2 {
 
                     }
 
-
-
-                }
-                         else { // @@@@@@@@@@@@@@@@@@@@@@@@@@@
+                } else { // @@@@@@@@@@@@@@@@@@@@@@@@@@@
                     System.out.println("존재하지 않는 명령어 입니다.");
                 }
 
