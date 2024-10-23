@@ -1,4 +1,7 @@
 import javax.print.DocFlavor;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 
@@ -7,7 +10,76 @@ public class qwer {
 
     public static void main(String[] args) {
 
-        Map<String, Map<String, String>> MapStorage = new HashMap<>();
+
+
+        LinkedList<LinkedList<LocalDate>> qqq = new LinkedList<>();
+
+        qqq.add(new LinkedList<>());
+        qqq.get(0).add(LocalDate.now());
+        System.out.println(qqq.get(0).get(0));
+        qqq.get(0).add(11,LocalDate.now());
+        System.out.println(qqq.get(0).get(1));
+
+
+
+        /*Scanner sc = new Scanner(System.in);
+        String userInput;
+        String[] userInputPath;// userInput을 split 한 경로 문자열 저장용.
+        String[] userInputCrud; // split한 경로 문자열에서 파라미터부분을 따로 또 분리해서 그것을 저장할 용도.
+        String[] userInputParameter;
+        String[] userInputParameterSplit = {"a"}; // 나중에 if조건문 활용하려하는데 초기화가 안되어있다는 오류가자꾸떠서 적어주었다.
+
+
+            System.out.print("손님 ");
+            userInput = sc.nextLine();
+            System.out.println();
+            userInputPath = null;
+            userInputCrud = null;
+            userInputParameter = null;
+            userInputParameterSplit = null;
+            // 기능이 한번끝나서 다시 다음에 명령어에 재사용하기위해 null로 안의 값들을 삭제.
+
+                userInputPath = userInput.split("/"); // 유저의 입력중에 "/"를 기준으로 나눠서 저장함.
+                // 예시 입력값=> /boards/add?parameter=10&b=value...
+                // userInputPath[0] => 빈 부분
+                // userInputPath[1] => boards 부분
+                // userInputPath[2] => add?parameter=10&b=value... 부분
+
+                userInputCrud = userInputPath[2].split("\\?"); // 맨처음 입력을 형식대로 입력했으면 2번인덱스(3번째배열)에는 add?parameter=10&b=value... 이런식으로 저장되어있을것이다.
+                //따라서 그것을 한번더 ? 를 기준으로 나눠서 저장한다.
+                // userInputCrud[0] => add 부분
+                // userInputCrud[1] => parameter=10&b=value... 부분
+
+        if ( userInputPath[0].equals("") && userInputPath[1].equals("boards") &&
+                userInputCrud[0].equals("edit") && userInputCrud.length == 2 ) {    //   게시판 수정 진입시도.
+            //   지금까지 테스트해본결과로는 /boards/edit?abc 까지는 확정되어야 진입가능하다.
+            //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거다. 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
+
+            
+            // /boards/edit => 안댐
+            // /boards/edit? =>안댐.
+            // /boards/edit?? => 안댐
+            // /boards/edit?abc => 됨
+            // /boards/edit??abc => 안됨.
+            // /boards/edit?asd? => 됨
+            // /boards/edit?abc=1 => 됨
+
+            System.out.println("굿");
+        }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*Map<String, Map<String, String>> MapStorage = new HashMap<>();
         LinkedList<LinkedList<String>> MapKeyStorage = new LinkedList<>();
         LinkedList<String> boardKeyStorage = new LinkedList<>();
 
@@ -19,7 +91,7 @@ public class qwer {
 
 
         MapStorage.get("정보게시판").put("제목1","내용1");
-        System.out.println(MapStorage.get("정보게시판"));
+        System.out.println(MapStorage.get("정보게시판"));*/
 
 
 
@@ -87,13 +159,6 @@ public class qwer {
 
         /*Integer.parseInt(userInput);
         System.out.println(userInput);*/
-
-
-
-
-        Map<String, String> boardStorage = new HashMap<>();
-        Deque<String> dequeStorage = new LinkedList<>();
-        Stack<String> stackStorage = new Stack<>();
 
 
         /*int a = 1;
