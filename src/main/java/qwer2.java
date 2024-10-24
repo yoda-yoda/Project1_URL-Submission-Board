@@ -49,8 +49,8 @@ public class qwer2 {
             userInputPath = null;
             userInputCrud = null;
             userInputParameter = null;
-            userInputParameterSplit = new ArrayList<>();
             temporaryParameterSplit = null;
+            userInputParameterSplit = new ArrayList<>();
             // 기능이 한번끝나서 다시 다음에 명령어에 재사용하기위해 null로 안의 값들을 삭제.
 
             if (!userInput.equals("종료")) {
@@ -65,10 +65,6 @@ public class qwer2 {
                 // 아마 2번인덱스(3번째배열)에는 add?parameter=10&b=value... 이런식으로 저장되어있을것이다. 따라서 그것을 한번더 ? 를 기준으로 나눠서 userInputCrud에 담는다.
                 // userInputCrud[0] => add 부분
                 // userInputCrud[1] => parameter=10&b=value... 부분
-
-
-
-
 
                 if (userInputPath[0].equals("") && userInputPath[1].equals("boards") &&
                         userInputPath[2].equals("add") && userInputPath.length == 3) { //   게시판 작성. 입력이 /boards/add   일경우에만 진입할것이다.
@@ -86,7 +82,7 @@ public class qwer2 {
 
 
                     System.out.println();
-                    System.out.printf(  "[%d]번 게시판 이름이 [%s] 으로 저장되었습니다.", boardKeyStorage.size(),  userInput );
+                    System.out.printf(  "[%s]이 [%d]번 게시판으로 저장되었습니다.", userInput , boardKeyStorage.size() );
                     System.out.println();
                     // 방금 게시판을 저장했다면 boardKeyStorage의 사이즈가 곧 그 게시판의 번호다.
 
@@ -105,46 +101,46 @@ public class qwer2 {
                     // 아래는 userInputCrud[1]이 어떤값일때, 그걸 "&"기준으로 split한 userInputParameter 가 어떨까를 경우의 수를 한번 분석해본 것이다.
 
                     // ?abc 였다면 userInputParameter의 length 가 1. 이때 userInputParameter[0] 은 => abc 이고 [1]은 없음.
-                    // 그러면 밑의 for문에서 userInputParameterSplit[0] 은 => abc 이고, [1]은 없음.
-                    //분석: userInputParameter 렝스는1, Split렝스는 1.
+                    // 그러면 밑의 for문에서 userInputParameterSplit.get(0) 은 => abc 이고, (1)은 없음.
+                    //분석: userInputParameter 렝스는1, Split.size()는 1.
 
-                    // ?abc= 였다면 length가 1. 이때 userInputParameter[0] 은 => abc= 이고 [1]은 없음. userInputParameterSplit[0] 은 => abc 이고, [1]은 없음
-                    // 분석: userInputParameter 렝스는1, Split렝스는 1.
+                    // ?abc= 였다면 length가 1. 이때 userInputParameter[0] 은 => abc= 이고 [1]은 없음. userInputParameterSplit.get(0) 은 => abc 이고, (1)은 없음
+                    // 분석: userInputParameter 렝스는1, Split.size()는 1.
 
-                    // ?abc== 였다면 length가 1. 이때 userInputParameter[0] 은 => abc== 이고 [1]은 없음. userInputParameterSplit[0] 은 => abc 이고, [1]은 없음
-                    // 분석: userInputParameter 렝스는1, Split렝스는 1.
+                    // ?abc== 였다면 length가 1. 이때 userInputParameter[0] 은 => abc== 이고 [1]은 없음. userInputParameterSplit.get(0) 은 => abc 이고, (1)은 없음
+                    // 분석: userInputParameter 렝스는1, Split.size()는 1.
 
-                    // ?abc==abc 였다면 length가 1. 이때 userInputParameter[0] 은 => abc==abc 이고 [1]은 없음. userInputParameterSplit[0] 은 => abc, [1]은 "", [2]는 abc
-                    // 분석: userInputParameter 렝스는1, Split렝스는 3.
+                    // ?abc==abc 였다면 length가 1. 이때 userInputParameter[0] 은 => abc==abc 이고 [1]은 없음. userInputParameterSplit.get(0) 은 => abc, (1)은 "", (2)는 abc
+                    // 분석: userInputParameter 렝스는1, Split.size()는 3.
 
-                    // ?aaa&bbb=bbb 였다면 length가 2. 이때 userInputParameter[0]은 aaa [1] bbb=bbb 이다. userInputParameterSplit[0] 은 aaa [1]은 bbb [2]는 bbb 이다.
-                    // 분석: userInputParameter 렝스는2, Split렝스는 3.
+                    // ?aaa&bbb=bbb 였다면 length가 2. 이때 userInputParameter[0]은 aaa [1] bbb=bbb 이다. userInputParameterSplit.get(0) 은 aaa (1)은 bbb (2)는 bbb 이다.
+                    // 분석: userInputParameter 렝스는2, Split.size()는 3.
 
-                    // ?aaa=aaa&bbb 였다면 length가 2. 이때 userInputParameter[0]은 aaa=aaa [1] bbb 이다. userInputParameterSplit[0]은 aaa [1]은 aaa [2]는 bbb 이다.
-                    // 분석: userInputParameter 렝스는2, Split렝스는 3.
+                    // ?aaa=aaa&bbb 였다면 length가 2. 이때 userInputParameter[0]은 aaa=aaa [1] bbb 이다. userInputParameterSplit.get(0)은 aaa (1)은 aaa (2)는 bbb 이다.
+                    // 분석: userInputParameter 렝스는2, Split.size()는 3.
 
-                    // ?aaa=aaa&bbb&ccc 였다면 length가 3. 이때 userInputParameter[0]은 aaa=aaa [1] bbb [2] ccc 이다. userInputParameterSplit[0]은 aaa [1]은 aaa [2]는 bbb [3]ccc 이다.
-                    // 분석: userInputParameter 렝스는3, Split렝스는 4.
+                    // ?aaa=aaa&bbb&ccc 였다면 length가 3. 이때 userInputParameter[0]은 aaa=aaa [1] bbb [2] ccc 이다. userInputParameterSplit.get(0)은 aaa (1)은 aaa (2)는 bbb (3)ccc 이다.
+                    // 분석: userInputParameter 렝스는3, Split.size()는 4.
 
-                    /////바라는 입력이다. ?aaa=aaa 였다면 length가 1. => 이때 userInputParameter[0]은 aaa=aaa이고, [1]은 없음. userInputParameterSplit[0] 은 =>aaa, [1]은 aaa.
-                    //분석: userInputParameter 렝스는1, Split렝스는 2.
-                    // 그러면 &스플릿하고 for = 하고난뒤에 userInputParameter.length==1 && userInputParameterSplit.length==2 면 통과.
+                    /////바라는 입력이다. ?aaa=aaa 였다면 length가 1. => 이때 userInputParameter[0]은 aaa=aaa이고, [1]은 없음. userInputParameterSplit.get(0) 은 =>aaa, (1)은 aaa.
+                    //분석: userInputParameter 렝스는1, Split.size()는 2.
+                    // 그러면 &스플릿하고 for = 하고난뒤에 userInputParameter.length==1 && userInputParameterSplit.size()==2 면 통과.
 
-                    //////바라는 입력이다. ?aaa=aaa&bbb=bbb 였다면 length가 2. => 이경우 userInputParameter[0]은 aaa=aaa이고, [1]은 bbb=bbb.
-                    ////// 위의 userInputParameterSplit[0] 은 aaa [1] aaa [2] bbb [3] bbb.
-                    //분석: userInputParameter 렝스는2, Split렝스는 4.
-                    // 그러면 &스플릿하고 for = 하고난뒤에 userInputParameter.length==2 && userInputParameterSplit.length==4 면 통과.
+                    //////바라는 입력이다. ?aaa=aaa&bbb=bbb 였다면 length가 2. => 이경우 userInputParameter.get(0)은 aaa=aaa이고, (1)은 bbb=bbb.
+                    //////  userInputParameterSplit.get(0) 은 aaa (1) aaa (2) bbb (3) bbb.
+                    //분석: userInputParameter 렝스는2, Split.size()는 4.
+                    // 그러면 &스플릿하고 for = 하고난뒤에 userInputParameter.length==2 && userInputParameterSplit.size()==4 면 통과.
 
-                    //////바라는 입력이다. ?aaa=aaa&bbb=bbb&ccc=ccc 였다면 length가 3. => 이경우 userInputParameter[0]은 aaa=aaa이고, [1]은 bbb=bbb. [2]는 ccc=ccc.
-                    ////// 위의 userInputParameterSplit[0] 은 aaa [1] aaa [2] bbb [3] bbb. [4] ccc [5] ccc.
-                    //분석: userInputParameter 렝스는3, Split렝스는 6.
-                    // 그러면 &스플릿하고 for = 하고난뒤에 userInputParameter.length==3 && userInputParameterSplit.length==6 면 통과.
+                    //////바라는 입력이다. ?aaa=aaa&bbb=bbb&ccc=ccc 였다면 length가 3. => 이경우 userInputParameter.get(0)은 aaa=aaa이고, (1)은 bbb=bbb. (2)는 ccc=ccc.
+                    ////// 위의 userInputParameterSplit.get(0) 은 aaa (1) aaa (2) bbb (3) bbb. (4) ccc (5) ccc.
+                    //분석: userInputParameter 렝스는3, Split.size()는 6.
+                    // 그러면 &스플릿하고 for = 하고난뒤에 userInputParameter.length==3 && userInputParameterSplit.size()==6 면 통과.
 
                     // 경우의 수를 하나씩 실험해본결과 원하는 입력들은 공통점이 있었다.
-                    // 공통점 => & 스플릿을하고 아래 for문 = 스플릿을 하고난뒤의 결과가 userInputParameter 렝스의 2배가 userInputParameterSplit 렝스가 되었다.
+                    // 공통점 => & 스플릿을하고 아래 for문 = 스플릿을 하고난뒤의 결과가 userInputParameter 렝스의 2배가 userInputParameterSplit.size() 가 되었다.
 
                         for (int i = 0; i < userInputParameter.length; i++) { //일단 못잡은 예외는 나중에 생각해보자.  예시입력값=> /boards/edit?parameter=10&b=value...
-                            //userInputParameter.length() 는 최소 1이상 일수밖에없다. 위 게시판 수정 진입 시점인 else if 조건때문이다.
+                            //userInputParameter.length() 는 최소 1이상 일수밖에없다. 위 게시판 진입 시점인 else if 조건때문이다.
                             //따라서 for에 도달하면 무조건 한번은 실행된다.
 
                             temporaryParameterSplit = userInputParameter[i].split("=");
@@ -152,11 +148,11 @@ public class qwer2 {
                             userInputParameterSplit.add(temporaryParameterSplit[1]);
                             // 테스트결과 매 반복마다 userInputParameterSplit은 새로운 배열로 덮어씌워지기때문에 그전에 저장해놓을 링크드리스트를 하나만들었음.
 
-                            //userInputParameterSplit.get(0) => postId 부분
+                            //userInputParameterSplit.get(0) => boardId 부분
                             //userInputParameterSplit.get(1) => 1 부분
-                            //userInputParameterSplit.get(2) => boardId 부분
-                            //userInputParameterSplit.get(3) => 1 부분 ...
-                        } // 어떤 값이 왔더라도 userInputParameterSplit length는 무조건 1이상 이다.
+                            //          ...
+
+                        } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
 
                          //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
                         if ( (userInputParameter.length)*2 == (userInputParameterSplit.size()) ) { //여기 진입하는것은 /boards/edit?abc=aaa&bbb=bbb... 이런식으로 입력 받은것들이다.
@@ -222,11 +218,12 @@ public class qwer2 {
                                             // 그래서 이때 beforeMapValue 는 수정전의 그 게시판 인스턴스의 메모리 주소를 담고있다.
                                             Map<Integer, LocalDate> beforeEditDateValue = editLocalDate.get(beforeTitle); // 수정전 게시판의 수정일 value들.
 
+                                            System.out.printf("기존 게시판 이름: [%s]", beforeTitle);
                                             System.out.println();
-                                            System.out.print("바꿀 게시판 이름을 입력해주세요 :");
-                                            System.out.println();
+                                            System.out.print("해당 게시판의 새 이름을 입력해주세요 :");
 
                                             afterTitle = sc.nextLine();
+                                            System.out.println();
 
                                             mapStorage.put(afterTitle, mapStorage.get(beforeTitle)); // 기존의 게시판 인스턴스 메모리주소를 그대로 복사해서 가져왔기때문에 게시판값이 그대로다.
                                             mapStorage.remove(beforeTitle); // 맵의 맵에서 기존 key(게시판제목) 를 가진 노드를 삭제. 실험결과 이렇게해도 afterTitle의 밸류는 그대로있음.
@@ -235,7 +232,7 @@ public class qwer2 {
                                             editLocalDate.put(afterTitle, beforeEditDateValue); // 새게시판제목의 밸류에 수정전 수정일 value들을 저장한 인스턴스 메모리 주소를 그대로 넣겠다.
                                             editLocalDate.remove(beforeTitle); // 맵의 맵에서 기존 key(게시판제목) 를 가진 수정일 노드를 삭제.
 
-                                            System.out.println("게시판 이름이 [" + afterTitle  + "] 로 변경되었습니다!");
+                                            System.out.println("게시판 이름이 [" + afterTitle  + "] 로 수정되었습니다!");
 
                                         }
 
@@ -247,13 +244,11 @@ public class qwer2 {
 
 
                 } else if(userInputPath[0].equals("") && userInputPath[1].equals("boards") &&
-                        userInputCrud[0].equals("remove") && userInputCrud.length == 2 ){  //게시판 remove 진입시도 => /boards/remove?abc..
-
-                    //   /boards/remove?abc.. 같은 입력이면 통과 됐을거임.
-                    //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거고 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
+                        userInputCrud[0].equals("remove") && userInputCrud.length == 2 ){  //게시판 remove 진입시도.
+                        //   지금까지 테스트해본결과로는 /boards/remove?abc 여기까지는 확정되어야 진입가능하다. 물론 /boards/remove?abc? 같은 입력도 들어와지긴한다. 그 이후의 값들은 이 밑에서부터 필터링해야겠다.
+                        //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거기때문에 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
 
                     userInputParameter = userInputCrud[1].split("&");
-                    // userInputCrud[1] => parameter=10&b=value... 부분
 
                     for (int i = 0; i < userInputParameter.length; i++) { //일단 못잡은 예외는 나중에 생각해보자.  예시입력값=> /boards/remove?parameter=10&b=value...
                         //userInputParameter.length() 는 최소 1이상 일수밖에없다. 위 게시판 수정 진입 시점인 else if 조건때문이다.
@@ -264,16 +259,15 @@ public class qwer2 {
                         userInputParameterSplit.add(temporaryParameterSplit[1]);
                         // 테스트결과 매 반복마다 userInputParameterSplit은 새로운 배열로 덮어씌워지기때문에 그전에 저장해놓을 링크드리스트를 하나만들었음.
 
-                        //userInputParameterSplit.get(0) => postId 부분
+                        //userInputParameterSplit.get(0) => boardId 부분
                         //userInputParameterSplit.get(1) => 1 부분
-                        //userInputParameterSplit.get(2) => boardId 부분
-                        //userInputParameterSplit.get(3) => 1 부분 ...
-                    } // 어떤 값이 왔더라도 userInputParameterSplit length는 무조건 1이상 이다.
+                        //          ...
+                    } // 어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
 
                     //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
                     if ( (userInputParameter.length)*2 == (userInputParameterSplit.size()) ) { //여기 진입하는것은 /boards/remove?abc=aaa&bbb=bbb... 이런식으로 입력 받은것들이다.
                         //그리고 이 시점부턴 userInputParameterSplit 에 드디어 파라미터값과, =뒤의 값만 따로따로 순차적으로 존재하게됐다.
-                        //원하는것: /boards/remove?boardId=1...   => 처럼 입력받으면 해당 게시판 edit모드로 진입하게끔하고싶은것이다.
+                        //원하는것: /boards/remove?boardId=1...   => 처럼 입력받으면 해당 게시판 삭제 모드로 진입하게끔하고싶은것이다.
                         // 분석중에 또다른 공통점 발견: 여기 진입한 입력값의 파라미터의 이름값들은 전부 split의 짝수에 저장됨.(get(0)을 포함)  ex) get(0),get(2),get(4) ....
 
                         LinkedList<String> parameterNames = new LinkedList<>();
@@ -311,7 +305,7 @@ public class qwer2 {
                             } //오류안나면 true
                             // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
                             // 우선유저가  /boards/remove?boardId=1  이런식으로 게시판의 순서를 입력하길원함.
-                            // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판 수정모드로 진입할수있는것이다.
+                            // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판 삭제모드로 진입할수있는것이다.
                             catch (NumberFormatException e) {
                                 System.out.println("삭제할 게시판 번호를 입력해주세요.");
                             }
@@ -367,11 +361,10 @@ public class qwer2 {
                         userInputParameterSplit.add(temporaryParameterSplit[1]);
                         // 테스트결과 매 반복마다 userInputParameterSplit은 새로운 배열로 덮어씌워지기때문에 그전에 저장해놓을 링크드리스트를 하나만들었음.
 
-                        //userInputParameterSplit.get(0) => postId 부분
-                        //userInputParameterSplit.get(1) => 1 부분
-                        //userInputParameterSplit.get(2) => boardId 부분
-                        //userInputParameterSplit.get(3) => 1 부분 ...
-                    } // 어떤 값이 왔더라도 userInputParameterSplit length는 무조건 1이상 이다.
+                        //userInputParameterSplit.get(0) => boardName 부분
+                        //userInputParameterSplit.get(1) => 자유게시판 부분
+                        //           ...
+                    } // 어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
 
                     //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
                     if ( (userInputParameter.length)*2 == (userInputParameterSplit.size()) ) { //여기 진입하는것은 /boards/view?abc=aaa&bbb=bbb... 이런식으로 입력 받은것들이다.
@@ -449,9 +442,8 @@ public class qwer2 {
                     }
 
                 } else if(userInputPath[0].equals("") && userInputPath[1].equals("posts") &&
-                        userInputCrud[0].equals("add") && userInputCrud.length == 2) {
+                        userInputCrud[0].equals("add") && userInputCrud.length == 2) {  //   해당 게시판의 게시글작성 진입시도.
 
-                    //   해당 게시판의 게시글작성 진입시도.
                     //   지금까지 테스트해본결과로는 /posts/add?abc 여기까지는 확정되어야 진입가능하다. 물론 /posts/add?abc? 같은 입력도 들어와지긴한다. 그 이후의 값들은 이 밑에서부터 필터링해야겠다.
                     //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거기때문에 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
 
@@ -461,7 +453,7 @@ public class qwer2 {
                     // 예시 입력값 => /posts/add?abc 이라고치자.
 
                     // 경우의 수를 하나씩 실험해본결과 원하는 입력들은 공통점이 있었다.
-                    // 공통점 => & 스플릿을하고 아래 for문 = 스플릿을 하고난뒤의 결과가 userInputParameter 렝스의 2배가 userInputParameterSplit 사이즈가 되었다.
+                    // 공통점 => & 스플릿을하고 아래 for문 = 스플릿을 하고난뒤에 userInputParameter 렝스의 2배가 userInputParameterSplit 사이즈가 되었다.
 
                     for (int i = 0; i < userInputParameter.length; i++) {
                         //userInputParameter.length() 는 최소 1이상 일수밖에없다. 위 게시판 수정 진입 시점인 else if 조건때문이다.
@@ -472,11 +464,10 @@ public class qwer2 {
                         userInputParameterSplit.add(temporaryParameterSplit[1]);
                         // 테스트결과 매 반복마다 userInputParameterSplit은 새로운 배열로 덮어씌워지기때문에 그전에 저장해놓을 링크드리스트를 하나만들었음.
 
-                        //userInputParameterSplit.get(0) => postId 부분
+                        //userInputParameterSplit.get(0) => boardId 부분
                         //userInputParameterSplit.get(1) => 1 부분
-                        //userInputParameterSplit.get(2) => boardId 부분
-                        //userInputParameterSplit.get(3) => 1 부분 ...
-                    } // 어떤 값이 왔더라도 userInputParameterSplit length는 무조건 1이상 이다.
+                        //                  ...
+                    } // 어떤 값이 왔더라도 userInputParameter의 length는 무조건 1이상 이고 userInputParameterSplit.size()는 무조건 2이상일것이다.
 
                     //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
                     if ( (userInputParameter.length)*2 == (userInputParameterSplit.size()) ) { //여기 진입하는것은 /posts/add?abc=aaa&bbb=bbb... 이런식으로 입력 받은것들이다.
@@ -498,7 +489,7 @@ public class qwer2 {
 
                         for (int i=0; i < parameterNames.size(); i++) { // parameterNames.size() 는 최소한 1이다. 최소 aaa라는 파라미터네임1개.
 
-                            if (!(parameterNames.get(i).equals("boardId"))) {
+                            if (!(parameterNames.get(i).equals("boardId"))) { // 파라미터이름들을 검사하도록 진입.
                                 okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 1개라도 "boardId" 가 아니라면 false.
                                 //만약 전부 "boardId" 가 맞다면 true.
                                 break;
@@ -533,7 +524,7 @@ public class qwer2 {
                                     // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이면 진입.
                                     // 게시판이 생성되면 mapKeyStorage.size()가 1씩늘어나게되어있기때문이다.
 
-                                    // 그러면 이제 해당 게시판의 게시글 작성이다. 실험중.
+                                    // 그러면 이제 해당 게시판의 게시글 작성이다.
 
 
                                     String title = boardKeyStorage.get(userBoardIdValueInteger-1); // 해당 게시판 제목(key)
@@ -561,8 +552,8 @@ public class qwer2 {
                     }
 
                 } else if( userInputPath[0].equals("") && userInputPath[1].equals("posts") &&
-                        userInputCrud[0].equals("remove") && userInputCrud.length == 2) {
-                    //   해당 게시판의 게시글삭제 진입시도.
+                        userInputCrud[0].equals("remove") && userInputCrud.length == 2) { //   해당 게시판의 게시글삭제 진입시도.
+                    
                     //   지금까지 테스트해본결과로는 /posts/remove?abc 여기까지는 확정되어야 진입가능하다. 물론 /posts/remove?abc? 같은 입력도 들어와지긴한다. 그 이후의 값들은 이 밑에서부터 필터링해야겠다.
                     //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거기때문에 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
 
@@ -574,7 +565,7 @@ public class qwer2 {
                     // userInputParameter[1] boardId=1 이다. 이렇게 최소한 가져가야한다.
 
                     // 경우의 수를 하나씩 실험해본결과 원하는 입력들은 공통점이 있었다.
-                    // 공통점 => & 스플릿을하고 아래 for문 = 스플릿을 하고난뒤의 결과가 userInputParameter 렝스의 2배가 userInputParameterSplit 렝스가 되었다.
+                    // 공통점 => & 스플릿을하고 아래 for문 = 스플릿을 하고난뒤의 결과가 userInputParameter 렝스의 2배가 userInputParameterSplit의 사이즈가 되었다.
 
                     for (int i = 0; i < userInputParameter.length; i++) {
                         //userInputParameter.length() 는 최소 1이상 일수밖에없다. 위 게시판 수정 진입 시점인 else if 조건때문이다.
@@ -589,7 +580,7 @@ public class qwer2 {
                         //userInputParameterSplit.get(1) => 1 부분
                         //userInputParameterSplit.get(2) => boardId 부분
                         //userInputParameterSplit.get(3) => 1 부분 ...
-                    } // 어떤 값이 왔더라도 userInputParameterSplit length는 무조건 1이상 이다.
+                    } // 어떤 값이 왔더라도 userInputParameter length는 1이상이고 userInputParameterSplit 사이즈는 무조건 2이상 일것이다.
 
                     //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
                     if ( (userInputParameter.length)*2 == (userInputParameterSplit.size()) ) { //여기 진입하는것은 /posts/remove?abc=aaa&bbb=bbb... 이런식으로 입력 받은것들이다.
@@ -607,11 +598,12 @@ public class qwer2 {
                         } // 이제 userInputParameterSplit 에서 파라미터 이름들만 다 뽑아서 parameterNames 라는 링크드리스트에 저장끝.
 
 
+                        // 분석중
                         // 예시 입력값 => /posts/remove?postId=1&boardId=1 ... 이라고치자. 그러면
                         // userInputParameter[0] postId=무엇         여기부터
-                        // userInputParameter[1] boardId=무엇 이다. 이렇게 최소한 이것까진 확정돼야한다.
+                        // userInputParameter[1] boardId=무엇     여기까진 최소한 확정돼야한다.
                         // userInputParameter[2] aaa=aaa...
-                        // userInputParameterSplit.get(0) postId   여기부터
+                        // userInputParameterSplit.get(0) postId   그리고 여기부터
                         // userInputParameterSplit.get(1) 무엇
                         // userInputParameterSplit.get(2) boardId
                         // userInputParameterSplit.get(3) 무엇      최소한 이것까진 확정돼야한다.
@@ -621,14 +613,16 @@ public class qwer2 {
 
                         if(parameterNames.get(0).equals("postId") && parameterNames.get(1).equals("boardId")  ) {
                             // userInputParameterSplit.get(0) postId 이고
-                            // userInputParameterSplit.get(2) boardId 이면 진입가능하다. 즉 /posts/remove?postId=무엇&boardId=무엇   이면 진입한다. 따라서
+                            // userInputParameterSplit.get(2) boardId 이면 진입가능하다. 즉 /posts/remove?postId=무엇&boardId=무엇   이면 진입한다. 그것은
                             // parameterNames.get(0) postId
-                            // parameterNames.get(1) boardId 만 진입.
+                            // parameterNames.get(1) boardId 만 진입하는것.
 
                         boolean okCheck1 = true; // parameterNames 링크드리스트에 저장한 파라미터네임들을 체크하기위함.
                         boolean okCheck2 = false; // 파라미터 value들이 숫자인지(?번 게시판) 확인하기위해서 만듬.
 
-                        for (int i = 1; i < parameterNames.size(); i++) { // parameterNames.size() 는 최소한 2이다. (postId 와 boardId)
+                        for (int i = 1; i < parameterNames.size(); i++) { // 파라미터네임들 검사 진입. 이때 parameterNames.size() 가 최소한 2이다.
+                            // 위 이프문으로인해 parameterNames.get(0) postId
+                            //                parameterNames.get(1) boardId 이다.
 
                             if (!(parameterNames.get(i).equals("boardId"))) {
                                 okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 2번째인덱스부터(번호1부터) 1개라도 "boardId" 가 아니라면 false.
@@ -677,7 +671,7 @@ public class qwer2 {
                                     // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이고,
                                     // 입력 게시글 번호가 실제 생성되어있는 번호면 진입한것이다.
 
-                                    // 그러면 이제 해당 게시판의 해당 게시글 삭제다. 실험중.
+                                    // 그러면 이제 해당 게시판의 해당 게시글 삭제다.
 
                                     // userBoardIdValueInteger-1  = 해당 게시판의 실제 인덱스번호
                                     // userPostIdValueInteger-1  = 해당 게시글의 실제 인덱스번호
@@ -736,7 +730,7 @@ public class qwer2 {
                         //userInputParameterSplit.get(1) => 1 부분
                         //userInputParameterSplit.get(2) => boardId 부분
                         //userInputParameterSplit.get(3) => 1 부분 ...
-                    } // 어떤 값이 왔더라도 userInputParameterSplit length는 무조건 1이상 이다.
+                    } // 어떤 값이 왔더라도 userInputParameter length는 무조건 1이상 이다.
 
                     //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
                     if ( (userInputParameter.length)*2 == (userInputParameterSplit.size()) ) { //여기 진입하는것은 /posts/edit?abc=aaa&bbb=bbb... 이런식으로 입력 받은것들이다.
@@ -775,7 +769,7 @@ public class qwer2 {
                             boolean okCheck1 = true; // parameterNames 링크드리스트에 저장한 파라미터네임들을 체크하기위함.
                             boolean okCheck2 = false; // 파라미터 value들이 숫자인지(?번 게시판) 확인하기위해서 만듬.
 
-                            for (int i = 1; i < parameterNames.size(); i++) { // parameterNames.size() 는 최소한 2이다. (postId 와 boardId)
+                            for (int i = 1; i < parameterNames.size(); i++) { // 파라미터이름 검사진입. parameterNames.size() 는 최소한 2이다. (postId 와 boardId)
 
                                 if (!(parameterNames.get(i).equals("boardId"))) {
                                     okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 2번째인덱스부터(번호1부터) 1개라도 "boardId" 가 아니라면 false.
@@ -824,7 +818,7 @@ public class qwer2 {
                                         // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이고,
                                         // 입력 게시글 번호가 실제 생성되어있는 번호면 진입한것이다.
 
-                                        // 그러면 이제 해당 게시판의 해당 게시글 수정이다. 실험중.
+                                        // 그러면 이제 해당 게시판의 해당 게시글 수정이다.
 
                                         // userBoardIdValueInteger-1  = 해당 게시판의 실제 인덱스번호
                                         // userPostIdValueInteger-1  = 해당 게시글의 실제 인덱스번호
@@ -895,7 +889,7 @@ public class qwer2 {
                         //userInputParameterSplit.get(1) => 1 부분
                         //userInputParameterSplit.get(2) => boardId 부분
                         //userInputParameterSplit.get(3) => 1 부분 ...
-                    } // 어떤 값이 왔더라도 userInputParameterSplit length는 무조건 1이상 이다.
+                    } // 어떤 값이 왔더라도 userInputParameter length는 무조건 1이상 이다.
 
                     //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
                     if ( (userInputParameter.length)*2 == (userInputParameterSplit.size()) ) { //여기 진입하는것은 /posts/view?abc=aaa&bbb=bbb... 이런식으로 입력 받은것들이다.
@@ -965,7 +959,7 @@ public class qwer2 {
                                 } //오류안나면 true
                                 // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
                                 // 우선유저가 /posts/view?postId=1&boardId=1 이런식으로 게시판의 순서를 입력하길원함.
-                                // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 유저가 입력한 게시판의 번호인것이고, 존재한다면 해당 게시판의 게시글 수정모드로 진입할수있는것이다.
+                                // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 유저가 입력한 게시판의 번호인것이고, 존재한다면 해당 게시판의 해당 게시글 뷰모드로 진입할수있는것이다.
                                 catch (NumberFormatException e) {
                                     System.out.println("수정할 게시판 번호를 입력해주세요.");
                                 }
@@ -983,7 +977,7 @@ public class qwer2 {
                                         // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이고,
                                         // 입력 게시글 번호가 실제 생성되어있는 번호면 진입한것이다.
 
-                                        // 그러면 이제 해당 게시판의 해당 게시글 뷰모드다. 실험중.
+                                        // 그러면 이제 해당 게시판의 해당 게시글 뷰모드다.
 
                                         // userBoardIdValueInteger-1  = 해당 게시판의 실제 인덱스번호
                                         // userPostIdValueInteger-1  = 해당 게시글의 실제 인덱스번호
