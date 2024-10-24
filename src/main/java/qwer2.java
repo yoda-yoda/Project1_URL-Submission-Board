@@ -38,10 +38,6 @@ public class qwer2 {
 
         //나중에 똑같은 게시판이름, 게시글제목 입력 등에대해 체크해보기.
 
-
-
-
-
         do {
             System.out.print("손님 ");
             userInput = sc.nextLine();
@@ -82,7 +78,7 @@ public class qwer2 {
 
 
                     System.out.println();
-                    System.out.printf(  "[%s]이 [%d]번 게시판으로 저장되었습니다.", userInput , boardKeyStorage.size() );
+                    System.out.printf(  "[%s]이 [%d]번 게시판에 저장되었습니다.", userInput , boardKeyStorage.size() );
                     System.out.println();
                     // 방금 게시판을 저장했다면 boardKeyStorage의 사이즈가 곧 그 게시판의 번호다.
 
@@ -218,9 +214,9 @@ public class qwer2 {
                                             // 그래서 이때 beforeMapValue 는 수정전의 그 게시판 인스턴스의 메모리 주소를 담고있다.
                                             Map<Integer, LocalDate> beforeEditDateValue = editLocalDate.get(beforeTitle); // 수정전 게시판의 수정일 value들.
 
-                                            System.out.printf("기존 게시판 이름: [%s]", beforeTitle);
+                                            System.out.printf("기존 게시판 이름 :[%s]", beforeTitle);
                                             System.out.println();
-                                            System.out.print("해당 게시판의 새 이름을 입력해주세요 :");
+                                            System.out.print("새로운 게시판 이름을 입력해주세요 :");
 
                                             afterTitle = sc.nextLine();
                                             System.out.println();
@@ -231,6 +227,9 @@ public class qwer2 {
                                             boardKeyStorage.add(userBoardIdValueInteger-1,afterTitle); // 삭제한 그 인덱스 자리에 새로운 게시판 제목 추가.
                                             editLocalDate.put(afterTitle, beforeEditDateValue); // 새게시판제목의 밸류에 수정전 수정일 value들을 저장한 인스턴스 메모리 주소를 그대로 넣겠다.
                                             editLocalDate.remove(beforeTitle); // 맵의 맵에서 기존 key(게시판제목) 를 가진 수정일 노드를 삭제.
+
+                                            //그러면 기존것 삭제하면 기존것이 연동이돼서 에디트시간도 같이삭제되나?.
+                                            //이건 맞는거같은데.
 
                                             System.out.println("게시판 이름이 [" + afterTitle  + "] 로 수정되었습니다!");
 
@@ -429,7 +428,7 @@ public class qwer2 {
                                         System.out.print( originalLocalDate.get(boardKeyIndex).get(i) ); // 해당 게시판의 0번째 게시글부터의 작성일부터 출력.
                                         System.out.println();
                                     }
-                                    
+                                    System.out.println();
                                 } else {
                                     System.out.println("해당 게시판에 작성된 게시글이 없습니다.");
                                 }
@@ -529,20 +528,21 @@ public class qwer2 {
 
                                     String title = boardKeyStorage.get(userBoardIdValueInteger-1); // 해당 게시판 제목(key)
 
-                                    System.out.printf("[%d]번 게시판 [%s]에 게시글을 작성합니다.", userBoardIdValueInteger, title );
+                                    System.out.printf("[%d]번게시판 [%s]에 게시글을 작성합니다.", userBoardIdValueInteger, title );
                                     System.out.println();
                                     System.out.print("제목을 입력해주세요 :");
                                     String key = sc.nextLine(); //게시글 제목(key)
 
                                     System.out.print("내용을 입력해주세요 :");
                                     String value = sc.nextLine(); //게시글 내용(value)
+                                    System.out.println();
 
                                     mapKeyStorage.get(userBoardIdValueInteger-1).add(key); // 게시글 제목 저장 공간에 제목 저장.
                                     mapStorage.get(title).put(key,value); //해당 맵에 제목과 내용 저장완료
                                     originalLocalDate.get(userBoardIdValueInteger-1).add(LocalDate.now()); //게시글의 로컬데이트도 저장완료.
 
-                                    System.out.printf("해당 게시글이 [%s] 게시판의 [%d]번 게시글로 저장되었습니다.",  title, mapKeyStorage.get(userBoardIdValueInteger).size() );
-                                    // mapKeyStorage.get(userBoardIdValueInteger).size() 는 해당게시판의 방금저장한 게시글의 번호다.
+                                    System.out.printf("해당 글이 [%s]의 [%d]번글로 저장되었습니다.",  title, mapKeyStorage.get(userBoardIdValueInteger-1).size() );
+                                    // mapKeyStorage.get(userBoardIdValueInteger-1).size() 는 해당게시판의 방금저장한 게시글의 번호다.
                                     System.out.println();
                                     System.out.println();
                                     
@@ -685,9 +685,15 @@ public class qwer2 {
 
                                     if(editLocalDate.get(title).get(userPostIdValueInteger - 1) != null) { // 수정을 한번도 안한 게시글이면 null일수도 있기때문에.
                                         editLocalDate.get(title).remove(userPostIdValueInteger - 1); // 수정일 저장소에서 해당 게시글 수정일도 삭제.
+                                        //여기가 문제였음. 오리지날에서 삭제가 1개될때마다 인덱스가 1씩당겨지니까 edit의 해당게시판의 key숫자들도 1씩 줄어들어야맞음.
+
+                                       // editLocalDate.
+
+
+
                                     }
 
-                                    System.out.println(userBoardIdValueInteger + "번 게시판의" + userPostIdValueInteger + "번 게시글이 삭제되었습니다.");
+                                    System.out.printf("[%s]의 [%d]번 글이 삭제되었습니다.", title, userPostIdValueInteger);
                                     System.out.println();
 
                                 }
@@ -828,13 +834,13 @@ public class qwer2 {
                                         String changeTitle; //바꿀 게시글 제목
                                         String changeContents; //바꿀 게시글 내용
 
+                                        System.out.printf("[%s]의 [%d]번글을 수정합니다.", title, userPostIdValueInteger );
                                         System.out.println();
-                                        System.out.print("바꿀 게시글 제목 :");
+                                        System.out.print("바꿀 글제목 :");
                                         changeTitle = sc.nextLine();
-
-                                        System.out.println();
-                                        System.out.print("바꿀 게시글 내용 :");
+                                        System.out.print("바꿀 글내용 :");
                                         changeContents = sc.nextLine();
+                                        System.out.println();
 
                                         mapStorage.get(title).remove(articleKey); // 맵의 해당맵에서 기존 게시글(제목,내용)을 삭제.
                                         mapKeyStorage.get(userBoardIdValueInteger-1).remove(userPostIdValueInteger-1); // 게시글 제목 저장소에서 해당게시글의 제목 삭제.
@@ -843,11 +849,10 @@ public class qwer2 {
                                         //
                                         mapStorage.get(title).put(changeTitle, changeContents); // 맵의 해당맵에 바꾼 게시글(제목,내용)을 새로 저장.
                                         mapKeyStorage.get(userBoardIdValueInteger-1).add(userPostIdValueInteger-1, changeTitle ); // 해당게시판 제목 저장소에서 기존게시글 삭제한 자리에 새 제목 저장.
-                                        editLocalDate.get(title).put(userPostIdValueInteger-1, LocalDate.now()); //수정일 저장소의 해당게시글 인덱스에 붙어있는 밸류에 수정일 저장.
+                                        editLocalDate.get(title).put( userPostIdValueInteger-1 , LocalDate.now()); //수정일 저장소의 해당게시글 인덱스에 붙어있는 밸류에 수정일 저장.
 
-                                        System.out.println(userBoardIdValueInteger + "번 게시판의" + userPostIdValueInteger + "번 게시글이 수정되었습니다.");
+                                        System.out.printf("[%s]의 [%d]번글이 수정되었습니다.", title, userPostIdValueInteger );
                                         System.out.println();
-
 
                                     }
 
@@ -961,7 +966,7 @@ public class qwer2 {
                                 // 우선유저가 /posts/view?postId=1&boardId=1 이런식으로 게시판의 순서를 입력하길원함.
                                 // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 유저가 입력한 게시판의 번호인것이고, 존재한다면 해당 게시판의 해당 게시글 뷰모드로 진입할수있는것이다.
                                 catch (NumberFormatException e) {
-                                    System.out.println("수정할 게시판 번호를 입력해주세요.");
+                                    System.out.println("글번호와 게시판번호를 정확히 입력해주세요.");
                                 }
 
                                 if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
@@ -986,19 +991,21 @@ public class qwer2 {
                                         String articleKey = mapKeyStorage.get(userBoardIdValueInteger-1).get(userPostIdValueInteger-1); //해당 게시판의 해당 게시글의 제목키
                                         String articleContents = mapStorage.get(title).get(articleKey);
 
-                                        System.out.println(userPostIdValueInteger + "번 게시글");
-                                        System.out.println("작성일 :" + originalLocalDate.get(userBoardIdValueInteger-1).get(userPostIdValueInteger-1));
+                                        System.out.printf("[%d]번 게시글", userPostIdValueInteger );
+                                        System.out.println();
+                                        System.out.println("작성일 : " + originalLocalDate.get(userBoardIdValueInteger-1).get(userPostIdValueInteger-1));
 
                                         if(editLocalDate.get(title).get(userPostIdValueInteger-1) != null){ //수정을 한적이있다면.
 
-                                            System.out.println("수정일 :" + editLocalDate.get(title).get(userPostIdValueInteger-1));  //예외처리 나중에하기.
+                                            System.out.println("수정일 : " + editLocalDate.get(title).get(userPostIdValueInteger-1));  //예외처리 나중에하기.
                                         } else {
 
-                                            System.out.println("수정일 : -");
+                                            System.out.println("수정일 : X");
 
                                         }
-                                        System.out.println("제목 :" + articleKey);
-                                        System.out.println("내용 :" + articleContents);
+                                        System.out.println("제목 : " + articleKey);
+                                        System.out.println("내용 : " + articleContents);
+                                        System.out.println();
 
                                     }
 
