@@ -1,12 +1,9 @@
 
-
-
-
 import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.*;
 
-//241023_16:42~ 2단계3시작. posts시작.
+//241024_17:22~ qwer2꺼를 여기에 복사해와서 2단계3 edit대공사 시작.
 public class qwer2 {
 
     public static void main(String[] args) {
@@ -19,13 +16,9 @@ public class qwer2 {
         String[] temporaryParameterSplit = {"a"}; // 나중에 if조건문 활용하려하는데 초기화가 안되어있다는 오류가자꾸떠서 적어주었다.
         ArrayList<String> userInputParameterSplit;
 
-       // Map<String, String> boardStorage = new HashMap<>(); //같은 제목이면 Map에서 덮어씌워지는 문제는 일단 나중에생각하자.
+        // Map<String, String> boardStorage = new HashMap<>(); //같은 제목이면 Map에서 덮어씌워지는 문제는 일단 나중에생각하자.
         //LinkedList<String> boardId = new LinkedList<>(); // LinkgedList로 한 이유.
         // 원랜 Deque 로 만들려했는데, Deque는 인덱스번호만으로 값을가져오는 메서드가 없었음. key값을 직접 입력해야했음.
-
-
-
-
 
         Map<String, Map<String, String>> mapStorage = new HashMap<>();// 게시'글'을 저장해두는 게시'판'들의 저장소다. 이렇게 한 이유=>
         // 고민해보다가 문득 맵속에 맵을 저장하면 게시판의 저장소가 될것같았다. 그리고 메모리 문제로 사라지지않게 최상위에 저장하고 싶었다.
@@ -34,7 +27,7 @@ public class qwer2 {
         LinkedList<String> boardKeyStorage = new LinkedList<>(); // 예를들어 MapStorage에서 게시판을 삭제할때, Key를 알아야하는데 그 key를 저장할 공간.
         //그리고 이것과 mapKeyStorage도 인덱스를 통해 연결가능하다.
         LinkedList<LinkedList<LocalDate>> originalLocalDate = new LinkedList<>();
-        Map<String, Map<Integer, LocalDate>> editLocalDate = new HashMap<>(); // 수정된 작성일을 인덱스와 연결해서 저장하고싶었다.
+        LinkedList<LinkedList<LocalDate>> editLocalDate = new LinkedList<>(); // 수정된 작성일을 인덱스와 연결해서 저장하고싶었다.
 
         //나중에 똑같은 게시판이름, 게시글제목 입력 등에대해 체크해보기.
 
@@ -74,7 +67,7 @@ public class qwer2 {
                     boardKeyStorage.add(userInput); // 추가한 Map의 키를 저장.
                     originalLocalDate.add(new LinkedList<>()); // 작성일 저장소에 인스턴스를 추가하고 인스턴스 인덱스를통해 몇번째게시판인지 알수있음. 또 인스턴스안에 링크드리스트로는 작성일과
                     //게시글 번호랑 연결되어서 그 게시글과 작성일을 연결할수있다.
-                    editLocalDate.put(userInput, new HashMap<>()); // 수정일 저장소에 게시판 이름을 저장.
+                    editLocalDate.add(new LinkedList<>()); // 수정일 저장소도 마찬가지.
 
 
                     System.out.println();
@@ -135,117 +128,111 @@ public class qwer2 {
                     // 경우의 수를 하나씩 실험해본결과 원하는 입력들은 공통점이 있었다.
                     // 공통점 => & 스플릿을하고 아래 for문 = 스플릿을 하고난뒤의 결과가 userInputParameter 렝스의 2배가 userInputParameterSplit.size() 가 되었다.
 
-                        for (int i = 0; i < userInputParameter.length; i++) { //일단 못잡은 예외는 나중에 생각해보자.  예시입력값=> /boards/edit?parameter=10&b=value...
-                            //userInputParameter.length() 는 최소 1이상 일수밖에없다. 위 게시판 진입 시점인 else if 조건때문이다.
-                            //따라서 for에 도달하면 무조건 한번은 실행된다.
+                    for (int i = 0; i < userInputParameter.length; i++) { //일단 못잡은 예외는 나중에 생각해보자.  예시입력값=> /boards/edit?parameter=10&b=value...
+                        //userInputParameter.length() 는 최소 1이상 일수밖에없다. 위 게시판 진입 시점인 else if 조건때문이다.
+                        //따라서 for에 도달하면 무조건 한번은 실행된다.
 
-                            temporaryParameterSplit = userInputParameter[i].split("=");
-                            userInputParameterSplit.add(temporaryParameterSplit[0]);
-                            userInputParameterSplit.add(temporaryParameterSplit[1]);
-                            // 테스트결과 매 반복마다 userInputParameterSplit은 새로운 배열로 덮어씌워지기때문에 그전에 저장해놓을 링크드리스트를 하나만들었음.
+                        temporaryParameterSplit = userInputParameter[i].split("=");
+                        userInputParameterSplit.add(temporaryParameterSplit[0]);
+                        userInputParameterSplit.add(temporaryParameterSplit[1]);
+                        // 테스트결과 매 반복마다 userInputParameterSplit은 새로운 배열로 덮어씌워지기때문에 그전에 저장해놓을 링크드리스트를 하나만들었음.
 
-                            //userInputParameterSplit.get(0) => boardId 부분
-                            //userInputParameterSplit.get(1) => 1 부분
-                            //          ...
+                        //userInputParameterSplit.get(0) => boardId 부분
+                        //userInputParameterSplit.get(1) => 1 부분
+                        //          ...
 
-                        } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
+                    } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
 
-                         //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
-                        if ( (userInputParameter.length)*2 == (userInputParameterSplit.size()) ) { //여기 진입하는것은 /boards/edit?abc=aaa&bbb=bbb... 이런식으로 입력 받은것들이다.
+                    //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
+                    if ( (userInputParameter.length)*2 == (userInputParameterSplit.size()) ) { //여기 진입하는것은 /boards/edit?abc=aaa&bbb=bbb... 이런식으로 입력 받은것들이다.
                         //그리고 이 시점부턴 userInputParameterSplit 에 드디어 파라미터값과, =뒤의 값만 따로따로 순차적으로 존재하게됐다.
                         //원하는것: /boards/edit?boardId=1...   => 처럼 입력받으면 해당 게시판 edit모드로 진입하게끔하고싶은것이다.
                         // 분석중에 또다른 공통점 발견: 여기 진입한 입력값의 파라미터의 이름값들은 전부 split의 짝수에 저장됨.(get(0)을 포함)  ex) get(0),get(2),get(4) ....
 
-                              LinkedList<String> parameterNames = new LinkedList<>();
+                        LinkedList<String> parameterNames = new LinkedList<>();
 
-                              for (int i = 0; i < userInputParameterSplit.size(); i +=2) { //파라미터 이름이 저장되는 parameterNames 에 짝수만 뽑아 저장한다.
-                                 // 이 위 조건문들에따라 userInputParameterSplit.size() 는 무조건 2이상일것이다.
+                        for (int i = 0; i < userInputParameterSplit.size(); i +=2) { //파라미터 이름이 저장되는 parameterNames 에 짝수만 뽑아 저장한다.
+                            // 이 위 조건문들에따라 userInputParameterSplit.size() 는 무조건 2이상일것이다.
 
-                                 parameterNames.add(userInputParameterSplit.get(i));
+                            parameterNames.add(userInputParameterSplit.get(i));
 
-                              } // 이제 userInputParameterSplit 에서 파라미터 이름들만 다 뽑아서 parameterNames 라는 링크드리스트에 저장끝.
+                        } // 이제 userInputParameterSplit 에서 파라미터 이름들만 다 뽑아서 parameterNames 라는 링크드리스트에 저장끝.
 
-                                boolean okCheck1 = true; // parameterNames 링크드리스트에 저장한 파라미터네임들이 전부 "boardId" 인지 확인하기위해서 만듬.
-                                boolean okCheck2 = false; // 파라미터 value들이 숫자인지(?번 게시판) 확인하기위해서 만듬.
+                        boolean okCheck1 = true; // parameterNames 링크드리스트에 저장한 파라미터네임들이 전부 "boardId" 인지 확인하기위해서 만듬.
+                        boolean okCheck2 = false; // 파라미터 value들이 숫자인지(?번 게시판) 확인하기위해서 만듬.
 
-                                for (int i=0; i < parameterNames.size(); i++) { // parameterNames.size() 는 최소한 1이다. 최소 aaa라는 파라미터네임1개.
+                        for (int i=0; i < parameterNames.size(); i++) { // parameterNames.size() 는 최소한 1이다. 최소 aaa라는 파라미터네임1개.
 
-                                    if (!(parameterNames.get(i).equals("boardId"))) {
-                                        okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 1개라도 "boardId" 가 아니라면 false.
-                                        //만약 전부 "boardId" 가 맞다면 true.
-                                        break;
-                                    }
-                                }
+                            if (!(parameterNames.get(i).equals("boardId"))) {
+                                okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 1개라도 "boardId" 가 아니라면 false.
+                                //만약 전부 "boardId" 가 맞다면 true.
+                                break;
+                            }
+                        }
 
-                                if (okCheck1) { // 유저URL 입력이 =>   /boards/edit?boardId=aaa&boardId=bbb ... 방식과 같은 입력만 여기에 진입함. &가 없어도됨.
+                        if (okCheck1) { // 유저URL 입력이 =>   /boards/edit?boardId=aaa&boardId=bbb ... 방식과 같은 입력만 여기에 진입함. &가 없어도됨.
 
-                                    String userBoardIdValueString;
-                                    Integer userBoardIdValueInteger;
+                            String userBoardIdValueString;
+                            Integer userBoardIdValueInteger;
 
-                                    userBoardIdValueString = userInputParameterSplit.get(userInputParameterSplit.size()-1);
-                                    // 이렇게하면 맨마지막 boardId의 value만 가져올수있다. 입력 URL 파라미터에, 같은 이름의 파라미터가 여러개있을때 맨 마지막 값만 활용하고싶었다.
+                            userBoardIdValueString = userInputParameterSplit.get(userInputParameterSplit.size()-1);
+                            // 이렇게하면 맨마지막 boardId의 value만 가져올수있다. 입력 URL 파라미터에, 같은 이름의 파라미터가 여러개있을때 맨 마지막 값만 활용하고싶었다.
 
-                                    try {
-                                        userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString);
-                                        okCheck2 = true;
-                                    } //오류안나면 true
-                                    // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
-                                    // 우선유저가  /boards/edit?boardId=1  이런식으로 게시판의 순서를 입력하길원함.
-                                    // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판 수정모드로 진입할수있는것이다.
-                                    catch (NumberFormatException e) {
-                                        System.out.println("수정할 게시판 번호를 입력해주세요.");
-                                    }
+                            try {
+                                userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString);
+                                okCheck2 = true;
+                            } //오류안나면 true
+                            // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
+                            // 우선유저가  /boards/edit?boardId=1  이런식으로 게시판의 순서를 입력하길원함.
+                            // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판 수정모드로 진입할수있는것이다.
+                            catch (NumberFormatException e) {
+                                System.out.println("수정할 게시판 번호를 입력해주세요.");
+                            }
 
-                                    if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
+                            if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
 
-                                        userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
+                                userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
 
-                                        if ( userBoardIdValueInteger > 0 && userBoardIdValueInteger <= mapKeyStorage.size() ) { // 드디어 진입. /boards/edit?boardId=1 처럼과같음.
+                                if ( userBoardIdValueInteger > 0 && userBoardIdValueInteger <= mapKeyStorage.size() ) { // 드디어 진입. /boards/edit?boardId=1 처럼과같음.
 
-                                            // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이면 진입.
-                                            // 게시판이 생성되면 mapKeyStorage.size()가 1씩늘어나게되어있기때문이다.
-                                            // 그럼 이 공간에서 드디어 해당 게시판을 수정할 수 있도록 진입된다.
+                                    // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이면 진입.
+                                    // 게시판이 생성되면 mapKeyStorage.size()가 1씩늘어나게되어있기때문이다.
+                                    // 그럼 이 공간에서 드디어 해당 게시판을 수정할 수 있도록 진입된다.
 
-                                            // 그러면 이제 해당 게시판의 이름을 수정하도록해야겠다. 실험중.
+                                    // 그러면 이제 해당 게시판의 이름을 수정하도록해야겠다. 실험중.
 
-                                            String afterTitle; // userInput 변수를 안쓰고 새로 name으로 선언해준이유는 만약 "종료" 로 게시판이름을 적으면 반복문이끝나고 프로그램이 종료될까봐.
-                                            String beforeTitle = boardKeyStorage.get(userBoardIdValueInteger-1); // 수정전 게시판 제목(key)
-                                            Map<String, String> beforeMapValue = mapStorage.get(beforeTitle);  // 수정전 게시판의 value. 즉 수정전 게시판의 게시글 제목과 내용 모음들.
-                                            // 그래서 이때 beforeMapValue 는 수정전의 그 게시판 인스턴스의 메모리 주소를 담고있다.
-                                            Map<Integer, LocalDate> beforeEditDateValue = editLocalDate.get(beforeTitle); // 수정전 게시판의 수정일 value들.
+                                    String afterTitle; // userInput 변수를 안쓰고 새로 name으로 선언해준이유는 만약 "종료" 로 게시판이름을 적으면 반복문이끝나고 프로그램이 종료될까봐.
+                                    String beforeTitle = boardKeyStorage.get(userBoardIdValueInteger-1); // 수정전 게시판 제목(key)
+                                    Map<String, String> beforeMapValue = mapStorage.get(beforeTitle);  // 수정전 게시판의 value. 즉 수정전 게시판의 게시글 제목과 내용 모음들.
+                                    // 그래서 이때 beforeMapValue 는 수정전의 그 게시판 인스턴스의 메모리 주소를 담고있다.
 
-                                            System.out.printf("기존 게시판 이름 :[%s]", beforeTitle);
-                                            System.out.println();
-                                            System.out.print("새로운 게시판 이름을 입력해주세요 :");
+                                    System.out.printf("기존 게시판 이름 :[%s]", beforeTitle);
+                                    System.out.println();
+                                    System.out.print("새로운 게시판 이름을 입력해주세요 :");
 
-                                            afterTitle = sc.nextLine();
-                                            System.out.println();
+                                    afterTitle = sc.nextLine();
+                                    System.out.println();
 
-                                            mapStorage.put(afterTitle, mapStorage.get(beforeTitle)); // 기존의 게시판 인스턴스 메모리주소를 그대로 복사해서 가져왔기때문에 게시판값이 그대로다.
-                                            mapStorage.remove(beforeTitle); // 맵의 맵에서 기존 key(게시판제목) 를 가진 노드를 삭제. 실험결과 이렇게해도 afterTitle의 밸류는 그대로있음.
-                                            boardKeyStorage.remove(userBoardIdValueInteger-1); // 게시판 제목 보관함에서도 기존것 삭제.
-                                            boardKeyStorage.add(userBoardIdValueInteger-1,afterTitle); // 삭제한 그 인덱스 자리에 새로운 게시판 제목 추가.
-                                            editLocalDate.put(afterTitle, beforeEditDateValue); // 새게시판제목의 밸류에 수정전 수정일 value들을 저장한 인스턴스 메모리 주소를 그대로 넣겠다.
-                                            editLocalDate.remove(beforeTitle); // 맵의 맵에서 기존 key(게시판제목) 를 가진 수정일 노드를 삭제.
+                                    mapStorage.put(afterTitle, mapStorage.get(beforeTitle)); // 기존의 게시판 인스턴스 메모리주소를 그대로 복사해서 가져왔기때문에 게시판값이 그대로다.
+                                    mapStorage.remove(beforeTitle); // 맵의 맵에서 기존 key(게시판제목) 를 가진 노드를 삭제. 실험결과 이렇게해도 afterTitle의 밸류는 그대로있음.
+                                    boardKeyStorage.remove(userBoardIdValueInteger-1); // 게시판 제목 보관함에서도 기존것 삭제.
+                                    boardKeyStorage.add(userBoardIdValueInteger-1,afterTitle); // 삭제한 그 인덱스 자리에 새로운 게시판 제목 추가.
 
-                                            //그러면 기존것 삭제하면 기존것이 연동이돼서 에디트시간도 같이삭제되나?.
-                                            //이건 맞는거같은데.
-
-                                            System.out.println("게시판 이름이 [" + afterTitle  + "] 로 수정되었습니다!");
-
-                                        }
-
-                                    }
+                                    System.out.println("게시판 이름이 [" + afterTitle  + "] 로 수정되었습니다!");
 
                                 }
 
                             }
 
+                        }
+
+                    }
+
 
                 } else if(userInputPath[0].equals("") && userInputPath[1].equals("boards") &&
                         userInputCrud[0].equals("remove") && userInputCrud.length == 2 ){  //게시판 remove 진입시도.
-                        //   지금까지 테스트해본결과로는 /boards/remove?abc 여기까지는 확정되어야 진입가능하다. 물론 /boards/remove?abc? 같은 입력도 들어와지긴한다. 그 이후의 값들은 이 밑에서부터 필터링해야겠다.
-                        //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거기때문에 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
+                    //   지금까지 테스트해본결과로는 /boards/remove?abc 여기까지는 확정되어야 진입가능하다. 물론 /boards/remove?abc? 같은 입력도 들어와지긴한다. 그 이후의 값들은 이 밑에서부터 필터링해야겠다.
+                    //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거기때문에 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
 
                     userInputParameter = userInputCrud[1].split("&");
 
@@ -418,7 +405,7 @@ public class qwer2 {
                             if(okCheck2) { // 드디어 진입. /boards/view?boardName=...&boardName=자유게시판.. 처럼 입력했고, 입력한 그 마지막 게시판 키가 실존해야 진입가능.
 
                                 int writeNumber = mapKeyStorage.get(boardKeyIndex).size(); // 이러면 이 변수에 해당게시판의 게시물 글 수가 담김.
-                                
+
                                 if(writeNumber != 0){
 
                                     for(int i=0; i<writeNumber; i++) { //해당 게시판의 글 수 만큼 실행하겠다. 이때 boardKeyIndex 는 해당 게시판의 인덱스번호(게시판 생성순서)임.
@@ -432,7 +419,7 @@ public class qwer2 {
                                 } else {
                                     System.out.println("해당 게시판에 작성된 게시글이 없습니다.");
                                 }
-                                
+
 
                             }
 
@@ -525,7 +512,6 @@ public class qwer2 {
 
                                     // 그러면 이제 해당 게시판의 게시글 작성이다.
 
-
                                     String title = boardKeyStorage.get(userBoardIdValueInteger-1); // 해당 게시판 제목(key)
 
                                     System.out.printf("[%d]번게시판 [%s]에 게시글을 작성합니다.", userBoardIdValueInteger, title );
@@ -540,12 +526,13 @@ public class qwer2 {
                                     mapKeyStorage.get(userBoardIdValueInteger-1).add(key); // 게시글 제목 저장 공간에 제목 저장.
                                     mapStorage.get(title).put(key,value); //해당 맵에 제목과 내용 저장완료
                                     originalLocalDate.get(userBoardIdValueInteger-1).add(LocalDate.now()); //게시글의 로컬데이트도 저장완료.
+                                    editLocalDate.get(userBoardIdValueInteger-1).add(null);// 생성시 수정일도 인덱스를 맞춰주기위해 null로 저장해놓고,
+                                    // 수정할때만 그 인덱스에 날짜를 넣어주려한다.
 
                                     System.out.printf("해당 글이 [%s]의 [%d]번글로 저장되었습니다.",  title, mapKeyStorage.get(userBoardIdValueInteger-1).size() );
                                     // mapKeyStorage.get(userBoardIdValueInteger-1).size() 는 해당게시판의 방금저장한 게시글의 번호다.
                                     System.out.println();
-                                    System.out.println();
-                                    
+
                                 }
                             }
                         }
@@ -553,7 +540,7 @@ public class qwer2 {
 
                 } else if( userInputPath[0].equals("") && userInputPath[1].equals("posts") &&
                         userInputCrud[0].equals("remove") && userInputCrud.length == 2) { //   해당 게시판의 게시글삭제 진입시도.
-                    
+
                     //   지금까지 테스트해본결과로는 /posts/remove?abc 여기까지는 확정되어야 진입가능하다. 물론 /posts/remove?abc? 같은 입력도 들어와지긴한다. 그 이후의 값들은 이 밑에서부터 필터링해야겠다.
                     //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거기때문에 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
 
@@ -617,92 +604,83 @@ public class qwer2 {
                             // parameterNames.get(0) postId
                             // parameterNames.get(1) boardId 만 진입하는것.
 
-                        boolean okCheck1 = true; // parameterNames 링크드리스트에 저장한 파라미터네임들을 체크하기위함.
-                        boolean okCheck2 = false; // 파라미터 value들이 숫자인지(?번 게시판) 확인하기위해서 만듬.
+                            boolean okCheck1 = true; // parameterNames 링크드리스트에 저장한 파라미터네임들을 체크하기위함.
+                            boolean okCheck2 = false; // 파라미터 value들이 숫자인지(?번 게시판) 확인하기위해서 만듬.
 
-                        for (int i = 1; i < parameterNames.size(); i++) { // 파라미터네임들 검사 진입. 이때 parameterNames.size() 가 최소한 2이다.
-                            // 위 이프문으로인해 parameterNames.get(0) postId
-                            //                parameterNames.get(1) boardId 이다.
+                            for (int i = 1; i < parameterNames.size(); i++) { // 파라미터네임들 검사 진입. 이때 parameterNames.size() 가 최소한 2이다.
+                                // 위 이프문으로인해 parameterNames.get(0) postId
+                                //                parameterNames.get(1) boardId 이다.
 
-                            if (!(parameterNames.get(i).equals("boardId"))) {
-                                okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 2번째인덱스부터(번호1부터) 1개라도 "boardId" 가 아니라면 false.
-                                //만약 전부 "boardId" 가 맞다면 true.
-                                break;
-                            }
-                        }
-
-                        if (okCheck1) { // 유저URL 입력이 =>   /posts/remove?postId=aaa&boardId=bbb ... 방식과 같은 입력만 여기에 진입함.
-
-                            String userPostIdValueString;
-                            String userBoardIdValueString;
-
-                            Integer userPostIdValueInteger;
-                            Integer userBoardIdValueInteger;
-
-                            userPostIdValueString = userInputParameterSplit.get(1); // 이렇게하면  /posts/remove?postId=aaa 에서 aaa값이 userPostIdValueString 에 저장.
-                            userBoardIdValueString = userInputParameterSplit.get(userInputParameterSplit.size()-1);
-                            // 이렇게하면  /posts/remove?postId=aaa&boardId=bbb... 라는 입력값 중에서,
-                            // 맨마지막에있는 value만 userBoardIdValueString 에 담는다.
-                            // 입력 URL 파라미터에, 같은 이름의 파라미터가 여러개있을때 맨 마지막 값만 활용한다는 규칙을 구현하고싶었다.
-
-                            try { // userPostIdValueString과 userBoardIdValueString 이 숫자여야한다.
-                                userPostIdValueInteger = Integer.parseInt(userPostIdValueString);
-                                userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString);
-                                okCheck2 = true;
-
-                            } //오류안나면 true
-                            // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
-                            // 우선유저가  /posts/remove?postId=1&boardId=1 이런식으로 게시판의 순서를 입력하길원함.
-                            // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 유저가 입력한 게시판의 번호인것이고, 존재한다면 해당 게시판의 게시글 삭제모드로 진입할수있는것이다.
-                            catch (NumberFormatException e) {
-                                System.out.println("삭제할 게시판 번호를 입력해주세요.");
+                                if (!(parameterNames.get(i).equals("boardId"))) {
+                                    okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 2번째인덱스부터(번호1부터) 1개라도 "boardId" 가 아니라면 false.
+                                    //만약 전부 "boardId" 가 맞다면 true.
+                                    break;
+                                }
                             }
 
-                            if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
+                            if (okCheck1) { // 유저URL 입력이 =>   /posts/remove?postId=aaa&boardId=bbb ... 방식과 같은 입력만 여기에 진입함.
 
-                                userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString); //다시 적은이유 => 이걸안하면 아래 if문안의 변수가 초기화안됐다며 오류가뜸.
-                                userPostIdValueInteger = Integer.parseInt(userPostIdValueString);
+                                String userPostIdValueString;
+                                String userBoardIdValueString;
 
-                                if (userBoardIdValueInteger > 0 &&  userPostIdValueInteger > 0 &&
-                                        userBoardIdValueInteger <= mapKeyStorage.size() &&
-                                        userPostIdValueInteger <= mapKeyStorage.get(userBoardIdValueInteger-1).size() ) {
-                                    // 드디어 여기서  /posts/remove?postId=1&boardId=1 같은 형식이 진입.
-                                    // 그리고 예를들어 /posts/remove?postId=1&boardId=15&...boardId=12 이런 형식이면  맨 마지막 boardId의 값인 12로 활용됨.
-                                    // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이고,
-                                    // 입력 게시글 번호가 실제 생성되어있는 번호면 진입한것이다.
+                                Integer userPostIdValueInteger;
+                                Integer userBoardIdValueInteger;
 
-                                    // 그러면 이제 해당 게시판의 해당 게시글 삭제다.
+                                userPostIdValueString = userInputParameterSplit.get(1); // 이렇게하면  /posts/remove?postId=aaa 에서 aaa값이 userPostIdValueString 에 저장.
+                                userBoardIdValueString = userInputParameterSplit.get(userInputParameterSplit.size()-1);
+                                // 이렇게하면  /posts/remove?postId=aaa&boardId=bbb... 라는 입력값 중에서,
+                                // 맨마지막에있는 value만 userBoardIdValueString 에 담는다.
+                                // 입력 URL 파라미터에, 같은 이름의 파라미터가 여러개있을때 맨 마지막 값만 활용한다는 규칙을 구현하고싶었다.
 
-                                    // userBoardIdValueInteger-1  = 해당 게시판의 실제 인덱스번호
-                                    // userPostIdValueInteger-1  = 해당 게시글의 실제 인덱스번호
-                                    
-                                    String title = boardKeyStorage.get(userBoardIdValueInteger-1); // 해당 게시판의 제목키
-                                    String articleKey = mapKeyStorage.get(userBoardIdValueInteger-1).get(userPostIdValueInteger-1); //해당 게시판의 해당 게시글의 제목키
+                                try { // userPostIdValueString과 userBoardIdValueString 이 숫자여야한다.
+                                    userPostIdValueInteger = Integer.parseInt(userPostIdValueString);
+                                    userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString);
+                                    okCheck2 = true;
 
-                                    mapStorage.get(title).remove(articleKey); // 맵의 해당맵에서 그 게시글(+내용)을 삭제.
-                                    mapKeyStorage.get(userBoardIdValueInteger-1).remove(userPostIdValueInteger-1); // 게시글 제목 저장소에서 해당게시글 삭제.
-                                    originalLocalDate.get(userBoardIdValueInteger-1).remove(userPostIdValueInteger-1); // 작성일 저장소에서 해당 게시글 작성일도 삭제.
+                                } //오류안나면 true
+                                // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
+                                // 우선유저가  /posts/remove?postId=1&boardId=1 이런식으로 게시판의 순서를 입력하길원함.
+                                // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 유저가 입력한 게시판의 번호인것이고, 존재한다면 해당 게시판의 게시글 삭제모드로 진입할수있는것이다.
+                                catch (NumberFormatException e) {
+                                    System.out.println("삭제할 게시판 번호를 입력해주세요.");
+                                }
 
-                                    if(editLocalDate.get(title).get(userPostIdValueInteger - 1) != null) { // 수정을 한번도 안한 게시글이면 null일수도 있기때문에.
-                                        editLocalDate.get(title).remove(userPostIdValueInteger - 1); // 수정일 저장소에서 해당 게시글 수정일도 삭제.
-                                        //여기가 문제였음. 오리지날에서 삭제가 1개될때마다 인덱스가 1씩당겨지니까 edit의 해당게시판의 key숫자들도 1씩 줄어들어야맞음.
+                                if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
 
-                                       // editLocalDate.
+                                    userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString); //다시 적은이유 => 이걸안하면 아래 if문안의 변수가 초기화안됐다며 오류가뜸.
+                                    userPostIdValueInteger = Integer.parseInt(userPostIdValueString);
 
+                                    if (userBoardIdValueInteger > 0 &&  userPostIdValueInteger > 0 &&
+                                            userBoardIdValueInteger <= mapKeyStorage.size() &&
+                                            userPostIdValueInteger <= mapKeyStorage.get(userBoardIdValueInteger-1).size() ) {
+                                        // 드디어 여기서  /posts/remove?postId=1&boardId=1 같은 형식이 진입.
+                                        // 그리고 예를들어 /posts/remove?postId=1&boardId=15&...boardId=12 이런 형식이면  맨 마지막 boardId의 값인 12로 활용됨.
+                                        // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이고,
+                                        // 입력 게시글 번호가 실제 생성되어있는 번호면 진입한것이다.
 
+                                        // 그러면 이제 해당 게시판의 해당 게시글 삭제다.
+
+                                        // userBoardIdValueInteger-1  = 해당 게시판의 실제 인덱스번호
+                                        // userPostIdValueInteger-1  = 해당 게시글의 실제 인덱스번호
+
+                                        String title = boardKeyStorage.get(userBoardIdValueInteger-1); // 해당 게시판의 제목키
+                                        String articleKey = mapKeyStorage.get(userBoardIdValueInteger-1).get(userPostIdValueInteger-1); //해당 게시판의 해당 게시글의 제목키
+
+                                        mapStorage.get(title).remove(articleKey); // 맵의 해당맵에서 그 게시글(+내용)을 삭제.
+                                        mapKeyStorage.get(userBoardIdValueInteger-1).remove(userPostIdValueInteger-1); // 게시글 제목 저장소에서 해당게시글 삭제.
+                                        originalLocalDate.get(userBoardIdValueInteger-1).remove(userPostIdValueInteger-1); // 작성일 저장소에서 해당 게시글 작성일도 삭제.
+                                        editLocalDate.get(userBoardIdValueInteger-1).remove(userPostIdValueInteger - 1);
+
+                                        System.out.printf("[%s]의 [%d]번 글이 삭제되었습니다.", title, userPostIdValueInteger);
+                                        System.out.println();
 
                                     }
-
-                                    System.out.printf("[%s]의 [%d]번 글이 삭제되었습니다.", title, userPostIdValueInteger);
-                                    System.out.println();
 
                                 }
 
                             }
 
                         }
-
-                      }
 
                     }
 
@@ -849,7 +827,10 @@ public class qwer2 {
                                         //
                                         mapStorage.get(title).put(changeTitle, changeContents); // 맵의 해당맵에 바꾼 게시글(제목,내용)을 새로 저장.
                                         mapKeyStorage.get(userBoardIdValueInteger-1).add(userPostIdValueInteger-1, changeTitle ); // 해당게시판 제목 저장소에서 기존게시글 삭제한 자리에 새 제목 저장.
-                                        editLocalDate.get(title).put( userPostIdValueInteger-1 , LocalDate.now()); //수정일 저장소의 해당게시글 인덱스에 붙어있는 밸류에 수정일 저장.
+
+                                        editLocalDate.get(userBoardIdValueInteger-1).remove(userPostIdValueInteger-1);
+                                        editLocalDate.get(userBoardIdValueInteger-1).add(userPostIdValueInteger-1, LocalDate.now());
+                                        // 해당 게시글 번호의 현재 수정일 값이 있을텐데, 그 자리를 삭제한뒤 다시 그자리에 LocalDate.now() 를 넣어줌으로써 수정일을 갱신한다.
 
                                         System.out.printf("[%s]의 [%d]번글이 수정되었습니다.", title, userPostIdValueInteger );
                                         System.out.println();
@@ -995,9 +976,9 @@ public class qwer2 {
                                         System.out.println();
                                         System.out.println("작성일 : " + originalLocalDate.get(userBoardIdValueInteger-1).get(userPostIdValueInteger-1));
 
-                                        if(editLocalDate.get(title).get(userPostIdValueInteger-1) != null){ //수정을 한적이있다면.
+                                        if(editLocalDate.get(userBoardIdValueInteger-1).get(userPostIdValueInteger-1) != null){ //수정일이 null이 아니라면.
 
-                                            System.out.println("수정일 : " + editLocalDate.get(title).get(userPostIdValueInteger-1));  //예외처리 나중에하기.
+                                            System.out.println("수정일 : " + editLocalDate.get(userBoardIdValueInteger-1).get(userPostIdValueInteger-1));
                                         } else {
 
                                             System.out.println("수정일 : X");
@@ -1043,7 +1024,7 @@ public class qwer2 {
 
 
 
-                
+
 
 
 /*
@@ -1190,3 +1171,4 @@ public class qwer2 {
 
 
 */
+

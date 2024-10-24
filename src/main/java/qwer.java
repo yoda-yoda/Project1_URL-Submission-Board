@@ -11,23 +11,11 @@ public class qwer {
     public static void main(String[] args) {
 
 
-        Map<String, Map<Integer, LocalDate>> editLocalDate = new HashMap<>(); // 수정된 작성일을 인덱스와 연결해서 저장하고싶었다.
-
-        editLocalDate.put("자유게시판", new HashMap<>());
-        editLocalDate.
-
-
-        /*String[] aaa;
-        String bbb = "짱짱짱=짱짱짱=짱짱짱";
-        String ccc = "굿굿굿=굿굿굿";
-
-        aaa = bbb.split("=");
-        System.out.println(aaa);
-
-        aaa=ccc.split("=");
-        System.out.println(aaa);
-
-        System.out.println(aaa[0]);*/
+        LinkedList<LinkedList<LocalDate>> editLocalDate = new LinkedList<>();
+        editLocalDate.add(new LinkedList<>());
+        editLocalDate.get(0).add(null);
+        editLocalDate.get(0).add(null);
+        System.out.println(editLocalDate.get(0).size());
 
 
         /*Map<String, Map<Integer, LocalDate>> editLocalDate = new HashMap<>();
