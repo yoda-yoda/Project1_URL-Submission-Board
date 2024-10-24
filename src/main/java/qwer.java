@@ -10,16 +10,25 @@ public class qwer {
 
     public static void main(String[] args) {
 
+        String[] aaa;
+        String bbb = "짱짱짱=짱짱짱=짱짱짱";
+        String ccc = "굿굿굿=굿굿굿";
+
+        aaa = bbb.split("=");
+        System.out.println(aaa);
+
+        aaa=ccc.split("=");
+        System.out.println(aaa);
+
+        System.out.println(aaa[0]);
 
 
-        LinkedList<LinkedList<LocalDate>> qqq = new LinkedList<>();
+        /*Map<String, Map<Integer, LocalDate>> editLocalDate = new HashMap<>();
 
-        qqq.add(new LinkedList<>());
-        qqq.get(0).add(LocalDate.now());
-        System.out.println(qqq.get(0).get(0));
-        qqq.get(0).add(11,LocalDate.now());
-        System.out.println(qqq.get(0).get(1));
-
+        editLocalDate.put("자유게시판", new HashMap<>());
+        editLocalDate.get("자유게시판").put(0,LocalDate.now()); //수정일이 자유게시판맵 속의 0번인덱스에 연결돼서 저장.
+        System.out.println( editLocalDate.get("자유게시판").get(0));
+*/
 
 
         /*Scanner sc = new Scanner(System.in);
