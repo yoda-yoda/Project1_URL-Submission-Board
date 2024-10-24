@@ -11,11 +11,39 @@ public class qwer {
     public static void main(String[] args) {
 
 
-        LinkedList<LinkedList<LocalDate>> editLocalDate = new LinkedList<>();
-        editLocalDate.add(new LinkedList<>());
-        editLocalDate.get(0).add(null);
-        editLocalDate.get(0).add(null);
-        System.out.println(editLocalDate.get(0).size());
+        Scanner sc = new Scanner(System.in);
+        String userInput="&boardId=1postId=1";
+        String[] userInputPath = {"a","b","c"};// userInput을 split 한 경로 문자열 저장용.
+        String[] userInputCrud; // split한 경로 문자열에서 파라미터부분을 따로 또 분리해서 그것을 저장할 용도.
+        String[] userInputParameter;
+        String[] temporaryParameterSplit = {"a"}; // 나중에 if조건문 활용하려하는데 초기화가 안되어있다는 오류가자꾸떠서 적어주었다.
+        ArrayList<String> userInputParameterSplit;
+
+
+           
+
+                  //  userInputPath = userInput.split("&",1); // 유저의 입력중에 "/"를 기준으로 나눠서 저장함. //  /a/a// 진입되는게문제네
+       int a= userInput.split("&").length;
+        System.out.println("a = " + a);
+       // userInputCrud = userInputPath[2].split("&", 0);      //("\\?",2);
+
+       /* System.out.println(userInputPath.length);
+        System.out.println(userInputPath[0]);
+        System.out.println(userInputPath[1]);*/
+
+
+
+
+         //    /boards/edit
+
+
+
+
+
+        //  asd/asd/asd 도 진입가능
+
+
+
 
 
         /*Map<String, Map<Integer, LocalDate>> editLocalDate = new HashMap<>();
