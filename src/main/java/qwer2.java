@@ -40,6 +40,8 @@ public class qwer2 {
             userInputParameter = null;
             temporaryParameterSplit = null;
             userInputParameterSplit = new ArrayList<>();
+            boolean elseCheck1 =false;
+
             // 기능이 한번끝나서 다시 다음에 명령어에 재사용하기위해 null로 안의 값들을 삭제.
 
             if (!userInput.equals("종료")) {
@@ -51,19 +53,27 @@ public class qwer2 {
                     // userInputPath[1] => boards 부분
                     // userInputPath[2] => add?parameter=10&b=value... 부분
 
+                    boolean firstCheck = false;
+
                 try {
                 userInputCrud = userInputPath[2].split("\\?",2); // userInputPath[2] 중에 "?"를 기준으로 2덩이까지만 나눠서 저장함.
                     // limit 2를 정해줌으로써 맨뒤 ?가 추가되어도 진입되는 문제를 예방가능.
                     // 아마 2번인덱스(3번째배열)에는 add?parameter=10&b=value... 이런식으로 저장되어있을것이다. 따라서 그것을 한번더 ? 를 기준으로 나눠서 userInputCrud에 담는다.
                     // userInputCrud[0] => add 부분
                     // userInputCrud[1] => parameter=10&b=value... 부분
+
+                    firstCheck = true;
+                    // 여기서 오류나면 무조건 else에 도달하게끔 하기위해 만들었다. try안의 오류코드다음은 아예실행 안되는것을 boolean 과같이 활용하였다.
+                    //아닌가 어차피그렇게되나.
+
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("유효하지 않은 URL 입니다.");
+                   //맨밑쯤 출력처리함.
                 }
 
-                if (userInputCrud != null && userInputPath.length == 3 && userInputPath[0].equals("") &&
+                if (firstCheck && userInputPath.length == 3 && userInputPath[0].equals("") &&
                         !userInputPath[1].equals("") && !userInputPath[2].equals("") ){ // 여기 진입하는 입력은 최소한 [/abc/abc] 여기까지는 abc내용이 무엇이든 충족되도록 시도함.
                     // 원하는 입력값들은 전부 userInputPath.length == 3 이므로 그것을 적용.
+                    //  firstCheck=true만 진입된다면 userInputCrud != null 인것도 보장받음.
 
                     if (userInputPath[1].equals("boards") && userInputPath[2].equals("add")) { //   게시판 작성. 입력이 /boards/add   일경우에만 진입할것이다.
                         // 원래는 맨마지막에 /를 더 추가해도 진입이 가능해서 문제였지만 맨 윗줄에서 userInputPath = userInput.split("/",3); 처럼
@@ -85,6 +95,7 @@ public class qwer2 {
                         System.out.printf("[%s]이 [%d]번 게시판에 저장되었습니다.", userInput, boardKeyStorage.size());
                         System.out.println();
                         // 방금 게시판을 저장했다면 boardKeyStorage의 사이즈가 곧 그 게시판의 번호다.
+                        elseCheck1 = true;
 
 
                     } else if (userInputPath[1].equals("boards") &&
@@ -159,7 +170,7 @@ public class qwer2 {
 
                             } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
                         } catch (ArrayIndexOutOfBoundsException e) {
-                            System.out.println("유효하지 않은 URL 입니다.");
+                            //
                         }
 
                         //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
@@ -206,7 +217,7 @@ public class qwer2 {
                                 // 우선유저가  /boards/edit?boardId=1  이런식으로 게시판의 순서를 입력하길원함.
                                 // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판 수정모드로 진입할수있는것이다.
                                 catch (NumberFormatException e) {
-                                    System.out.println("유효하지 않은 URL 입니다.");
+                                    //맨밑쯤에 출력처리함.
                                 }
 
                                 if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
@@ -226,12 +237,30 @@ public class qwer2 {
                                         Map<String, String> beforeMapValue = mapStorage.get(beforeTitle);  // 수정전 게시판의 value. 즉 수정전 게시판의 게시글 제목과 내용 모음들.
                                         // 그래서 이때 beforeMapValue 는 수정전의 그 게시판 인스턴스의 메모리 주소를 담고있다.
 
-                                        System.out.printf("기존 게시판 이름 :[%s]", beforeTitle);
-                                        System.out.println();
-                                        System.out.print("새로운 게시판 이름을 입력해주세요 :");
+                                        boolean equalName = false;
 
-                                        afterTitle = sc.nextLine();
-                                        System.out.println();
+                                        do{ //만약 수정한 게시판이름이 기존 게시판이름과 같다면 map저장 구조때문에 기존게시판 밸류가 삭제되므로 제한을 해주기위해 만든 do while 이다.
+
+                                            equalName = false;
+
+                                            System.out.printf("기존 게시판 이름 :[%s]", beforeTitle);
+                                            System.out.println();
+                                            System.out.print("새로운 게시판 이름을 입력해주세요 :");
+
+                                            afterTitle = sc.nextLine();
+                                            System.out.println();
+
+                                            for(int i=0; i < boardKeyStorage.size(); i++){
+
+                                                if( afterTitle.equals(boardKeyStorage.get(i)) ){
+                                                    System.out.println("기존과 다른 이름을 입력해주세요");
+                                                    System.out.println();
+                                                    equalName = true;
+                                                    break;
+                                                }
+                                            }
+
+                                        } while (equalName);
 
                                         mapStorage.put(afterTitle, mapStorage.get(beforeTitle)); // 기존의 게시판 인스턴스 메모리주소를 그대로 복사해서 가져왔기때문에 게시판값이 그대로다.
                                         mapStorage.remove(beforeTitle); // 맵의 맵에서 기존 key(게시판제목) 를 가진 노드를 삭제. 실험결과 이렇게해도 afterTitle의 밸류는 그대로있음.
@@ -239,6 +268,7 @@ public class qwer2 {
                                         boardKeyStorage.add(userBoardIdValueInteger - 1, afterTitle); // 삭제한 그 인덱스 자리에 새로운 게시판 제목 추가.
 
                                         System.out.println("게시판 이름이 [" + afterTitle + "] 로 수정되었습니다!");
+                                        elseCheck1 = true;
 
                                     }
 
@@ -275,7 +305,7 @@ public class qwer2 {
 
                             } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
                         } catch (ArrayIndexOutOfBoundsException e) {
-                            System.out.println("유효하지 않은 URL 입니다.");
+                            // 맨밑쯤 출력처리함.
                         }
 
                         //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
@@ -322,7 +352,7 @@ public class qwer2 {
                                 // 우선유저가  /boards/remove?boardId=1  이런식으로 게시판의 순서를 입력하길원함.
                                 // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판 삭제모드로 진입할수있는것이다.
                                 catch (NumberFormatException e) {
-                                    System.out.println("유효하지 않은 URL 입니다.");
+                                    //맨밑쯤 출력처리함.
                                 }
 
                                 if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
@@ -349,6 +379,8 @@ public class qwer2 {
 
                                         boardKeyStorage.remove(userBoardIdValueInteger - 1);
                                         //마지막으로, 게시판 생성 순서와 해당 게시판의 제목을 이어서 저장해둔 공간(게시판 순서와, 맵의 키를 이어붙일 용도의 공간)에서 해당 게시판 제목을 삭제.
+
+                                        elseCheck1 = true;
 
                                     }
                                 }
@@ -386,7 +418,7 @@ public class qwer2 {
 
                             } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
                         } catch (ArrayIndexOutOfBoundsException e) {
-                            System.out.println("유효하지 않은 URL 입니다.");
+                            //맨밑쯤 출력처리함.
                         }
 
                         //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
@@ -407,7 +439,7 @@ public class qwer2 {
 
                             boolean okCheck1 = true; // parameterNames 링크드리스트에 저장한 파라미터네임들이 전부 "boardName" 인지 확인하기위해서 만듬.
 
-                            for (int i = 0; i < parameterNames.size(); i++) {
+                            for (int i = 0; i < parameterNames.size(); i++) { //parameterNames.size()는 무조건1이상일것임.
 
                                 if (!(parameterNames.get(i).equals("boardName"))) {
                                     okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 1개라도 "boardName" 이 아니라면 false.
@@ -457,6 +489,7 @@ public class qwer2 {
                                     } else {
                                         System.out.println("해당 게시판에 작성된 게시글이 없습니다.");
                                     }
+                                    elseCheck1 = true;
 
 
                                 }
@@ -492,7 +525,7 @@ public class qwer2 {
 
                             } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
                         } catch (ArrayIndexOutOfBoundsException e) {
-                            System.out.println("유효하지 않은 URL 입니다.");
+                           //맨밑쯤 출력처리함.
                         }
 
                         //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
@@ -539,7 +572,7 @@ public class qwer2 {
                                 // 우선유저가  /posts/add?boardId=1  이런식으로 게시판의 순서를 입력하길원함.
                                 // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판의 게시글 작성모드로 진입할수있는것이다.
                                 catch (NumberFormatException e) {
-                                    System.out.println("유효하지 않은 URL 입니다.");
+                                    //맨밑쯤 출력처리.
                                 }
 
                                 if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
@@ -573,6 +606,7 @@ public class qwer2 {
                                         System.out.printf("해당 글이 [%s]의 [%d]번글로 저장되었습니다.", title, mapKeyStorage.get(userBoardIdValueInteger - 1).size());
                                         // mapKeyStorage.get(userBoardIdValueInteger-1).size() 는 해당게시판의 방금저장한 게시글의 번호다.
                                         System.out.println();
+                                        elseCheck1 = true;
 
                                     }
                                 }
@@ -606,7 +640,7 @@ public class qwer2 {
 
                             } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
                         } catch (ArrayIndexOutOfBoundsException e) {
-                            System.out.println("유효하지 않은 URL 입니다.");
+                           //맨밑쯤 출력처리함.
                         }
 
                         //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
@@ -639,6 +673,7 @@ public class qwer2 {
                             // userInputParameterSplit.get(5) 무엇
                             // ...
 
+                            try{ //   postId=1 까지만입력하면 parameterNames.get(1) 이 IndexOutOfBoundsException 일수있다.
                             if (parameterNames.get(0).equals("postId") && parameterNames.get(1).equals("boardId")) {
                                 // userInputParameterSplit.get(0) postId 이고
                                 // userInputParameterSplit.get(2) boardId 이면 진입가능하다. 즉 /posts/remove?postId=무엇&boardId=무엇   이면 진입한다. 그것은
@@ -649,8 +684,8 @@ public class qwer2 {
                                 boolean okCheck2 = false; // 파라미터 value들이 숫자인지(?번 게시판) 확인하기위해서 만듬.
 
                                 for (int i = 1; i < parameterNames.size(); i++) { // 파라미터네임들 검사 진입. 이때 parameterNames.size() 가 최소한 2이다.
-                                    // 위 이프문으로인해 parameterNames.get(0) postId
-                                    //                parameterNames.get(1) boardId 이다.
+                                    // 위 이프문으로인해 최소한 parameterNames.get(0) postId
+                                    //                      parameterNames.get(1) boardId 이다.
 
                                     if (!(parameterNames.get(i).equals("boardId"))) {
                                         okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 2번째인덱스부터(번호1부터) 1개라도 "boardId" 가 아니라면 false.
@@ -683,7 +718,7 @@ public class qwer2 {
                                     // 우선유저가  /posts/remove?postId=1&boardId=1 이런식으로 게시판의 순서를 입력하길원함.
                                     // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 유저가 입력한 게시판의 번호인것이고, 존재한다면 해당 게시판의 게시글 삭제모드로 진입할수있는것이다.
                                     catch (NumberFormatException e) {
-                                        System.out.println("유효하지 않은 URL 입니다.");
+                                        //맨밑쯤 출력처리함.
                                     }
 
                                     if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
@@ -714,6 +749,7 @@ public class qwer2 {
 
                                             System.out.printf("[%s]의 [%d]번 글이 삭제되었습니다.", title, userPostIdValueInteger);
                                             System.out.println();
+                                            elseCheck1 = true;
 
                                         }
 
@@ -721,6 +757,8 @@ public class qwer2 {
 
                                 }
 
+                            }}catch (IndexOutOfBoundsException e){
+                               //맨밑에 출력처리.
                             }
 
                         }
@@ -753,7 +791,7 @@ public class qwer2 {
 
                             } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
                         } catch (ArrayIndexOutOfBoundsException e) {
-                            System.out.println("유효하지 않은 URL 입니다.");
+                            //맨밑쯤 출력처리함.
                         }
 
                         //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
@@ -785,6 +823,7 @@ public class qwer2 {
                             // userInputParameterSplit.get(5) 무엇
                             // ...
 
+                            try{
                             if (parameterNames.get(0).equals("postId") && parameterNames.get(1).equals("boardId")) {
                                 // userInputParameterSplit.get(0) postId 이고
                                 // userInputParameterSplit.get(2) boardId 이면 진입가능하다. 즉 /posts/edit?postId=무엇&boardId=무엇   이면 진입한다. 따라서
@@ -827,7 +866,7 @@ public class qwer2 {
                                     // 우선유저가 /posts/edit?postId=1&boardId=1 이런식으로 게시판의 순서를 입력하길원함.
                                     // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 유저가 입력한 게시판의 번호인것이고, 존재한다면 해당 게시판의 게시글 수정모드로 진입할수있는것이다.
                                     catch (NumberFormatException e) {
-                                        System.out.println("유효하지 않은 URL 입니다.");
+                                        //맨밑쯤 출력처리함.
                                     }
 
                                     if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
@@ -875,6 +914,7 @@ public class qwer2 {
 
                                             System.out.printf("[%s]의 [%d]번글이 수정되었습니다.", title, userPostIdValueInteger);
                                             System.out.println();
+                                            elseCheck1 = true;
 
                                         }
 
@@ -882,6 +922,8 @@ public class qwer2 {
 
                                 }
 
+                            }} catch(IndexOutOfBoundsException e){
+                                //맨밑 출력처리.
                             }
 
                         }
@@ -914,7 +956,7 @@ public class qwer2 {
 
                             } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
                         } catch (ArrayIndexOutOfBoundsException e) {
-                            System.out.println("유효하지 않은 URL 입니다.");
+                           //맨밑쯤 출력처리함.
                         }
 
                         //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
@@ -946,6 +988,7 @@ public class qwer2 {
                             // userInputParameterSplit.get(5) 무엇
                             // ...
 
+                            try{
                             if (parameterNames.get(0).equals("postId") && parameterNames.get(1).equals("boardId")) {
                                 // userInputParameterSplit.get(0) postId 이고
                                 // userInputParameterSplit.get(2) boardId 이면 진입가능하다. 즉 /posts/view?postId=무엇&boardId=무엇   이면 진입한다. 따라서
@@ -988,7 +1031,7 @@ public class qwer2 {
                                     // 우선유저가 /posts/view?postId=1&boardId=1 이런식으로 게시판의 순서를 입력하길원함.
                                     // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 유저가 입력한 게시판의 번호인것이고, 존재한다면 해당 게시판의 해당 게시글 뷰모드로 진입할수있는것이다.
                                     catch (NumberFormatException e) {
-                                        System.out.println("유효하지 않은 URL 입니다.");
+                                        //맨밑쯤 출력처리함.
                                     }
 
                                     if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
@@ -1029,27 +1072,40 @@ public class qwer2 {
                                             System.out.println("내용 : " + articleContents);
                                             System.out.println();
 
+                                            elseCheck1 = true;
+
                                         }
 
                                     }
 
                                 }
 
+                            }} catch(IndexOutOfBoundsException e){
+                                //맨밑 출력처리.
                             }
 
                         }
 
+                    } else{ // 이 else엔 각 URL 맨처음 유효성 검사들에 진입하지 않은 입력만 올수있고 여기 진입한경우는 밑의 else를 무시함. 
+                            // 만약 URL 맨처음 유효성 검사들에 한번이라도 진입한 이후라면 여기에 진입하지못함.
+                        System.out.println("유효하지 않은 URL 입니다.");
+                        elseCheck1 = true;
                     }
-            }
 
-                else { // @@@@@@@@@@@@@@@@@@@@@@@@@@@
-
+                } else { // 1. URL 입력후 나오는 가장 처음의 if단계에 진입하지않으면 무조건 이 else로 진입함.
+                    // 2. 가장 처음의 if단계에 들어가기만하면 여기는 무조건 진입하지못함.
+                    System.out.println("유효하지 않은 URL 입니다.");
+                    elseCheck1 = true; // 여기서 ture 를 안해주면 첫단게 if 진입전 오류가나서 내려온경우엔 메시지를 2번 출력하게된다.
+                }
+                if(!elseCheck1){ // 이걸안하면 정상입력인 경우에도 밑내용이 출력돼서 elseCheck1이 false일때만 통과하게 만들었다.
+                    System.out.println("유효하지 않은 URL 입니다.");
                 }
 
-
-            }
+            } // 입력이 "종료" 일때만 바로 이 공간에 진입.
 
         } while (!userInput.equals("종료"));
+
+        System.out.println("프로그램이 종료됩니다.");
     }
 }
 

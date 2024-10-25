@@ -11,7 +11,19 @@ public class qwer {
     public static void main(String[] args) {
 
 
-        Scanner sc = new Scanner(System.in);
+        if(true){
+            System.out.println("1");
+            if(false){
+                System.out.println("2");
+            }
+
+        } else {
+            System.out.println("3");
+
+        }
+
+
+        /*Scanner sc = new Scanner(System.in);
         String userInput="&boardId=1postId=1";
         String[] userInputPath = {"a","b","c"};// userInput을 split 한 경로 문자열 저장용.
         String[] userInputCrud; // split한 경로 문자열에서 파라미터부분을 따로 또 분리해서 그것을 저장할 용도.
@@ -24,7 +36,9 @@ public class qwer {
 
                   //  userInputPath = userInput.split("&",1); // 유저의 입력중에 "/"를 기준으로 나눠서 저장함. //  /a/a// 진입되는게문제네
        int a= userInput.split("&").length;
-        System.out.println("a = " + a);
+        System.out.println("a = " + a);*/
+
+
        // userInputCrud = userInputPath[2].split("&", 0);      //("\\?",2);
 
        /* System.out.println(userInputPath.length);
