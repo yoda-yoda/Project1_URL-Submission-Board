@@ -34,6 +34,9 @@ public class qwer2 {
         LinkedList<String> userNickname = new LinkedList<>();
         LinkedList<String> userEmail = new LinkedList<>();
 
+        boolean loginCheck1;
+
+
 
 
 
@@ -1167,7 +1170,7 @@ public class qwer2 {
                             userInput = sc.nextLine();
                             userPassword.add(userInput);
 
-                            System.out.print("이름을 입력해주세요 :");
+                            System.out.print("회원님의 이름을 입력해주세요 :");
                             userInput = sc.nextLine();
                             userName.add(userInput);
 
@@ -1186,6 +1189,89 @@ public class qwer2 {
 
                             elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
                         }
+
+
+                    } else if (userInputPath[1].equals("accounts") && userInputPath[2].equals("signin")) { //  로그인 진입. 입력이 /accounts/signin   일경우에만 진입할것이다.
+                        // 원래는 맨마지막에 /를 더 추가해도 진입이 가능해서 문제였지만 맨 윗줄에서 userInputPath = userInput.split("/",3); 처럼
+                        // limit을 3 설정하면서 뒤의 덩어리자체를 저장시켰기에 필터링이 가능해졌다.
+
+                        boolean existingAccount = false;
+
+                        String inputAccount;
+                        String inputPassword;
+                        Integer userAccountIndex = 0;
+
+                        System.out.print("로그인할 계정을 입력해주세요 :");
+                        inputAccount = sc.nextLine();
+
+                        for(int i=0; i < userAccount.size(); i++){ // 입력 계정이 존재 계정인지 체크하기위한 for문.
+
+                            if( inputAccount.equals(userAccount.get(i)) ) {// 예외처리는 안해도된다. 사이즈0이면 for자체를실행안하니까.
+                                existingAccount = true; // 로그인 조건하나 충족.
+                                userAccountIndex = i; // 해당 계정이 계정보관소에서 몇번인덱스인지 알기위함. 실제 인덱스번호임.
+                                break;
+                            }
+
+                            if( i == userAccount.size()-1 ){ //여기 온다는것은 존재하지 않은 계정이라는것이다.
+
+                                System.out.println();
+                                System.out.println("존재하지 않는 계정입니다.");
+                                elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+
+                            }
+                        }
+
+                        if(existingAccount){ // 입력 계정명이 실존하면 진입.
+
+                            System.out.print("해당 계정의 비밀번호를 입력해주세요 :");
+                            inputPassword = sc.nextLine();
+
+                            if( inputPassword.equals(userPassword.get(userAccountIndex)) ){ // 해당 계정의 패스워드가 맞으면 진입. 계정보관소 인덱스와 패스워드 보관소의 인덱스가 같은걸 활용.
+
+                                System.out.println();
+                                System.out.printf("[%s] 계정으로 로그인 되었습니다.  계정번호:[%d]번", inputAccount, userAccountIndex+1 ); // 유저는 0부터세지않고 1부터세기때문.
+                                System.out.println();
+
+                                loginCheck1 = true; //로그인 최종성공. 변수가 최상위 스코프에 있기때문에 다음턴에도 로그인 유지되고있음.
+                                elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+
+                            } else {
+                                System.out.println();
+                                System.out.println("올바른 비밀번호가 아닙니다.");
+                                elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+                            }
+
+                        }
+
+
+
+                       /* if(existingAccount && loginCheck1){
+
+                            userAccount.add(userInput);
+
+                            System.out.print("계정 비밀번호를 입력해주세요 :");
+                            userInput = sc.nextLine();
+                            userPassword.add(userInput);
+
+                            System.out.print("이름을 입력해주세요 :");
+                            userInput = sc.nextLine();
+                            userName.add(userInput);
+
+                            System.out.print("닉네임을 입력해주세요 :");
+                            userInput = sc.nextLine();
+                            userNickname.add(userInput);
+
+                            System.out.print("이메일을 입력해주세요 :");
+                            userInput = sc.nextLine();
+                            userEmail.add(userInput);
+
+                            System.out.println();
+                            System.out.printf("해당 계정이 [%d]번 계정으로 생성되었습니다.",  userAccount.size());
+                            // 방금 계정을 저장했다면 userAccount의 사이즈가 곧 그 계정 번호다.
+                            System.out.println();
+
+                            elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+                        }*/
 
 
                     }
@@ -1224,7 +1310,8 @@ public class qwer2 {
 
                 userInput = "시작"; // 안에서 혹시나 userInput이 "종료"라고 할당되어있는 경우, 종료하지않기 위해서 "시작"으로 다시 재할당해준다.
 
-            } // 입력이 "종료" 일때만 바로 이 공간에 진입.
+            }
+            // 입력이 "종료" 일때만 바로 이 공간에 진입.
 
         } while (!userInput.equals("종료"));
 
