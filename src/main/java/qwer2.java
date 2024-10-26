@@ -107,7 +107,6 @@ public class qwer2 {
                             //게시글 번호랑 연결되어서 그 게시글과 작성일을 연결할수있다.
                             editLocalDate.add(new LinkedList<>()); // 수정일 저장소도 마찬가지.
 
-
                             System.out.println();
                             System.out.printf("[%s]이 [%d]번 게시판에 저장되었습니다.", userInput, boardKeyStorage.size());
                             System.out.println();
@@ -1118,7 +1117,65 @@ public class qwer2 {
 
                         }
 
-                    } else{ // 이 else엔 각 URL 맨처음 유효성 검사들에 진입하지 않은 입력만 올수있고 여기 진입한경우는 밑의 else를 무시함. 
+                    } if (userInputPath[1].equals("accounts") && userInputPath[2].equals("signup")) { //   게시판 작성. 입력이 /boards/add   일경우에만 진입할것이다.
+                        // 원래는 맨마지막에 /를 더 추가해도 진입이 가능해서 문제였지만 맨 윗줄에서 userInputPath = userInput.split("/",3); 처럼
+                        // limit을 3 설정하면서 뒤의 덩어리자체를 저장시켰기에 필터링이 가능해졌다.
+
+                        boolean existingName = false;
+                        System.out.print("생성할 게시판의 이름을 입력해주세요 :");
+                        userInput = sc.nextLine();
+
+                        for(int i=0; i < boardKeyStorage.size(); i++){ // 이름이 기존게시판과 같은지 체크하기위한 for문.
+
+                            if( userInput.equals(boardKeyStorage.get(i)) ) {   // 예외처리는 안해도된다. 사이즈0이면 for자체를실행안하니까.
+                                existingName = true; //생성에 진입못하게만듬.
+
+                                System.out.println();
+                                System.out.println("이미 해당 게시판이 존재합니다.");
+
+                                elseCheck1 = true; // 맨밑 유효하지않은 URL 이라는 출력을 막기위함.
+                                break;
+                            }
+
+                        }
+
+                        if(!existingName){
+
+                            mapKeyStorage.add(new LinkedList<>()); // 이것으로 방금 만든 게시판이 몇번째 게시판인지 그 인덱스를 활용해 알수있음.
+                            mapStorage.put(userInput, new HashMap<>()); // 게시판 저장소용 Map 에다가, 방금만든 게시판 이름을 key로 잡고 그 key에 붙는 새로운 게시판을 생성함.
+                            //이제 해당 key(게시판)으로 접근하면, 해당 게시판만의 게시물들을 String타입으로 제목(key)과 내용(vlaue)을 저장할수있음.
+                            boardKeyStorage.add(userInput); // 추가한 Map의 키를 저장.
+                            originalLocalDate.add(new LinkedList<>()); // 작성일 저장소에 인스턴스를 추가하고 인스턴스 인덱스를통해 몇번째게시판인지 알수있음. 또 인스턴스안에 링크드리스트로는 작성일과
+                            //게시글 번호랑 연결되어서 그 게시글과 작성일을 연결할수있다.
+                            editLocalDate.add(new LinkedList<>()); // 수정일 저장소도 마찬가지.
+
+                            System.out.println();
+                            System.out.printf("[%s]이 [%d]번 게시판에 저장되었습니다.", userInput, boardKeyStorage.size());
+                            System.out.println();
+                            // 방금 게시판을 저장했다면 boardKeyStorage의 사이즈가 곧 그 게시판의 번호다.
+                            elseCheck1 = true;
+                        }
+
+
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    else{ // 이 else엔 각 URL 맨처음 유효성 검사들에 진입하지 않은 입력만 올수있고 여기 진입한경우는 밑의 else를 무시함.
                             // 만약 URL 맨처음 유효성 검사들에 한번이라도 진입한 이후라면 여기에 진입하지못함.
                         System.out.println("유효하지 않은 URL 입니다.");
                         elseCheck1 = true;
