@@ -16,9 +16,7 @@ public class qwer2 {
         String[] temporaryParameterSplit = {"a"}; // 나중에 if조건문 활용하려하는데 초기화가 안되어있다는 오류가자꾸떠서 적어주었다.
         ArrayList<String> userInputParameterSplit;
 
-        // Map<String, String> boardStorage = new HashMap<>(); //같은 제목이면 Map에서 덮어씌워지는 문제는 일단 나중에생각하자.
-        //LinkedList<String> boardId = new LinkedList<>(); // LinkgedList로 한 이유.
-        // 원랜 Deque 로 만들려했는데, Deque는 인덱스번호만으로 값을가져오는 메서드가 없었음. key값을 직접 입력해야했음.
+
 
         Map<String, Map<String, String>> mapStorage = new HashMap<>();// 게시'글'을 저장해두는 게시'판'들의 저장소다. 이렇게 한 이유=>
         // 고민해보다가 문득 맵속에 맵을 저장하면 게시판의 저장소가 될것같았다. 그리고 메모리 문제로 사라지지않게 최상위에 저장하고 싶었다.
@@ -29,7 +27,29 @@ public class qwer2 {
         LinkedList<LinkedList<LocalDate>> originalLocalDate = new LinkedList<>();
         LinkedList<LinkedList<LocalDate>> editLocalDate = new LinkedList<>(); // 수정된 작성일을 인덱스와 연결해서 저장하고싶었다.
 
-        //나중에 똑같은 게시판이름, 게시글제목 입력 등에대해 체크해보기.
+
+        LinkedList<String> userAccount = new LinkedList<>();
+        LinkedList<String> userPassword = new LinkedList<>();
+        LinkedList<String> userName = new LinkedList<>();
+        LinkedList<String> userNickname = new LinkedList<>();
+        LinkedList<String> userEmail = new LinkedList<>();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 똑같은 이름, 입력 등에대해 체크해보기.
 
         do {
             System.out.print("손님 ");
@@ -1117,12 +1137,12 @@ public class qwer2 {
 
                         }
 
-                    } if (userInputPath[1].equals("accounts") && userInputPath[2].equals("signup")) { //   게시판 작성. 입력이 /boards/add   일경우에만 진입할것이다.
+                    } else if (userInputPath[1].equals("accounts") && userInputPath[2].equals("signup")) { //   회원 등록 진입. 입력이 /accounts/signup   일경우에만 진입할것이다.
                         // 원래는 맨마지막에 /를 더 추가해도 진입이 가능해서 문제였지만 맨 윗줄에서 userInputPath = userInput.split("/",3); 처럼
                         // limit을 3 설정하면서 뒤의 덩어리자체를 저장시켰기에 필터링이 가능해졌다.
 
                         boolean existingName = false;
-                        System.out.print("생성할 게시판의 이름을 입력해주세요 :");
+                        System.out.print("생성할 계정을 입력해주세요 :");
                         userInput = sc.nextLine();
 
                         for(int i=0; i < boardKeyStorage.size(); i++){ // 이름이 기존게시판과 같은지 체크하기위한 for문.
@@ -1188,7 +1208,10 @@ public class qwer2 {
                 }
                 if(!elseCheck1){ // 이걸안하면 정상입력인 경우에도 밑내용이 출력돼서 elseCheck1이 false일때만 통과하게 만들었다.
                     System.out.println("유효하지 않은 URL 입니다.");
-                }
+
+                } // 입력이 "종료"가 아닌 경우엔 무조건 이 공간에 도달한다.
+
+                userInput = "시작"; // 안에서 혹시나 userInput이 "종료"라고 할당되어있는 경우, 종료하지않기 위해서 "시작"으로 다시 재할당해준다.
 
             } // 입력이 "종료" 일때만 바로 이 공간에 진입.
 

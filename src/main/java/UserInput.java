@@ -1138,7 +1138,9 @@ public class UserInput {
                 }
                 if(!elseCheck1){ // 이걸안하면 정상입력인 경우에도 밑내용이 출력돼서 elseCheck1이 false일때만 통과하게 만들었다.
                     System.out.println("유효하지 않은 URL 입니다.");
-                }
+                }// 입력이 "종료"가 아닌 경우엔 무조건 이 공간에 도달한다.
+
+                userInput = "시작"; // 안에서 혹시나 userInput이 "종료"라고 할당되어있는 경우, 종료하지않기 위해서 "시작"으로 다시 재할당해준다.
 
             } // 입력이 "종료" 일때만 바로 이 공간에 진입.
 
