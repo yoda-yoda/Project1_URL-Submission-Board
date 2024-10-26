@@ -8,19 +8,32 @@ import java.util.*;
 
 public class qwer {
 
+    public void myMethod() {
+        System.out.println("1hello");
+        try {
+            throw new IllegalArgumentException("잘못된 인자입니다.");
+
+            // System.out.println("헬로"); //어차피 도달못하므로 컴파일 오류남.
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("예외 처리:" + e.getMessage());
+        }
+
+        System.out.println("2hello");
+    }
+
+    public void myMethod2() {
+        myMethod();
+        System.out.println("3hello");
+    }
+
     public static void main(String[] args) {
 
 
-        if(true){
-            System.out.println("1");
-            if(false){
-                System.out.println("2");
-            }
+            qwer test1 = new qwer();
+            test1.myMethod2();
+            System.out.println("4hello");
 
-        } else {
-            System.out.println("3");
-
-        }
 
 
         /*Scanner sc = new Scanner(System.in);

@@ -34,7 +34,8 @@ public class qwer2 {
         LinkedList<String> userNickname = new LinkedList<>();
         LinkedList<String> userEmail = new LinkedList<>();
 
-        boolean loginCheck1;
+        boolean loginCheck1 = false; // 만약 로그인에 성공했다면 true인 상태로 프로그램(do문) 계속 실행됨. 초기화 안해두면 if문 조건문안에서 오류가나서 해둠.
+        String loginingAccount = ""; // 만약 로그인에 성공했다면 해당 계정을 담아 활용하기위해 만듬. 초기화 안해두면 if문 조건문안에서 오류가나서 해둠.
 
 
 
@@ -1195,84 +1196,106 @@ public class qwer2 {
                         // 원래는 맨마지막에 /를 더 추가해도 진입이 가능해서 문제였지만 맨 윗줄에서 userInputPath = userInput.split("/",3); 처럼
                         // limit을 3 설정하면서 뒤의 덩어리자체를 저장시켰기에 필터링이 가능해졌다.
 
-                        boolean existingAccount = false;
+                        if(!loginCheck1) { //로그인 안된 상태에서만 진입.
+                            // 현재까지 loginCheck1 을 true로 만들어주는 시점은 signin 밖에없음.
+                            // 현재까지 loginCheck1 이 true인걸 false로 만들어주는 시점은 signout밖에없음.
 
-                        String inputAccount;
-                        String inputPassword;
-                        Integer userAccountIndex = 0;
+                            // 이 if문 안에 들어오면 예외처리는 끝. 해놨음.
+                            //아니다. 아무 계정없는상태에서 로그인하는것도 막아야한다.
 
-                        System.out.print("로그인할 계정을 입력해주세요 :");
-                        inputAccount = sc.nextLine();
+                            boolean existingAccount = false;
 
-                        for(int i=0; i < userAccount.size(); i++){ // 입력 계정이 존재 계정인지 체크하기위한 for문.
+                            String inputAccount;
+                            String inputPassword;
+                            Integer userAccountIndex = 0; //초기화안해두면 if조건문에서 오류나서 해줌.
 
-                            if( inputAccount.equals(userAccount.get(i)) ) {// 예외처리는 안해도된다. 사이즈0이면 for자체를실행안하니까.
-                                existingAccount = true; // 로그인 조건하나 충족.
-                                userAccountIndex = i; // 해당 계정이 계정보관소에서 몇번인덱스인지 알기위함. 실제 인덱스번호임.
-                                break;
-                            }
+                            System.out.print("로그인할 계정을 입력해주세요 :");
+                            inputAccount = sc.nextLine();
 
-                            if( i == userAccount.size()-1 ){ //여기 온다는것은 존재하지 않은 계정이라는것이다.
+                            if( userAccount.size() == 0 ){ //  로그인 명령어후, 계정입력후 만약 가입되어있는 계정자체가 아예 없는 상태라면 여기 진입.
+                                // 현재까진 여기진입시 else 무시하므로 여기서 출력 처리해주면됨.
 
                                 System.out.println();
                                 System.out.println("존재하지 않는 계정입니다.");
-                                elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+                                elseCheck1 = true;
 
+                            }
+
+                            for(int i=0; i < userAccount.size(); i++){ // 입력 계정이 존재 계정인지 체크하기위한 for문.
+
+                                if( inputAccount.equals(userAccount.get(i)) ) {// 예외처리는 안해도된다. 사이즈0이면 for자체를실행안하니까.
+                                    existingAccount = true; // 로그인 조건하나 충족.
+                                    userAccountIndex = i; // 해당 계정이 계정보관소에서 몇번인덱스인지 알기위함. 실제 인덱스번호임.
+                                    break;
+                                }
+
+                                if( i == userAccount.size()-1 ){ //여기 온다는것은 존재하지 않은 계정이라는것이다.
+
+                                    System.out.println();
+                                    System.out.println("존재하지 않는 계정입니다.");
+                                    elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+
+                                }
+                            }
+
+                            if(existingAccount){ // 입력 계정명이 실존하면 진입.
+
+                                System.out.print("해당 계정의 비밀번호를 입력해주세요 :");
+                                inputPassword = sc.nextLine();
+
+                                if( inputPassword.equals(userPassword.get(userAccountIndex)) ){ // 해당 계정의 패스워드가 맞으면 진입. 계정보관소 인덱스와 패스워드 보관소의 인덱스가 같은걸 활용.
+
+                                    loginCheck1 = true; //로그인 최종성공. 변수가 최상위 스코프에 있기때문에 다음턴에도 로그인 유지되고있음.
+                                    loginingAccount = inputAccount; // 로그인한 계정을 최상위 스코프에 담아둬서 활용할수있도록함.
+                                    elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+
+                                    System.out.println();
+                                    System.out.printf("[%s] 계정으로 로그인 되었습니다.  계정번호:[%d]번", inputAccount, userAccountIndex+1 ); // 유저는 0부터세지않고 1부터세기때문.
+                                    System.out.println();
+
+                                } else {
+                                    System.out.println();
+                                    System.out.println("올바른 비밀번호가 아닙니다.");
+                                    elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+                                }
+
+                            }
+
+                        } else { // 로그인 되어있는 상태에서 로그인 명령 입력시에만 여기 진입.
+
+                            try{
+                                throw new RuntimeException("이미 로그인 되어있습니다.");
+                            } catch (RuntimeException e) {
+
+                                System.out.println(e.getMessage());
+                                elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
                             }
                         }
 
-                        if(existingAccount){ // 입력 계정명이 실존하면 진입.
 
-                            System.out.print("해당 계정의 비밀번호를 입력해주세요 :");
-                            inputPassword = sc.nextLine();
+                    } else if (userInputPath[1].equals("accounts") && userInputPath[2].equals("signout")) { //  로그아웃 진입. 입력이 /accounts/signout 일경우에만 진입할것이다.
+                        // 원래는 맨마지막에 /를 더 추가해도 진입이 가능해서 문제였지만 맨 윗줄에서 userInputPath = userInput.split("/",3); 처럼
+                        // limit을 3 설정하면서 뒤의 덩어리자체를 저장시켰기에 필터링이 가능해졌다.
 
-                            if( inputPassword.equals(userPassword.get(userAccountIndex)) ){ // 해당 계정의 패스워드가 맞으면 진입. 계정보관소 인덱스와 패스워드 보관소의 인덱스가 같은걸 활용.
+                        if(loginCheck1){ // 이 시점에 계정 로그인이 되어있는 상태일때만 진입가능.
 
-                                System.out.println();
-                                System.out.printf("[%s] 계정으로 로그인 되었습니다.  계정번호:[%d]번", inputAccount, userAccountIndex+1 ); // 유저는 0부터세지않고 1부터세기때문.
-                                System.out.println();
-
-                                loginCheck1 = true; //로그인 최종성공. 변수가 최상위 스코프에 있기때문에 다음턴에도 로그인 유지되고있음.
-                                elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
-
-                            } else {
-                                System.out.println();
-                                System.out.println("올바른 비밀번호가 아닙니다.");
-                                elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
-                            }
-
-                        }
-
-
-
-                       /* if(existingAccount && loginCheck1){
-
-                            userAccount.add(userInput);
-
-                            System.out.print("계정 비밀번호를 입력해주세요 :");
-                            userInput = sc.nextLine();
-                            userPassword.add(userInput);
-
-                            System.out.print("이름을 입력해주세요 :");
-                            userInput = sc.nextLine();
-                            userName.add(userInput);
-
-                            System.out.print("닉네임을 입력해주세요 :");
-                            userInput = sc.nextLine();
-                            userNickname.add(userInput);
-
-                            System.out.print("이메일을 입력해주세요 :");
-                            userInput = sc.nextLine();
-                            userEmail.add(userInput);
-
-                            System.out.println();
-                            System.out.printf("해당 계정이 [%d]번 계정으로 생성되었습니다.",  userAccount.size());
-                            // 방금 계정을 저장했다면 userAccount의 사이즈가 곧 그 계정 번호다.
+                            loginCheck1 = false; // 최상위스코프에서 로그아웃 상태로 바꾼다.
+                            System.out.printf("[%s] 계정에서 로그아웃 되었습니다.", loginingAccount);
+                            loginingAccount = ""; // 로그아웃했으니 초기값으로 재할당.
                             System.out.println();
 
                             elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
-                        }*/
 
+                        } else { // 로그인이 안되어있는 상태라면 진입하고 예외처리.
+
+                            try {
+                                throw new RuntimeException("이미 로그아웃 상태입니다.");
+                            } catch (RuntimeException e) {
+                                System.out.println(e.getMessage());
+                                elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+                            }
+
+                        }
 
                     }
 
