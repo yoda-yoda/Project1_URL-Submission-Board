@@ -1142,16 +1142,16 @@ public class qwer2 {
                         // limit을 3 설정하면서 뒤의 덩어리자체를 저장시켰기에 필터링이 가능해졌다.
 
                         boolean existingName = false;
-                        System.out.print("생성할 계정을 입력해주세요 :");
+                        System.out.print("생성할 계정 이름을 입력해주세요 :");
                         userInput = sc.nextLine();
 
-                        for(int i=0; i < boardKeyStorage.size(); i++){ // 이름이 기존게시판과 같은지 체크하기위한 for문.
+                        for(int i=0; i < userAccount.size(); i++){ // 이름이 기존게시판과 같은지 체크하기위한 for문.
 
-                            if( userInput.equals(boardKeyStorage.get(i)) ) {   // 예외처리는 안해도된다. 사이즈0이면 for자체를실행안하니까.
+                            if( userInput.equals(userAccount.get(i)) ) {   // 예외처리는 안해도된다. 사이즈0이면 for자체를실행안하니까.
                                 existingName = true; //생성에 진입못하게만듬.
 
                                 System.out.println();
-                                System.out.println("이미 해당 게시판이 존재합니다.");
+                                System.out.println("이미 존재하는 계정입니다.");
 
                                 elseCheck1 = true; // 맨밑 유효하지않은 URL 이라는 출력을 막기위함.
                                 break;
@@ -1161,19 +1161,30 @@ public class qwer2 {
 
                         if(!existingName){
 
-                            mapKeyStorage.add(new LinkedList<>()); // 이것으로 방금 만든 게시판이 몇번째 게시판인지 그 인덱스를 활용해 알수있음.
-                            mapStorage.put(userInput, new HashMap<>()); // 게시판 저장소용 Map 에다가, 방금만든 게시판 이름을 key로 잡고 그 key에 붙는 새로운 게시판을 생성함.
-                            //이제 해당 key(게시판)으로 접근하면, 해당 게시판만의 게시물들을 String타입으로 제목(key)과 내용(vlaue)을 저장할수있음.
-                            boardKeyStorage.add(userInput); // 추가한 Map의 키를 저장.
-                            originalLocalDate.add(new LinkedList<>()); // 작성일 저장소에 인스턴스를 추가하고 인스턴스 인덱스를통해 몇번째게시판인지 알수있음. 또 인스턴스안에 링크드리스트로는 작성일과
-                            //게시글 번호랑 연결되어서 그 게시글과 작성일을 연결할수있다.
-                            editLocalDate.add(new LinkedList<>()); // 수정일 저장소도 마찬가지.
+                            userAccount.add(userInput);
+
+                            System.out.print("계정 비밀번호를 입력해주세요 :");
+                            userInput = sc.nextLine();
+                            userPassword.add(userInput);
+
+                            System.out.print("이름을 입력해주세요 :");
+                            userInput = sc.nextLine();
+                            userName.add(userInput);
+
+                            System.out.print("닉네임을 입력해주세요 :");
+                            userInput = sc.nextLine();
+                            userNickname.add(userInput);
+
+                            System.out.print("이메일을 입력해주세요 :");
+                            userInput = sc.nextLine();
+                            userEmail.add(userInput);
 
                             System.out.println();
-                            System.out.printf("[%s]이 [%d]번 게시판에 저장되었습니다.", userInput, boardKeyStorage.size());
+                            System.out.printf("해당 계정이 [%d]번 계정으로 생성되었습니다.",  userAccount.size());
+                            // 방금 계정을 저장했다면 userAccount의 사이즈가 곧 그 계정 번호다.
                             System.out.println();
-                            // 방금 게시판을 저장했다면 boardKeyStorage의 사이즈가 곧 그 게시판의 번호다.
-                            elseCheck1 = true;
+
+                            elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
                         }
 
 
