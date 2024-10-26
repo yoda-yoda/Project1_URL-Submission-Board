@@ -33,8 +33,12 @@ public class qwer2 {
         LinkedList<String> userName = new LinkedList<>();
         LinkedList<String> userNickname = new LinkedList<>();
         LinkedList<String> userEmail = new LinkedList<>();
+        LinkedList<String> boardWriter = new LinkedList<>();
+        LinkedList<LinkedList<String>> postWriter = new LinkedList<>();
+
         LinkedList<LocalDate> userSignUpDay = new LinkedList<>();
         LinkedList<LocalDate> userEditDay = new LinkedList<>();
+
 
 
         boolean loginCheck1 = false; // 만약 로그인에 성공했다면 true인 상태로 프로그램(do문) 계속 실행됨. 초기화 안해두면 if문 조건문안에서 오류가나서 해둠.
@@ -102,6 +106,8 @@ public class qwer2 {
                     // 원하는 입력값들은 전부 userInputPath.length == 3 이므로 그것을 적용.
                     //  firstCheck=true만 진입된다면 userInputCrud != null 인것도 보장받음.
 
+
+
                     if (userInputPath[1].equals("boards") && userInputPath[2].equals("add")) { //   게시판 작성. 입력이 /boards/add   일경우에만 진입할것이다.
                         // 원래는 맨마지막에 /를 더 추가해도 진입이 가능해서 문제였지만 맨 윗줄에서 userInputPath = userInput.split("/",3); 처럼
                         // limit을 3 설정하면서 뒤의 덩어리자체를 저장시켰기에 필터링이 가능해졌다.
@@ -133,12 +139,21 @@ public class qwer2 {
                             originalLocalDate.add(new LinkedList<>()); // 작성일 저장소에 인스턴스를 추가하고 인스턴스 인덱스를통해 몇번째게시판인지 알수있음. 또 인스턴스안에 링크드리스트로는 작성일과
                             //게시글 번호랑 연결되어서 그 게시글과 작성일을 연결할수있다.
                             editLocalDate.add(new LinkedList<>()); // 수정일 저장소도 마찬가지.
+                            postWriter.add(new LinkedList<>()); // postWriter 를 mapKeyStorage 처럼 인덱스와 연결해서 활용한다.
+
+                            if(loginCheck1){
+                                boardWriter.add(loginingAccount);
+                            } else {
+                                boardWriter.add("비회원"); // boardWriter도 boardKeyStorage 처럼 인덱스와 연결해서 활용한다.
+                            }
 
                             System.out.println();
                             System.out.printf("[%s]이 [%d]번 게시판에 저장되었습니다.", userInput, boardKeyStorage.size());
-                            System.out.println();
                             // 방금 게시판을 저장했다면 boardKeyStorage의 사이즈가 곧 그 게시판의 번호다.
+                            System.out.println();
+
                             elseCheck1 = true;
+
                         }
 
 
@@ -431,6 +446,8 @@ public class qwer2 {
                                         mapKeyStorage.remove(userBoardIdValueInteger - 1); // 해당게시판의 게시글 제목들을 순서대로 저장한 공간을 삭제.
                                         originalLocalDate.remove(userBoardIdValueInteger - 1); // 작성일 보관소에도 해당게시판 저장소를 삭제.
                                         editLocalDate.remove(removeKey); // 수정일 보관소에도 해당게시판 저장소를 삭제.
+                                        boardWriter.remove(userBoardIdValueInteger - 1); // 해당 게시판 생성자 저장소 삭제
+                                        postWriter.remove(userBoardIdValueInteger - 1); // 각 게시판마다 게시글 생성을 저장하는 곳에서 해당 게시판도 삭제
 
                                         System.out.printf("[%d번] 게시판 [%s] 삭제가 완료되었습니다.", userBoardIdValueInteger, boardKeyStorage.get(userBoardIdValueInteger - 1));
                                         System.out.println();
@@ -538,9 +555,11 @@ public class qwer2 {
 
                                         for (int i = 0; i < writeNumber; i++) { //해당 게시판의 글 수 만큼 실행하겠다. 이때 boardKeyIndex 는 해당 게시판의 인덱스번호(게시판 생성순서)임.
 
+                                            System.out.printf("[%s] / ",userBoardIdValueString); // 게시판 이름도 출력한다.
                                             System.out.print((i + 1) + "번글 / ");
                                             System.out.print(mapKeyStorage.get(boardKeyIndex).get(i) + " / "); // 해당 게시판의 게시글중에 0번째(첫번째) 글제목부터 출력.
-                                            System.out.print(originalLocalDate.get(boardKeyIndex).get(i)); // 해당 게시판의 0번째 게시글부터의 작성일부터 출력.
+                                            System.out.print(originalLocalDate.get(boardKeyIndex).get(i) + " / "); // 해당 게시판의 0번째 게시글부터의 작성일부터 출력.
+                                            System.out.print("작성자 :" + postWriter.get(boardKeyIndex).get(i)); // 해당 게시글 작성당시 작성자도 출력.
                                             System.out.println();
                                         }
                                         System.out.println();
@@ -548,7 +567,6 @@ public class qwer2 {
                                         System.out.println("해당 게시판에 작성된 게시글이 없습니다.");
                                     }
                                     elseCheck1 = true;
-
 
                                 }
 
@@ -660,6 +678,12 @@ public class qwer2 {
                                         originalLocalDate.get(userBoardIdValueInteger - 1).add(LocalDate.now()); //게시글의 로컬데이트도 저장완료.
                                         editLocalDate.get(userBoardIdValueInteger - 1).add(null);// 생성시 수정일도 인덱스를 맞춰주기위해 null로 저장해놓고,
                                         // 수정할때만 그 인덱스에 날짜를 넣어주려한다.
+
+                                        if(loginCheck1){
+                                            postWriter.get(userBoardIdValueInteger - 1).add(loginingAccount);
+                                        } else {
+                                            postWriter.get(userBoardIdValueInteger - 1).add("비회원");
+                                        }
 
                                         System.out.printf("해당 글이 [%s]의 [%d]번글로 저장되었습니다.", title, mapKeyStorage.get(userBoardIdValueInteger - 1).size());
                                         // mapKeyStorage.get(userBoardIdValueInteger-1).size() 는 해당게시판의 방금저장한 게시글의 번호다.
@@ -804,6 +828,8 @@ public class qwer2 {
                                             mapKeyStorage.get(userBoardIdValueInteger - 1).remove(userPostIdValueInteger - 1); // 게시글 제목 저장소에서 해당게시글 삭제.
                                             originalLocalDate.get(userBoardIdValueInteger - 1).remove(userPostIdValueInteger - 1); // 작성일 저장소에서 해당 게시글 작성일도 삭제.
                                             editLocalDate.get(userBoardIdValueInteger - 1).remove(userPostIdValueInteger - 1);
+
+                                            postWriter.get(userBoardIdValueInteger - 1).remove(userPostIdValueInteger-1); // 게시글 작성자 저장소에서도 해당 저장삭제.
 
                                             System.out.printf("[%s]의 [%d]번 글이 삭제되었습니다.", title, userPostIdValueInteger);
                                             System.out.println();
@@ -1114,8 +1140,11 @@ public class qwer2 {
                                             String articleKey = mapKeyStorage.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1); //해당 게시판의 해당 게시글의 제목키
                                             String articleContents = mapStorage.get(title).get(articleKey);
 
+                                            System.out.printf("[%s]",title); // 해당 게시판도 출력
+                                            System.out.println();
                                             System.out.printf("[%d]번 게시글", userPostIdValueInteger);
                                             System.out.println();
+                                            System.out.println("작성자 : " + postWriter.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1));
                                             System.out.println("작성일 : " + originalLocalDate.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1));
 
                                             if (editLocalDate.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1) != null) { //수정일이 null이 아니라면.
@@ -1190,7 +1219,7 @@ public class qwer2 {
                             userEditDay.add(null); // 유저 계정 수정일 저장소에 null로 저장. 인덱스를 맞추기위해서.
 
                             System.out.println();
-                            System.out.printf("해당 계정이 [%d]번 계정으로 생성되었습니다.",  userAccount.size());
+                            System.out.printf("[%s] 계정이 생성되었습니다. 회원번호 :[%d]번", userAccount.get(userAccount.size()-1) , userAccount.size());
                             // 방금 계정을 저장했다면 userAccount의 사이즈가 곧 그 계정 번호다.
                             System.out.println();
 
@@ -1256,7 +1285,7 @@ public class qwer2 {
                                     elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
 
                                     System.out.println();
-                                    System.out.printf("[%s] 계정으로 로그인 되었습니다.  회원번호:[%d]번", inputAccount, userAccountIndex+1 ); // 유저는 0부터세지않고 1부터세기때문.
+                                    System.out.printf("[%s] 계정으로 로그인 되었습니다. 회원번호:[%d]번", inputAccount, userAccountIndex+1 ); // 유저는 0부터세지않고 1부터세기때문.
                                     System.out.println();
 
                                 } else {
