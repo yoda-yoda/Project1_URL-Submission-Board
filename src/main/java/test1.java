@@ -1,9 +1,8 @@
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.*;
 
-public class UserInput {
+public class test1 {
 
     public static void main(String[] args) {
 
@@ -57,10 +56,12 @@ public class UserInput {
         // 똑같은 이름, 입력 등에대해 체크해보기.
 
         do {
+
+
             if(session.masterLogin){
                 System.out.print("관리자 >");
             } else if(session.userLogin){
-                System.out.print("회원님 >");
+                System.out.print("회원 >");
             } else {
                 System.out.print("손님 >");
             }
@@ -76,19 +77,22 @@ public class UserInput {
 
             session.inputUrl = userInput; // 입력 URL을 받을때마다 세션 객체 핃드변수에 저장.
 
+
+
+
             if (!userInput.equals("종료")) {
 
-                userInputPath = userInput.split("/",3); // 유저의 입력중에 "/"를 기준으로 3덩이까지만 나눠서 저장함.
-                // 테스트결과 여기변수에 담는것까진 "/"든, 공백이든 뭐라고 입력해도 오류가안남.
-                // 예시 입력값=> /boards/add?parameter=10&b=value...
-                // userInputPath[0] => 빈 부분
-                // userInputPath[1] => boards 부분
-                // userInputPath[2] => add?parameter=10&b=value... 부분
+                    userInputPath = userInput.split("/",3); // 유저의 입력중에 "/"를 기준으로 3덩이까지만 나눠서 저장함.
+                    // 테스트결과 여기변수에 담는것까진 "/"든, 공백이든 뭐라고 입력해도 오류가안남.
+                    // 예시 입력값=> /boards/add?parameter=10&b=value...
+                    // userInputPath[0] => 빈 부분
+                    // userInputPath[1] => boards 부분
+                    // userInputPath[2] => add?parameter=10&b=value... 부분
 
-                boolean firstCheck = false;
+                    boolean firstCheck = false;
 
                 try {
-                    userInputCrud = userInputPath[2].split("\\?",2); // userInputPath[2] 중에 "?"를 기준으로 2덩이까지만 나눠서 저장함.
+                     userInputCrud = userInputPath[2].split("\\?",2); // userInputPath[2] 중에 "?"를 기준으로 2덩이까지만 나눠서 저장함.
                     // limit 2를 정해줌으로써 맨뒤 ?가 추가되어도 진입되는 문제를 예방가능.
                     // 아마 2번인덱스(3번째배열)에는 add?parameter=10&b=value... 이런식으로 저장되어있을것이다. 따라서 그것을 한번더 ? 를 기준으로 나눠서 userInputCrud에 담는다.
                     // userInputCrud[0] => add 부분
@@ -99,7 +103,7 @@ public class UserInput {
                     //아닌가 어차피그렇게되나.
 
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    //맨밑쯤 출력처리함.
+                   //맨밑쯤 출력처리함.
                 }
 
                 if (firstCheck && userInputPath.length == 3 && userInputPath[0].equals("") &&
@@ -167,12 +171,11 @@ public class UserInput {
                         //  원래  /boards/edit?abc???? 같은 입력도 진입되어서 문제였지만, userInputCrud 변수에 담을때 limit 2를 정해줌으로써 맨뒤 ?가 추가되어도 진입되는 문제를 해결했다.
                         //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거기때문에 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
 
-                        if(session.masterLogin){ //관리자 로그인만 진입가능.
 
-                            int splitLimit = userInputCrud[1].split("&").length;
-                            userInputParameter = userInputCrud[1].split("&",splitLimit);
-                            // 맨마지막에 붙이는 "&"를 필터링하려면 limit을 알아야했다.
-                            //// 지금까지 테스트 결과 limit의 숫자는 split한 것의 length 숫자로 대입하면 맨뒤 "&"필터링은 해결되었다.
+                             int splitLimit = userInputCrud[1].split("&").length;
+                             userInputParameter = userInputCrud[1].split("&",splitLimit);
+                             // 맨마지막에 붙이는 "&"를 필터링하려면 limit을 알아야했다.
+                             //// 지금까지 테스트 결과 limit의 숫자는 split한 것의 length 숫자로 대입하면 맨뒤 "&"필터링은 해결되었다.
 
                             // 우선 userInputParameter.length() 는 최소 1이상 일수밖에없다. 앞의 조건문 때문이다.
                             // 예를들면 userInputCrud[1]은 => parameter=10&b=value... 부분이다.
@@ -235,12 +238,12 @@ public class UserInput {
 
                                 } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
                             } catch (ArrayIndexOutOfBoundsException e) {
-                                //
+                                // 맨밑쯤 도달해서 유효하지않은 URL로 출력처리됨.
                             }
 
                             //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
                             if ((userInputParameter.length) * 2 == (userInputParameterSplit.size())) { //여기 진입하는것은 /boards/edit?abc=aaa&bbb=bbb... 이런식으로 입력 받은것들이다.
-                                //만약 맨끝이 &이어도 여길 통과한다. 그러나 위쪽 int splitLimit 변수로 맨마지막 &를 필터한뒤에 더 아래쪽에서 필터링하게끔 만들었다.
+                                // 원래는 맨끝이 &이어도 여길 통과했었다. 그러나 위쪽 int splitLimit 변수로 맨마지막 &를 필터한뒤에 더 아래쪽에서 필터링하게끔 만들었다.
                                 //그리고 이 시점부턴 userInputParameterSplit 에 드디어 파라미터값과, =뒤의 값만 따로따로 순차적으로 존재하게됐다.
                                 //원하는것: /boards/edit?boardId=1...   => 처럼 입력받으면 해당 게시판 edit모드로 진입하게끔하고싶은것이다.
                                 // 분석중에 또다른 공통점 발견: 여기 진입한 입력값의 파라미터의 이름값들은 전부 split의 짝수에 저장됨.(get(0)을 포함)  ex) get(0),get(2),get(4) ....
@@ -278,7 +281,7 @@ public class UserInput {
                                         userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString);
                                         okCheck2 = true;
                                     } //오류안나면 true
-                                    // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음.
+                                    // 유저가 밸류에 숫자입력을 안했으면 오류임.
                                     // 우선유저가  /boards/edit?boardId=1  이런식으로 게시판의 순서를 입력하길원함.
                                     // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판 수정모드로 진입할수있는것이다.
                                     catch (NumberFormatException e) {
@@ -287,68 +290,66 @@ public class UserInput {
 
                                     if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
 
-                                        userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
+                                        if(session.masterLogin) { // 관리자 로그인만 진입가능.
 
-                                        if (userBoardIdValueInteger > 0 && userBoardIdValueInteger <= mapKeyStorage.size()) { // 드디어 진입. /boards/edit?boardId=1 처럼과같음.
+                                            userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
 
-                                            // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이면 진입.
-                                            // 게시판이 생성되면 mapKeyStorage.size()가 1씩늘어나게되어있기때문이다.
-                                            // 그럼 이 공간에서 드디어 해당 게시판을 수정할 수 있도록 진입된다.
+                                            if (userBoardIdValueInteger > 0 && userBoardIdValueInteger <= mapKeyStorage.size()) { // 드디어 진입. /boards/edit?boardId=1 처럼과같음.
 
-                                            // 그러면 이제 해당 게시판의 이름을 수정하도록해야겠다. 실험중.
+                                                // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이면 진입.
+                                                // 게시판이 생성되면 mapKeyStorage.size()가 1씩늘어나게되어있기때문이다.
+                                                // 그럼 이 공간에서 드디어 해당 게시판을 수정할 수 있도록 진입된다.
 
-                                            String afterTitle; // userInput 변수를 안쓰고 새로 name으로 선언해준이유는 만약 "종료" 로 게시판이름을 적으면 반복문이끝나고 프로그램이 종료될까봐.
-                                            String beforeTitle = boardKeyStorage.get(userBoardIdValueInteger - 1); // 수정전 게시판 제목(key)
-                                            Map<String, String> beforeMapValue = mapStorage.get(beforeTitle);  // 수정전 게시판의 value. 즉 수정전 게시판의 게시글 제목과 내용 모음들.
-                                            // 그래서 이때 beforeMapValue 는 수정전의 그 게시판 인스턴스의 메모리 주소를 담고있다.
+                                                String afterTitle;
+                                                String beforeTitle = boardKeyStorage.get(userBoardIdValueInteger - 1); // 수정전 게시판 제목(key)
+                                                Map<String, String> beforeMapValue = mapStorage.get(beforeTitle);  // 수정전 게시판의 value. 즉 수정전 게시판의 게시글 제목과 내용 모음들.
+                                                // 그래서 이때 beforeMapValue 는 수정전의 그 게시판 인스턴스의 메모리 주소를 담고있다.
 
-                                            boolean existingName = false;
-                                            boolean equalName = true;
-
-                                            do{ //만약 수정한 게시판이름이 기존 게시판이름과 같다면 map저장 구조때문에 기존게시판 밸류가 삭제되므로 제한을 해주기위해 만든 do while 이다.
-
-                                                existingName = false;
+                                                boolean existingName = false;
 
                                                 System.out.printf("기존 게시판 이름 :[%s]", beforeTitle);
                                                 System.out.println();
                                                 System.out.print("새로운 게시판 이름을 입력해주세요 :");
-
                                                 afterTitle = sc.nextLine();
                                                 System.out.println();
 
-                                                for(int i=0; i < boardKeyStorage.size(); i++){ // 게시판제목 저장소 사이즈만큼 실행하겠다.
+                                                for(int i=0; i < boardKeyStorage.size(); i++){
+                                                    //만약 수정한 게시판이름이 기존 게시판이름과 같다면 map저장 구조때문에 기존게시판 밸류가 삭제되므로 제한을 해주기위해 만들었다.
+                                                    // 게시판제목 저장소 사이즈만큼 실행된다.
 
-                                                    if( afterTitle.equals(boardKeyStorage.get(i)) ){
-                                                        // 만약 변경할 제목이 기존제목과 하나라도 일치하는게 있다면 막겠다.
-                                                        if( afterTitle.equals(beforeTitle) ){
-                                                            System.out.println("기존 이름과 같습니다.");
-                                                            equalName = false;
-                                                            elseCheck1 = true; // 이거안하고 나가면 맨밑에 유효하지않은 URL이 출력되니까 써준다.
-                                                            break; //이름을 기존이름 그대로 바꾸면 그건 문제없으니 통과하도록 허용.
-                                                        }
+                                                    if( afterTitle.equals(boardKeyStorage.get(i)) ){  // 만약 변경할 제목이 기존 게시판 제목과 하나라도 일치하는게 있다면 막겠다.
 
-                                                        System.out.println("이미 해당 게시판이 존재합니다. 다른 이름을 입력해주세요");
-                                                        System.out.println();
+                                                        System.out.println("이미 존재하는 게시판입니다.");
+
                                                         existingName = true;
+                                                        elseCheck1 = true; //유효하지않은 URL출력처리 막음.
                                                         break;
+
                                                     }
-
-
                                                 }
 
-                                            } while (existingName);
+                                                if(!existingName){ // 최종 게시판 이름 수정 진입.
 
-                                            if(equalName){
+                                                    mapStorage.put(afterTitle, mapStorage.get(beforeTitle)); // 기존의 게시판 인스턴스 메모리주소를 그대로 복사해서 가져왔기때문에 게시판값이 그대로다.
+                                                    mapStorage.remove(beforeTitle); // 맵의 맵에서 기존 key(게시판제목) 를 가진 노드를 삭제. 실험결과 이렇게해도 afterTitle의 밸류는 그대로있음.
+                                                    boardKeyStorage.remove(userBoardIdValueInteger - 1); // 게시판 제목 보관함에서도 기존것 삭제.
+                                                    boardKeyStorage.add(userBoardIdValueInteger - 1, afterTitle); // 삭제한 그 인덱스 자리에 새로운 게시판 제목 추가.
 
-                                                mapStorage.put(afterTitle, mapStorage.get(beforeTitle)); // 기존의 게시판 인스턴스 메모리주소를 그대로 복사해서 가져왔기때문에 게시판값이 그대로다.
-                                                mapStorage.remove(beforeTitle); // 맵의 맵에서 기존 key(게시판제목) 를 가진 노드를 삭제. 실험결과 이렇게해도 afterTitle의 밸류는 그대로있음.
-                                                boardKeyStorage.remove(userBoardIdValueInteger - 1); // 게시판 제목 보관함에서도 기존것 삭제.
-                                                boardKeyStorage.add(userBoardIdValueInteger - 1, afterTitle); // 삭제한 그 인덱스 자리에 새로운 게시판 제목 추가.
+                                                    System.out.println("게시판 이름이 [" + afterTitle + "] 으로 수정되었습니다!");
+                                                    elseCheck1 = true;
+                                                }
 
-                                                System.out.println("게시판 이름이 [" + afterTitle + "] 로 수정되었습니다!");
+
+
+                                            } else {
+                                                System.out.println("존재하지 않는 게시판 번호입니다.");
                                                 elseCheck1 = true;
                                             }
 
+
+                                        } else {
+                                            System.out.println("게시판 수정 권한이 없습니다.");
+                                            elseCheck1 = true;
                                         }
 
                                     }
@@ -356,19 +357,12 @@ public class UserInput {
                                 }
 
                             }
-                        } else {
-                            System.out.println("게시판 수정 권한이 없습니다.");
-                            elseCheck1 = true;
-                        }
-
 
                     }  else if (userInputPath[1].equals("boards") &&
                             userInputCrud[0].equals("remove") && userInputCrud.length == 2 ) {
                         //게시판 remove 진입시도.
                         //   지금까지 테스트해본결과로는 /boards/remove?abc 여기까지는 확정되어야 진입가능하다. 물론 /boards/remove?abc? 같은 입력도 들어와지긴한다. 그 이후의 값들은 이 밑에서부터 필터링해야겠다.
                         //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거기때문에 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
-
-                        if(session.masterLogin){ //관리자 로그인일때만 진입.
 
                             int splitLimit = userInputCrud[1].split("&").length;
                             userInputParameter = userInputCrud[1].split("&",splitLimit);
@@ -443,44 +437,50 @@ public class UserInput {
 
                                     if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
 
-                                        userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
+                                        if(session.masterLogin){
 
-                                        if (userBoardIdValueInteger > 0 && userBoardIdValueInteger <= mapKeyStorage.size()) { // 드디어 진입. /boards/remove?boardId=1 처럼입력한값이 들어옴.
+                                            userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
 
-                                            // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이면 진입.
-                                            // 게시판이 생성되면 mapKeyStorage.size()가 1씩늘어나게되어있기때문이다.
-                                            // boardKeyStorage 도 게시판 생성마다 1씩늘어난다.
-                                            // 그럼 이 공간에서 드디어 해당 게시판을 삭제할 수 있도록 진입된다.
+                                            if (userBoardIdValueInteger > 0 && userBoardIdValueInteger <= mapKeyStorage.size()) { // 드디어 진입. /boards/remove?boardId=1 처럼입력한값이 들어옴.
 
-                                            //boardId의 게시판 삭제진입 성공.
+                                                // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이면 진입.
+                                                // 게시판이 생성되면 mapKeyStorage.size()가 1씩늘어나게되어있기때문이다.
+                                                // boardKeyStorage 도 게시판 생성마다 1씩늘어난다.
+                                                // 그럼 이 공간에서 드디어 해당 게시판을 삭제할 수 있도록 진입된다.
 
-                                            String removeKey = boardKeyStorage.get(userBoardIdValueInteger - 1); //삭제할 게시판의 제목키값
-                                            mapStorage.remove(removeKey); // 해당 게시판의 제목과 내용을 묶어서 저장해놓은 공간을 삭제.
-                                            mapKeyStorage.remove(userBoardIdValueInteger - 1); // 해당게시판의 게시글 제목들을 순서대로 저장한 공간을 삭제.
-                                            originalLocalDate.remove(userBoardIdValueInteger - 1); // 작성일 보관소에도 해당게시판 저장소를 삭제.
-                                            editLocalDate.remove(removeKey); // 수정일 보관소에도 해당게시판 저장소를 삭제.
-                                            boardWriter.remove(userBoardIdValueInteger - 1); // 해당 게시판 생성자 저장소 삭제
-                                            postWriter.remove(userBoardIdValueInteger - 1); // 각 게시판마다 게시글 생성을 저장하는 곳에서 해당 게시판도 삭제
+                                                //boardId의 게시판 삭제진입 성공.
 
-                                            System.out.printf("[%d번] 게시판 [%s] 삭제가 완료되었습니다.", userBoardIdValueInteger, boardKeyStorage.get(userBoardIdValueInteger - 1));
-                                            System.out.println();
+                                                String removeKey = boardKeyStorage.get(userBoardIdValueInteger - 1); //삭제할 게시판의 제목키값
+                                                mapStorage.remove(removeKey); // 해당 게시판의 제목과 내용을 묶어서 저장해놓은 공간을 삭제.
+                                                mapKeyStorage.remove(userBoardIdValueInteger - 1); // 해당게시판의 게시글 제목들을 순서대로 저장한 공간을 삭제.
+                                                originalLocalDate.remove(userBoardIdValueInteger - 1); // 작성일 보관소에도 해당게시판 저장소를 삭제.
+                                                editLocalDate.remove(removeKey); // 수정일 보관소에도 해당게시판 저장소를 삭제.
+                                                boardWriter.remove(userBoardIdValueInteger - 1); // 해당 게시판 생성자 저장소 삭제
+                                                postWriter.remove(userBoardIdValueInteger - 1); // 각 게시판마다 게시글 생성을 저장하는 곳에서 해당 게시판도 삭제
 
-                                            boardKeyStorage.remove(userBoardIdValueInteger - 1);
-                                            //마지막으로, 게시판 생성 순서와 해당 게시판의 제목을 이어서 저장해둔 공간(게시판 순서와, 맵의 키를 이어붙일 용도의 공간)에서 해당 게시판 제목을 삭제.
+                                                System.out.printf("[%d번] 게시판 [%s] 삭제가 완료되었습니다.", userBoardIdValueInteger, boardKeyStorage.get(userBoardIdValueInteger - 1));
+                                                System.out.println();
 
+                                                boardKeyStorage.remove(userBoardIdValueInteger - 1);
+                                                //마지막으로, 게시판 생성 순서와 해당 게시판의 제목을 이어서 저장해둔 공간(게시판 순서와, 맵의 키를 이어붙일 용도의 공간)에서 해당 게시판 제목을 삭제.
+
+                                                elseCheck1 = true;
+
+                                            } else {
+                                                System.out.println("존재하지 않는 게시판 번호입니다.");
+                                                elseCheck1 = true;
+                                            }
+
+                                        } else {
+                                            System.out.println("게시판 삭제 권한이 없습니다.");
                                             elseCheck1 = true;
-
                                         }
+
                                     }
 
                                 }
 
                             }
-
-                        } else { // 관리자 로그인이 아니면.
-                            System.out.println("게시판 삭제 권한이 없습니다.");
-                            elseCheck1 = true;
-                        }
 
                     } else if (userInputPath[1].equals("boards") &&
                             userInputCrud[0].equals("view") && userInputCrud.length == 2) { //게시판 뷰 진입시도 /boards/view?abc..
@@ -554,7 +554,7 @@ public class UserInput {
                                 int boardKeyIndex = 0; // 밑의 for문에서 boardKeyStorage 에서의 어떤 저장된 키 값이 몇번인덱스인지 알고싶었는데 get메서드 인자 타입이 index밖에없어서 어떻게 할까하다가
                                 // for문의 해당 i값을 여기 저장해서 이 변수를 활용하면어떨까 생각이들었다. 0은 초기화안됐다고 오류날까봐 일단 미리 초기화해둔것.
 
-                                for (int i = 0; i < boardKeyStorage.size(); i++) { //오류는 구현하고 나중에 체크하자.넘복잡.
+                                for (int i = 0; i < boardKeyStorage.size(); i++) { // boardKeyStorage.size() 가 0이면 for문 실행 안한다.
 
                                     if (boardKeyStorage.get(i).equals(userBoardIdValueString)) {
                                         okCheck2 = true; // boardKeyStorage 안의 키값들 중에 입력한 게시판 value 키값이 하나라도 실존한다면 true.
@@ -563,7 +563,7 @@ public class UserInput {
                                     }
                                 }
 
-
+                                //boardKeyStorage.size() 가 0 이거나 실존하지않으면 okcheck2 if문에 진입못함.
                                 if (okCheck2) { // 드디어 진입. /boards/view?boardName=...&boardName=자유게시판.. 처럼 입력했고, 입력한 그 마지막 게시판 키가 실존해야 진입가능.
 
                                     int writeNumber = mapKeyStorage.get(boardKeyIndex).size(); // 이러면 이 변수에 해당게시판의 게시물 글 수가 담김.
@@ -583,19 +583,32 @@ public class UserInput {
                                             System.out.println();
                                         }
                                         System.out.println();
+                                        elseCheck1 = true;
                                     } else {
                                         System.out.println("해당 게시판에 작성된 게시글이 없습니다.");
+                                        elseCheck1 = true;
                                     }
-                                    elseCheck1 = true;
+
+
+                                } else {
+
+                                    if( userInput.equals("/boards/view?boardName=") ) {
+
+                                        System.out.println("유효하지 않은 URL 입니다.");
+                                        elseCheck1 = true;
+
+                                    } else {
+                                        System.out.println("게시판이 존재하지 않습니다.");
+                                        elseCheck1 = true;
+                                    }
 
                                 }
-
                             }
 
                         }
 
                     } else if (userInputPath[1].equals("posts") &&
-                            userInputCrud[0].equals("add") && userInputCrud.length == 2) {//   해당 게시판의 게시글작성 진입시도.
+                            userInputCrud[0].equals("add") && userInputCrud.length == 2) { //   해당 게시판의 게시글작성 진입시도.
 
                         //   지금까지 테스트해본결과로는 /posts/add?abc 여기까지는 확정되어야 진입가능하다. 물론 /posts/add?abc? 같은 입력도 들어와지긴한다. 그 이후의 값들은 이 밑에서부터 필터링해야겠다.
                         //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거기때문에 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
@@ -710,6 +723,9 @@ public class UserInput {
                                             System.out.println();
                                             elseCheck1 = true;
 
+                                        } else {
+                                            System.out.println("존재하지 않는 게시판 번호입니다.");
+                                            elseCheck1 = true;
                                         }
                                     }
                                 }
@@ -727,7 +743,6 @@ public class UserInput {
                         //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거기때문에 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
 
                         if(session.masterLogin || session.userLogin){ //로그인 중일때만 진입가능.
-
 
                             int splitLimit = userInputCrud[1].split("&").length;
                             userInputParameter = userInputCrud[1].split("&",splitLimit);
@@ -824,7 +839,7 @@ public class UserInput {
                                                 okCheck2 = true;
 
                                             } //오류안나면 true
-                                            // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
+                                            // 유저가 밸류에 숫자입력을 안했으면 오류.
                                             // 우선유저가  /posts/remove?postId=1&boardId=1 이런식으로 게시판의 순서를 입력하길원함.
                                             // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 유저가 입력한 게시판의 번호인것이고, 존재한다면 해당 게시판의 게시글 삭제모드로 진입할수있는것이다.
                                             catch (NumberFormatException e) {
@@ -871,6 +886,9 @@ public class UserInput {
                                                         elseCheck1 = true;
                                                     }
 
+                                                } else {
+                                                    System.out.println("게시글 또는 게시판 번호가 존재하지 않습니다.");
+                                                    elseCheck1 = true;
                                                 }
 
 
@@ -990,7 +1008,7 @@ public class UserInput {
                                                 okCheck2 = true;
 
                                             } //오류안나면 true
-                                            // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
+                                            // 유저가 밸류에 숫자입력을 안했으면 오류.
                                             // 우선유저가 /posts/edit?postId=1&boardId=1 이런식으로 게시판의 순서를 입력하길원함.
                                             // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 유저가 입력한 게시판의 번호인것이고, 존재한다면 해당 게시판의 게시글 수정모드로 진입할수있는것이다.
                                             catch (NumberFormatException e) {
@@ -1054,6 +1072,9 @@ public class UserInput {
                                                         elseCheck1 = true;
                                                     }
 
+                                                } else {
+                                                    System.out.println("게시글 또는 게시판 번호가 존재하지 않습니다.");
+                                                    elseCheck1 = true;
                                                 }
 
                                             }
@@ -1098,7 +1119,7 @@ public class UserInput {
 
                             } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
                         } catch (ArrayIndexOutOfBoundsException e) {
-                            //맨밑쯤 출력처리함.
+                           //맨밑쯤 출력처리함.
                         }
 
                         //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
@@ -1131,101 +1152,104 @@ public class UserInput {
                             // ...
 
                             try{
-                                if (parameterNames.get(0).equals("postId") && parameterNames.get(1).equals("boardId")) {
-                                    // userInputParameterSplit.get(0) postId 이고
-                                    // userInputParameterSplit.get(2) boardId 이면 진입가능하다. 즉 /posts/view?postId=무엇&boardId=무엇   이면 진입한다. 따라서
-                                    // parameterNames.get(0) postId
-                                    // parameterNames.get(1) boardId 만 진입.
+                            if (parameterNames.get(0).equals("postId") && parameterNames.get(1).equals("boardId")) {
+                                // userInputParameterSplit.get(0) postId 이고
+                                // userInputParameterSplit.get(2) boardId 이면 진입가능하다. 즉 /posts/view?postId=무엇&boardId=무엇   이면 진입한다. 따라서
+                                // parameterNames.get(0) postId
+                                // parameterNames.get(1) boardId 만 진입.
 
-                                    boolean okCheck1 = true; // parameterNames 링크드리스트에 저장한 파라미터네임들을 체크하기위함.
-                                    boolean okCheck2 = false; // 파라미터 value들이 숫자인지(?번 게시판) 확인하기위해서 만듬.
+                                boolean okCheck1 = true; // parameterNames 링크드리스트에 저장한 파라미터네임들을 체크하기위함.
+                                boolean okCheck2 = false; // 파라미터 value들이 숫자인지(?번 게시판) 확인하기위해서 만듬.
 
-                                    for (int i = 1; i < parameterNames.size(); i++) { // parameterNames.size() 는 최소한 2이다. (postId 와 boardId)
+                                for (int i = 1; i < parameterNames.size(); i++) { // parameterNames.size() 는 최소한 2이다. (postId 와 boardId)
 
-                                        if (!(parameterNames.get(i).equals("boardId"))) {
-                                            okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 2번째인덱스부터(번호1부터) 1개라도 "boardId" 가 아니라면 false.
-                                            //만약 전부 "boardId" 가 맞다면 true.
-                                            break;
-                                        }
+                                    if (!(parameterNames.get(i).equals("boardId"))) {
+                                        okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 2번째인덱스부터(번호1부터) 1개라도 "boardId" 가 아니라면 false.
+                                        //만약 전부 "boardId" 가 맞다면 true.
+                                        break;
+                                    }
+                                }
+
+                                if (okCheck1) { // 유저URL 입력이 =>  /posts/view?postId=aaa&boardId=bbb ... 방식과 같은 입력만 여기에 진입함.
+
+                                    String userPostIdValueString;
+                                    String userBoardIdValueString;
+
+                                    Integer userPostIdValueInteger;
+                                    Integer userBoardIdValueInteger;
+
+                                    userPostIdValueString = userInputParameterSplit.get(1); // 이렇게하면  /posts/view?postId=aaa 에서 aaa값이 userPostIdValueString 에 저장.
+                                    userBoardIdValueString = userInputParameterSplit.get(userInputParameterSplit.size() - 1);
+                                    // 이렇게하면  /posts/view?postId=aaa&boardId=bbb... 라는 입력값 중에서,
+                                    // 맨마지막에있는 value만 userBoardIdValueString 에 담는다.
+                                    // 입력 URL 파라미터에, 같은 이름의 파라미터가 여러개있을때 맨 마지막 값만 활용한다는 규칙을 구현하고싶었다.
+
+                                    try { // userPostIdValueString과 userBoardIdValueString 이 숫자여야한다.
+                                        userPostIdValueInteger = Integer.parseInt(userPostIdValueString);
+                                        userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString);
+                                        okCheck2 = true;
+
+                                    } //오류안나면 true
+                                    // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
+                                    // 우선유저가 /posts/view?postId=1&boardId=1 이런식으로 게시판의 순서를 입력하길원함.
+                                    // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 유저가 입력한 게시판의 번호인것이고, 존재한다면 해당 게시판의 해당 게시글 뷰모드로 진입할수있는것이다.
+                                    catch (NumberFormatException e) {
+                                        //맨밑쯤 출력처리함.
                                     }
 
-                                    if (okCheck1) { // 유저URL 입력이 =>  /posts/view?postId=aaa&boardId=bbb ... 방식과 같은 입력만 여기에 진입함.
+                                    if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
 
-                                        String userPostIdValueString;
-                                        String userBoardIdValueString;
+                                        userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
+                                        userPostIdValueInteger = Integer.parseInt(userPostIdValueString);
 
-                                        Integer userPostIdValueInteger;
-                                        Integer userBoardIdValueInteger;
+                                        if (userBoardIdValueInteger > 0 && userPostIdValueInteger > 0 &&
+                                                userBoardIdValueInteger <= mapKeyStorage.size() &&
+                                                userPostIdValueInteger <= mapKeyStorage.get(userBoardIdValueInteger - 1).size()) {
+                                            // 드디어 여기서  /posts/view?postId=1&boardId=1 같은 형식이 진입.
+                                            // 그리고 예를들어 /posts/view?postId=1&boardId=15&...boardId=12 이런 형식이면  맨 마지막 boardId의 값인 12로 활용됨.
+                                            // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이고,
+                                            // 입력 게시글 번호가 실제 생성되어있는 번호면 진입한것이다.
 
-                                        userPostIdValueString = userInputParameterSplit.get(1); // 이렇게하면  /posts/view?postId=aaa 에서 aaa값이 userPostIdValueString 에 저장.
-                                        userBoardIdValueString = userInputParameterSplit.get(userInputParameterSplit.size() - 1);
-                                        // 이렇게하면  /posts/view?postId=aaa&boardId=bbb... 라는 입력값 중에서,
-                                        // 맨마지막에있는 value만 userBoardIdValueString 에 담는다.
-                                        // 입력 URL 파라미터에, 같은 이름의 파라미터가 여러개있을때 맨 마지막 값만 활용한다는 규칙을 구현하고싶었다.
+                                            // 그러면 이제 해당 게시판의 해당 게시글 뷰모드다.
 
-                                        try { // userPostIdValueString과 userBoardIdValueString 이 숫자여야한다.
-                                            userPostIdValueInteger = Integer.parseInt(userPostIdValueString);
-                                            userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString);
-                                            okCheck2 = true;
+                                            // userBoardIdValueInteger-1  = 해당 게시판의 실제 인덱스번호
+                                            // userPostIdValueInteger-1  = 해당 게시글의 실제 인덱스번호
 
-                                        } //오류안나면 true
-                                        // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
-                                        // 우선유저가 /posts/view?postId=1&boardId=1 이런식으로 게시판의 순서를 입력하길원함.
-                                        // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 유저가 입력한 게시판의 번호인것이고, 존재한다면 해당 게시판의 해당 게시글 뷰모드로 진입할수있는것이다.
-                                        catch (NumberFormatException e) {
-                                            //맨밑쯤 출력처리함.
-                                        }
+                                            String title = boardKeyStorage.get(userBoardIdValueInteger - 1); // 해당 게시판의 제목키
+                                            String articleKey = mapKeyStorage.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1); //해당 게시판의 해당 게시글의 제목키
+                                            String articleContents = mapStorage.get(title).get(articleKey);
 
-                                        if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
+                                            System.out.printf("[%s]",title); // 해당 게시판도 출력
+                                            System.out.println();
+                                            System.out.printf("[%d]번 게시글", userPostIdValueInteger);
+                                            System.out.println();
+                                            System.out.println("작성자 : " + postWriter.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1));
+                                            System.out.println("작성일 : " + originalLocalDate.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1));
 
-                                            userBoardIdValueInteger = Integer.parseInt(userBoardIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
-                                            userPostIdValueInteger = Integer.parseInt(userPostIdValueString);
+                                            if (editLocalDate.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1) != null) { //수정일이 null이 아니라면.
 
-                                            if (userBoardIdValueInteger > 0 && userPostIdValueInteger > 0 &&
-                                                    userBoardIdValueInteger <= mapKeyStorage.size() &&
-                                                    userPostIdValueInteger <= mapKeyStorage.get(userBoardIdValueInteger - 1).size()) {
-                                                // 드디어 여기서  /posts/view?postId=1&boardId=1 같은 형식이 진입.
-                                                // 그리고 예를들어 /posts/view?postId=1&boardId=15&...boardId=12 이런 형식이면  맨 마지막 boardId의 값인 12로 활용됨.
-                                                // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 게시판번호가 실제 생성되어있는 게시판 번호이고,
-                                                // 입력 게시글 번호가 실제 생성되어있는 번호면 진입한것이다.
+                                                System.out.println("수정일 : " + editLocalDate.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1));
+                                            } else {
 
-                                                // 그러면 이제 해당 게시판의 해당 게시글 뷰모드다.
-
-                                                // userBoardIdValueInteger-1  = 해당 게시판의 실제 인덱스번호
-                                                // userPostIdValueInteger-1  = 해당 게시글의 실제 인덱스번호
-
-                                                String title = boardKeyStorage.get(userBoardIdValueInteger - 1); // 해당 게시판의 제목키
-                                                String articleKey = mapKeyStorage.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1); //해당 게시판의 해당 게시글의 제목키
-                                                String articleContents = mapStorage.get(title).get(articleKey);
-
-                                                System.out.printf("[%s]",title); // 해당 게시판도 출력
-                                                System.out.println();
-                                                System.out.printf("[%d]번 게시글", userPostIdValueInteger);
-                                                System.out.println();
-                                                System.out.println("작성자 : " + postWriter.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1));
-                                                System.out.println("작성일 : " + originalLocalDate.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1));
-
-                                                if (editLocalDate.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1) != null) { //수정일이 null이 아니라면.
-
-                                                    System.out.println("수정일 : " + editLocalDate.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1));
-                                                } else {
-
-                                                    System.out.println("수정일 : X");
-
-                                                }
-                                                System.out.println("제목 : " + articleKey);
-                                                System.out.println("내용 : " + articleContents);
-                                                System.out.println();
-
-                                                elseCheck1 = true;
+                                                System.out.println("수정일 : X");
 
                                             }
+                                            System.out.println("제목 : " + articleKey);
+                                            System.out.println("내용 : " + articleContents);
+                                            System.out.println();
 
+                                            elseCheck1 = true;
+
+                                        } else {
+                                            System.out.println("게시글 또는 게시판 번호가 존재하지 않습니다.");
+                                            elseCheck1 = true;
                                         }
 
                                     }
 
-                                }} catch(IndexOutOfBoundsException e){
+                                }
+
+                            }} catch(IndexOutOfBoundsException e){
                                 //맨밑 출력처리.
                             }
 
@@ -1334,7 +1358,7 @@ public class UserInput {
                                 inputPassword = sc.nextLine();
 
                                 if( inputPassword.equals(userPassword.get(userAccountIndex)) ){ // 해당 계정의 패스워드가 맞으면 진입. 계정보관소 인덱스와 패스워드 보관소의 인덱스가 같은걸 활용.
-
+                                    
                                     if(!inputAccount.equals("관리자")){ // "관리자" 계정이 아닌 일반회원으로 로그인한 경우 진입.
 
                                         session.userLogin = true; //로그인 최종성공. 변수가 최상위 스코프에 있기때문에 다음턴에도 로그인 유지되고있음.
@@ -1344,7 +1368,7 @@ public class UserInput {
                                         System.out.println();
                                         System.out.printf("[%s] 계정으로 로그인 되었습니다. 회원번호:[%d]번", inputAccount, userAccountIndex+1 ); // 유저는 0부터세지않고 1부터세기때문.
                                         System.out.println();
-
+                                        
                                     } else { // "관리자" 계정으로 로그인한 경우 진입.
 
                                         session.masterLogin = true;
@@ -1356,7 +1380,7 @@ public class UserInput {
                                         System.out.println();
                                     }
 
-
+                                    
 
                                 } else {
                                     System.out.println();
@@ -1788,7 +1812,7 @@ public class UserInput {
 
 
                     } else{ // 이 else엔 각 URL 맨처음 유효성 검사들에 진입하지 않은 입력만 올수있고 여기 진입한경우는 밑의 else를 무시함.
-                        // 만약 URL 맨처음 유효성 검사들에 한번이라도 진입한 이후라면 여기에 진입하지못함.
+                            // 만약 URL 맨처음 유효성 검사들에 한번이라도 진입한 이후라면 여기에 진입하지못함.
                         System.out.println("유효하지 않은 URL 입니다.");
                         elseCheck1 = true;
                     }
