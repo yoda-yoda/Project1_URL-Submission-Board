@@ -1424,7 +1424,17 @@ public class qwer2 {
                                         System.out.println("계정 :"  +  userAccount.get(accountIdValueInteger-1) );
                                         System.out.println("이메일 :" + userEmail.get(accountIdValueInteger-1) );
                                         System.out.println("가입일 :" + userSignUpDay.get(accountIdValueInteger-1) );
-                                        System.out.println();
+
+                                        if( userEditDay.get(accountIdValueInteger-1) != null ) { // 수정일 저장소에 null이 아니면 저장된 수정일 출력.
+
+                                            System.out.println("수정일 :" + userEditDay.get(accountIdValueInteger-1) );
+                                            System.out.println();
+                                        } else { // null이면 수정일 :X 출력.
+
+                                            System.out.println("수정일 :X");
+                                            System.out.println();
+                                        }
+
                                         elseCheck1 = true;
 
                                     }
@@ -1537,6 +1547,7 @@ public class qwer2 {
                                         userEmail.add(accountIdValueInteger-1,newEmail); //다시 그곳에 이메일 저장
                                         userEditDay.add(accountIdValueInteger-1, LocalDate.now()); //다시 그곳에 수정일 저장
 
+                                        System.out.println();
                                         System.out.printf("[%s] 계정 정보가 수정되었습니다.", thisAccount);
                                         System.out.println();
                                         elseCheck1 = true; //출력 처리

@@ -16,9 +16,7 @@ public class UserInput {
         String[] temporaryParameterSplit = {"a"}; // 나중에 if조건문 활용하려하는데 초기화가 안되어있다는 오류가자꾸떠서 적어주었다.
         ArrayList<String> userInputParameterSplit;
 
-        // Map<String, String> boardStorage = new HashMap<>(); //같은 제목이면 Map에서 덮어씌워지는 문제는 일단 나중에생각하자.
-        //LinkedList<String> boardId = new LinkedList<>(); // LinkgedList로 한 이유.
-        // 원랜 Deque 로 만들려했는데, Deque는 인덱스번호만으로 값을가져오는 메서드가 없었음. key값을 직접 입력해야했음.
+
 
         Map<String, Map<String, String>> mapStorage = new HashMap<>();// 게시'글'을 저장해두는 게시'판'들의 저장소다. 이렇게 한 이유=>
         // 고민해보다가 문득 맵속에 맵을 저장하면 게시판의 저장소가 될것같았다. 그리고 메모리 문제로 사라지지않게 최상위에 저장하고 싶었다.
@@ -29,7 +27,40 @@ public class UserInput {
         LinkedList<LinkedList<LocalDate>> originalLocalDate = new LinkedList<>();
         LinkedList<LinkedList<LocalDate>> editLocalDate = new LinkedList<>(); // 수정된 작성일을 인덱스와 연결해서 저장하고싶었다.
 
-        //나중에 똑같은 게시판이름, 게시글제목 입력 등에대해 체크해보기.
+
+        LinkedList<String> userAccount = new LinkedList<>();
+        LinkedList<String> userPassword = new LinkedList<>();
+        LinkedList<String> userName = new LinkedList<>();
+        LinkedList<String> userNickname = new LinkedList<>();
+        LinkedList<String> userEmail = new LinkedList<>();
+        LinkedList<String> boardWriter = new LinkedList<>();
+        LinkedList<LinkedList<String>> postWriter = new LinkedList<>();
+
+        LinkedList<LocalDate> userSignUpDay = new LinkedList<>();
+        LinkedList<LocalDate> userEditDay = new LinkedList<>();
+
+
+
+        boolean loginCheck1 = false; // 만약 로그인에 성공했다면 true인 상태로 프로그램(do문) 계속 실행됨. 초기화 안해두면 if문 조건문안에서 오류가나서 해둠.
+        String loginingAccount = null; // 만약 로그인에 성공했다면 해당 계정을 담아 활용하기위해 만듬. 초기화 안해두면 if문 조건문안에서 오류가나서 해둠.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 똑같은 이름, 입력 등에대해 체크해보기.
 
         do {
             System.out.print("손님 ");
@@ -75,6 +106,8 @@ public class UserInput {
                     // 원하는 입력값들은 전부 userInputPath.length == 3 이므로 그것을 적용.
                     //  firstCheck=true만 진입된다면 userInputCrud != null 인것도 보장받음.
 
+
+
                     if (userInputPath[1].equals("boards") && userInputPath[2].equals("add")) { //   게시판 작성. 입력이 /boards/add   일경우에만 진입할것이다.
                         // 원래는 맨마지막에 /를 더 추가해도 진입이 가능해서 문제였지만 맨 윗줄에서 userInputPath = userInput.split("/",3); 처럼
                         // limit을 3 설정하면서 뒤의 덩어리자체를 저장시켰기에 필터링이 가능해졌다.
@@ -106,12 +139,21 @@ public class UserInput {
                             originalLocalDate.add(new LinkedList<>()); // 작성일 저장소에 인스턴스를 추가하고 인스턴스 인덱스를통해 몇번째게시판인지 알수있음. 또 인스턴스안에 링크드리스트로는 작성일과
                             //게시글 번호랑 연결되어서 그 게시글과 작성일을 연결할수있다.
                             editLocalDate.add(new LinkedList<>()); // 수정일 저장소도 마찬가지.
+                            postWriter.add(new LinkedList<>()); // postWriter 를 mapKeyStorage 처럼 인덱스와 연결해서 활용한다.
+
+                            if(loginCheck1){
+                                boardWriter.add(loginingAccount);
+                            } else {
+                                boardWriter.add("비회원"); // boardWriter도 boardKeyStorage 처럼 인덱스와 연결해서 활용한다.
+                            }
 
                             System.out.println();
                             System.out.printf("[%s]이 [%d]번 게시판에 저장되었습니다.", userInput, boardKeyStorage.size());
-                            System.out.println();
                             // 방금 게시판을 저장했다면 boardKeyStorage의 사이즈가 곧 그 게시판의 번호다.
+                            System.out.println();
+
                             elseCheck1 = true;
+
                         }
 
 
@@ -404,6 +446,8 @@ public class UserInput {
                                         mapKeyStorage.remove(userBoardIdValueInteger - 1); // 해당게시판의 게시글 제목들을 순서대로 저장한 공간을 삭제.
                                         originalLocalDate.remove(userBoardIdValueInteger - 1); // 작성일 보관소에도 해당게시판 저장소를 삭제.
                                         editLocalDate.remove(removeKey); // 수정일 보관소에도 해당게시판 저장소를 삭제.
+                                        boardWriter.remove(userBoardIdValueInteger - 1); // 해당 게시판 생성자 저장소 삭제
+                                        postWriter.remove(userBoardIdValueInteger - 1); // 각 게시판마다 게시글 생성을 저장하는 곳에서 해당 게시판도 삭제
 
                                         System.out.printf("[%d번] 게시판 [%s] 삭제가 완료되었습니다.", userBoardIdValueInteger, boardKeyStorage.get(userBoardIdValueInteger - 1));
                                         System.out.println();
@@ -511,9 +555,11 @@ public class UserInput {
 
                                         for (int i = 0; i < writeNumber; i++) { //해당 게시판의 글 수 만큼 실행하겠다. 이때 boardKeyIndex 는 해당 게시판의 인덱스번호(게시판 생성순서)임.
 
+                                            System.out.printf("[%s] / ",userBoardIdValueString); // 게시판 이름도 출력한다.
                                             System.out.print((i + 1) + "번글 / ");
                                             System.out.print(mapKeyStorage.get(boardKeyIndex).get(i) + " / "); // 해당 게시판의 게시글중에 0번째(첫번째) 글제목부터 출력.
-                                            System.out.print(originalLocalDate.get(boardKeyIndex).get(i)); // 해당 게시판의 0번째 게시글부터의 작성일부터 출력.
+                                            System.out.print(originalLocalDate.get(boardKeyIndex).get(i) + " / "); // 해당 게시판의 0번째 게시글부터의 작성일부터 출력.
+                                            System.out.print("작성자 :" + postWriter.get(boardKeyIndex).get(i)); // 해당 게시글 작성당시 작성자도 출력.
                                             System.out.println();
                                         }
                                         System.out.println();
@@ -521,7 +567,6 @@ public class UserInput {
                                         System.out.println("해당 게시판에 작성된 게시글이 없습니다.");
                                     }
                                     elseCheck1 = true;
-
 
                                 }
 
@@ -633,6 +678,12 @@ public class UserInput {
                                         originalLocalDate.get(userBoardIdValueInteger - 1).add(LocalDate.now()); //게시글의 로컬데이트도 저장완료.
                                         editLocalDate.get(userBoardIdValueInteger - 1).add(null);// 생성시 수정일도 인덱스를 맞춰주기위해 null로 저장해놓고,
                                         // 수정할때만 그 인덱스에 날짜를 넣어주려한다.
+
+                                        if(loginCheck1){
+                                            postWriter.get(userBoardIdValueInteger - 1).add(loginingAccount);
+                                        } else {
+                                            postWriter.get(userBoardIdValueInteger - 1).add("비회원");
+                                        }
 
                                         System.out.printf("해당 글이 [%s]의 [%d]번글로 저장되었습니다.", title, mapKeyStorage.get(userBoardIdValueInteger - 1).size());
                                         // mapKeyStorage.get(userBoardIdValueInteger-1).size() 는 해당게시판의 방금저장한 게시글의 번호다.
@@ -777,6 +828,8 @@ public class UserInput {
                                                 mapKeyStorage.get(userBoardIdValueInteger - 1).remove(userPostIdValueInteger - 1); // 게시글 제목 저장소에서 해당게시글 삭제.
                                                 originalLocalDate.get(userBoardIdValueInteger - 1).remove(userPostIdValueInteger - 1); // 작성일 저장소에서 해당 게시글 작성일도 삭제.
                                                 editLocalDate.get(userBoardIdValueInteger - 1).remove(userPostIdValueInteger - 1);
+
+                                                postWriter.get(userBoardIdValueInteger - 1).remove(userPostIdValueInteger-1); // 게시글 작성자 저장소에서도 해당 저장삭제.
 
                                                 System.out.printf("[%s]의 [%d]번 글이 삭제되었습니다.", title, userPostIdValueInteger);
                                                 System.out.println();
@@ -1087,8 +1140,11 @@ public class UserInput {
                                                 String articleKey = mapKeyStorage.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1); //해당 게시판의 해당 게시글의 제목키
                                                 String articleContents = mapStorage.get(title).get(articleKey);
 
+                                                System.out.printf("[%s]",title); // 해당 게시판도 출력
+                                                System.out.println();
                                                 System.out.printf("[%d]번 게시글", userPostIdValueInteger);
                                                 System.out.println();
+                                                System.out.println("작성자 : " + postWriter.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1));
                                                 System.out.println("작성일 : " + originalLocalDate.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1));
 
                                                 if (editLocalDate.get(userBoardIdValueInteger - 1).get(userPostIdValueInteger - 1) != null) { //수정일이 null이 아니라면.
@@ -1117,7 +1173,509 @@ public class UserInput {
 
                         }
 
+                    } else if (userInputPath[1].equals("accounts") && userInputPath[2].equals("signup")) { //   회원 등록 진입. 입력이 /accounts/signup   일경우에만 진입할것이다.
+                        // 원래는 맨마지막에 /를 더 추가해도 진입이 가능해서 문제였지만 맨 윗줄에서 userInputPath = userInput.split("/",3); 처럼
+                        // limit을 3 설정하면서 뒤의 덩어리자체를 저장시켰기에 필터링이 가능해졌다.
+
+                        boolean existingName = false;
+                        System.out.print("생성할 계정 이름을 입력해주세요 :");
+                        userInput = sc.nextLine();
+
+                        for(int i=0; i < userAccount.size(); i++){ // 이름이 기존게시판과 같은지 체크하기위한 for문.
+
+                            if( userInput.equals(userAccount.get(i)) ) {   // 예외처리는 안해도된다. 사이즈0이면 for자체를실행안하니까.
+                                existingName = true; //생성에 진입못하게만듬.
+
+                                System.out.println();
+                                System.out.println("이미 존재하는 계정입니다.");
+
+                                elseCheck1 = true; // 맨밑 유효하지않은 URL 이라는 출력을 막기위함.
+                                break;
+                            }
+
+                        }
+
+                        if(!existingName){
+
+                            userAccount.add(userInput);
+
+                            System.out.print("계정 비밀번호를 입력해주세요 :");
+                            userInput = sc.nextLine();
+                            userPassword.add(userInput);
+
+                            System.out.print("회원님의 이름을 입력해주세요 :");
+                            userInput = sc.nextLine();
+                            userName.add(userInput);
+
+                            System.out.print("닉네임을 입력해주세요 :");
+                            userInput = sc.nextLine();
+                            userNickname.add(userInput);
+
+                            System.out.print("이메일을 입력해주세요 :");
+                            userInput = sc.nextLine();
+                            userEmail.add(userInput);
+
+                            userSignUpDay.add(LocalDate.now()); // 유저 가입일 저장소에 가입일 저장.
+                            userEditDay.add(null); // 유저 계정 수정일 저장소에 null로 저장. 인덱스를 맞추기위해서.
+
+                            System.out.println();
+                            System.out.printf("[%s] 계정이 생성되었습니다. 회원번호 :[%d]번", userAccount.get(userAccount.size()-1) , userAccount.size());
+                            // 방금 계정을 저장했다면 userAccount의 사이즈가 곧 그 계정 번호다.
+                            System.out.println();
+
+                            elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+                        }
+
+
+                    } else if (userInputPath[1].equals("accounts") && userInputPath[2].equals("signin")) { //  로그인 진입. 입력이 /accounts/signin   일경우에만 진입할것이다.
+                        // 원래는 맨마지막에 /를 더 추가해도 진입이 가능해서 문제였지만 맨 윗줄에서 userInputPath = userInput.split("/",3); 처럼
+                        // limit을 3 설정하면서 뒤의 덩어리자체를 저장시켰기에 필터링이 가능해졌다.
+
+                        if(!loginCheck1) { //로그인 안된 상태에서만 진입.
+                            // 현재까지 loginCheck1 을 true로 만들어주는 시점은 signin 밖에없음.
+                            // 현재까지 loginCheck1 이 true인걸 false로 만들어주는 시점은 signout밖에없음.
+
+                            // 이 if문 안에 들어오면 예외처리는 끝. 해놨음.
+                            //아니다. 아무 계정없는상태에서 로그인하는것도 막아야한다.
+
+                            boolean existingAccount = false;
+
+                            String inputAccount;
+                            String inputPassword;
+                            Integer userAccountIndex = 0; //초기화안해두면 if조건문에서 오류나서 해줌.
+
+                            System.out.print("로그인할 계정을 입력해주세요 :");
+                            inputAccount = sc.nextLine();
+
+                            if( userAccount.size() == 0 ){ //  로그인 명령어후, 계정입력후 만약 가입되어있는 계정자체가 아예 없는 상태라면 여기 진입.
+                                // 현재까진 여기진입시 else 무시하므로 여기서 출력 처리해주면됨.
+
+                                System.out.println();
+                                System.out.println("존재하지 않는 계정입니다.");
+                                elseCheck1 = true;
+
+                            }
+
+                            for(int i=0; i < userAccount.size(); i++){ // 입력 계정이 존재 계정인지 체크하기위한 for문.
+
+                                if( inputAccount.equals(userAccount.get(i)) ) {// 예외처리는 안해도된다. 사이즈0이면 for자체를실행안하니까.
+                                    existingAccount = true; // 로그인 조건하나 충족.
+                                    userAccountIndex = i; // 해당 계정이 계정보관소에서 몇번인덱스인지 알기위함. 실제 인덱스번호임.
+                                    break;
+                                }
+
+                                if( i == userAccount.size()-1 ){ //여기 온다는것은 존재하지 않은 계정이라는것이다.
+
+                                    System.out.println();
+                                    System.out.println("존재하지 않는 계정입니다.");
+                                    elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+
+                                }
+                            }
+
+                            if(existingAccount){ // 입력 계정명이 실존하면 진입.
+
+                                System.out.print("해당 계정의 비밀번호를 입력해주세요 :");
+                                inputPassword = sc.nextLine();
+
+                                if( inputPassword.equals(userPassword.get(userAccountIndex)) ){ // 해당 계정의 패스워드가 맞으면 진입. 계정보관소 인덱스와 패스워드 보관소의 인덱스가 같은걸 활용.
+
+                                    loginCheck1 = true; //로그인 최종성공. 변수가 최상위 스코프에 있기때문에 다음턴에도 로그인 유지되고있음.
+                                    loginingAccount = inputAccount; // 로그인한 계정을 최상위 스코프에 담아둬서 활용할수있도록함.
+                                    elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+
+                                    System.out.println();
+                                    System.out.printf("[%s] 계정으로 로그인 되었습니다. 회원번호:[%d]번", inputAccount, userAccountIndex+1 ); // 유저는 0부터세지않고 1부터세기때문.
+                                    System.out.println();
+
+                                } else {
+                                    System.out.println();
+                                    System.out.println("올바른 비밀번호가 아닙니다.");
+                                    elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+                                }
+
+                            }
+
+                        } else { // 로그인 되어있는 상태에서 로그인 명령 입력시에만 여기 진입.
+
+                            try{
+                                throw new RuntimeException("이미 로그인 되어있습니다.");
+                            } catch (RuntimeException e) {
+
+                                System.out.println(e.getMessage());
+                                elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+                            }
+                        }
+
+
+                    } else if (userInputPath[1].equals("accounts") && userInputPath[2].equals("signout")) { //  로그아웃 진입. 입력이 /accounts/signout 일경우에만 진입할것이다.
+                        // 원래는 맨마지막에 /를 더 추가해도 진입이 가능해서 문제였지만 맨 윗줄에서 userInputPath = userInput.split("/",3); 처럼
+                        // limit을 3 설정하면서 뒤의 덩어리자체를 저장시켰기에 필터링이 가능해졌다.
+
+                        if(loginCheck1){ // 이 시점에 계정 로그인이 되어있는 상태일때만 진입가능.
+
+                            loginCheck1 = false; // 최상위스코프에서 로그아웃 상태로 바꾼다.
+                            System.out.printf("[%s] 계정에서 로그아웃 되었습니다.", loginingAccount);
+                            loginingAccount = null; // 로그아웃했으니 초기값 null로 재할당.
+                            System.out.println();
+
+                            elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+
+                        } else { // 로그인이 안되어있는 상태라면 진입하고 예외처리.
+
+                            try {
+                                throw new RuntimeException("이미 로그아웃 상태입니다.");
+                            } catch (RuntimeException e) {
+                                System.out.println(e.getMessage());
+                                elseCheck1 = true; // 유효하지앟은 URL 출력처리를 막기위함.
+                            }
+
+                        }
+
+                    } else if (userInputPath[1].equals("accounts") &&
+                            userInputCrud[0].equals("detail") && userInputCrud.length == 2) {  //   해당 게시판의 게시글작성 진입시도.
+
+                        //   지금까지 테스트해본결과로는 /posts/add?abc 여기까지는 확정되어야 진입가능하다. 물론 /posts/add?abc? 같은 입력도 들어와지긴한다. 그 이후의 값들은 이 밑에서부터 필터링해야겠다.
+                        //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거기때문에 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
+
+                        int splitLimit = userInputCrud[1].split("&").length;
+                        userInputParameter = userInputCrud[1].split("&",splitLimit);
+
+                        try { // 만약입력값이 /boards/edit?aaa&bbb=bbb&ccc 같다면 for문 내에서 예외가 발생한다.
+                            for (int i = 0; i < userInputParameter.length; i++) { // 필터링전의 필요한 값을 갖기위한 반복문.
+                                //userInputParameter.length() 는 최소 1이상 일수밖에없다. 이전의 조건때문이다.
+                                //따라서 for에 도달하면 무조건 한번은 실행된다.
+                                // userInputParameter[0] 은 ?뒤부터 & 이전까지.
+
+                                temporaryParameterSplit = userInputParameter[i].split("=",2); // limit 2를 준이유는 abc=abc= 처럼 맨끝에 =를붙이면 필터하기위해.
+                                userInputParameterSplit.add(temporaryParameterSplit[0]);
+                                userInputParameterSplit.add(temporaryParameterSplit[1]); // 만약 ?aaa&bbb=bbb&ccc=ccc 라면 여기서 예외가 발생.
+                                // 테스트결과 매 반복마다 userInputParameterSplit은 새로운 배열로 덮어씌워지기때문에 따로 저장해놓을 링크드리스트에 저장.
+
+                                //정상 입력이라면
+                                //userInputParameterSplit.get(0) => boardId 부분
+                                //userInputParameterSplit.get(1) => 1 부분
+                                //          ...
+
+                            } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            //맨밑쯤 출력처리함.
+                        }
+
+                        //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
+                        if ((userInputParameter.length) * 2 == (userInputParameterSplit.size())) { //여기 진입하는것은 /posts/add?abc=aaa&bbb=bbb... 이런식으로 입력 받은것들이다.
+                            //만약 맨끝이 &이어도 여길 통과한다. 그러나 위쪽 int splitLimit 변수로 맨마지막 &를 필터한뒤에 더 아래쪽에서 필터링하게끔 만들었다.
+                            //그리고 이 시점부턴 userInputParameterSplit 에 드디어 파라미터값과, =뒤의 값만 따로따로 순차적으로 존재하게됐다.
+                            //원하는것: /posts/add?boardId=1...   => 처럼 입력받으면 해당 게시판에서 게시글 작성모드로 진입하게끔하고싶은것이다.
+                            // 분석중에 또다른 공통점 발견: 여기 진입한 입력값의 파라미터의 이름값들은 전부 split의 짝수에 저장됨.(get(0)을 포함)  ex) get(0),get(2),get(4) ....
+
+                            LinkedList<String> parameterNames = new LinkedList<>();
+
+                            for (int i = 0; i < userInputParameterSplit.size(); i += 2) { //파라미터 이름이 저장되는 parameterNames 에 짝수만 뽑아 저장한다.
+                                // 이 위 조건문들에따라 userInputParameterSplit.size() 는 무조건 2이상일것이다.
+
+                                parameterNames.add(userInputParameterSplit.get(i));
+
+                            } // 이제 userInputParameterSplit 에서 파라미터 이름들만 다 뽑아서 parameterNames 라는 링크드리스트에 저장끝.
+
+                            boolean okCheck1 = true; // parameterNames 링크드리스트에 저장한 파라미터네임들이 전부 "boardId" 인지 확인하기위해서 만듬.
+                            boolean okCheck2 = false; // 파라미터 value들이 숫자인지(?번 게시판) 확인하기위해서 만듬.
+
+                            for (int i = 0; i < parameterNames.size(); i++) { // parameterNames.size() 는 최소한 1이다. 최소 aaa라는 파라미터네임1개.
+
+                                if (!(parameterNames.get(i).equals("accountId"))) { // 파라미터이름들을 검사하도록 진입.
+                                    okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 1개라도 "boardId" 가 아니라면 false.
+                                    //만약 전부 "boardId" 가 맞다면 true.
+                                    break;
+                                }
+                            }
+
+                            if (okCheck1) { // 유저URL 입력이 =>   /posts/add?boardId=aaa&boardId=bbb ... 방식과 같은 입력만 여기에 진입함. &가 없어도됨.
+
+                                String accountIdValueString;
+                                Integer accountIdValueInteger;
+
+                                accountIdValueString = userInputParameterSplit.get(userInputParameterSplit.size() - 1);
+                                // 이렇게하면 맨마지막 boardId의 value만 가져올수있다. 입력 URL 파라미터에, 같은 이름의 파라미터가 여러개있을때 맨 마지막 값만 활용하고싶었다.
+
+                                try {
+                                    accountIdValueInteger = Integer.parseInt(accountIdValueString);
+                                    okCheck2 = true;
+                                } //오류안나면 true
+                                // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
+                                // 우선유저가  /posts/add?boardId=1  이런식으로 게시판의 순서를 입력하길원함.
+                                // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판의 게시글 작성모드로 진입할수있는것이다.
+                                catch (NumberFormatException e) {
+                                    //맨밑쯤 출력처리.
+                                }
+
+                                if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
+
+                                    accountIdValueInteger = Integer.parseInt(accountIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
+
+                                    if (accountIdValueInteger > 0 && accountIdValueInteger <= userAccount.size()) { // 드디어 진입. /accounts/detail?accountId=1 같은 형식과 같음.
+                                        //  /accounts/detail?accountId=1&accountId=7... 형식이면 맨 마지막 7로 활용됨.
+                                        // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 계정번호가 실제 생성되어있는 계정번호이면 진입.
+                                        // 게시판이 생성되면 mapKeyStorage.size()가 1씩늘어나게되어있기때문이다.
+
+
+                                        System.out.printf("[%d]번 회원", accountIdValueInteger);
+                                        System.out.println();
+                                        System.out.println("계정 :"  +  userAccount.get(accountIdValueInteger-1) );
+                                        System.out.println("이메일 :" + userEmail.get(accountIdValueInteger-1) );
+                                        System.out.println("가입일 :" + userSignUpDay.get(accountIdValueInteger-1) );
+
+                                        if( userEditDay.get(accountIdValueInteger-1) != null ) { // 수정일 저장소에 null이 아니면 저장된 수정일 출력.
+
+                                            System.out.println("수정일 :" + userEditDay.get(accountIdValueInteger-1) );
+                                            System.out.println();
+                                        } else { // null이면 수정일 :X 출력.
+
+                                            System.out.println("수정일 :X");
+                                            System.out.println();
+                                        }
+
+                                        elseCheck1 = true;
+
+                                    }
+                                }
+                            }
+                        }
+                    } else if (userInputPath[1].equals("accounts") &&
+                            userInputCrud[0].equals("edit") && userInputCrud.length == 2) {  //   해당 게시판의 게시글작성 진입시도.
+
+                        //   지금까지 테스트해본결과로는 /posts/add?abc 여기까지는 확정되어야 진입가능하다. 물론 /posts/add?abc? 같은 입력도 들어와지긴한다. 그 이후의 값들은 이 밑에서부터 필터링해야겠다.
+                        //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거기때문에 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
+
+                        int splitLimit = userInputCrud[1].split("&").length;
+                        userInputParameter = userInputCrud[1].split("&",splitLimit);
+
+                        try { // 만약입력값이 /boards/edit?aaa&bbb=bbb&ccc 같다면 for문 내에서 예외가 발생한다.
+                            for (int i = 0; i < userInputParameter.length; i++) { // 필터링전의 필요한 값을 갖기위한 반복문.
+                                //userInputParameter.length() 는 최소 1이상 일수밖에없다. 이전의 조건때문이다.
+                                //따라서 for에 도달하면 무조건 한번은 실행된다.
+                                // userInputParameter[0] 은 ?뒤부터 & 이전까지.
+
+                                temporaryParameterSplit = userInputParameter[i].split("=",2); // limit 2를 준이유는 abc=abc= 처럼 맨끝에 =를붙이면 필터하기위해.
+                                userInputParameterSplit.add(temporaryParameterSplit[0]);
+                                userInputParameterSplit.add(temporaryParameterSplit[1]); // 만약 ?aaa&bbb=bbb&ccc=ccc 라면 여기서 예외가 발생.
+                                // 테스트결과 매 반복마다 userInputParameterSplit은 새로운 배열로 덮어씌워지기때문에 따로 저장해놓을 링크드리스트에 저장.
+
+                                //정상 입력이라면
+                                //userInputParameterSplit.get(0) => boardId 부분
+                                //userInputParameterSplit.get(1) => 1 부분
+                                //          ...
+
+                            } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            //맨밑쯤 출력처리함.
+                        }
+
+                        //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
+                        if ((userInputParameter.length) * 2 == (userInputParameterSplit.size())) { //여기 진입하는것은 /posts/add?abc=aaa&bbb=bbb... 이런식으로 입력 받은것들이다.
+                            //만약 맨끝이 &이어도 여길 통과한다. 그러나 위쪽 int splitLimit 변수로 맨마지막 &를 필터한뒤에 더 아래쪽에서 필터링하게끔 만들었다.
+                            //그리고 이 시점부턴 userInputParameterSplit 에 드디어 파라미터값과, =뒤의 값만 따로따로 순차적으로 존재하게됐다.
+                            //원하는것: /posts/add?boardId=1...   => 처럼 입력받으면 해당 게시판에서 게시글 작성모드로 진입하게끔하고싶은것이다.
+                            // 분석중에 또다른 공통점 발견: 여기 진입한 입력값의 파라미터의 이름값들은 전부 split의 짝수에 저장됨.(get(0)을 포함)  ex) get(0),get(2),get(4) ....
+
+                            LinkedList<String> parameterNames = new LinkedList<>();
+
+                            for (int i = 0; i < userInputParameterSplit.size(); i += 2) { //파라미터 이름이 저장되는 parameterNames 에 짝수만 뽑아 저장한다.
+                                // 이 위 조건문들에따라 userInputParameterSplit.size() 는 무조건 2이상일것이다.
+
+                                parameterNames.add(userInputParameterSplit.get(i));
+
+                            } // 이제 userInputParameterSplit 에서 파라미터 이름들만 다 뽑아서 parameterNames 라는 링크드리스트에 저장끝.
+
+                            boolean okCheck1 = true; // parameterNames 링크드리스트에 저장한 파라미터네임들이 전부 "boardId" 인지 확인하기위해서 만듬.
+                            boolean okCheck2 = false; // 파라미터 value들이 숫자인지(?번 게시판) 확인하기위해서 만듬.
+
+                            for (int i = 0; i < parameterNames.size(); i++) { // parameterNames.size() 는 최소한 1이다. 최소 aaa라는 파라미터네임1개.
+
+                                if (!(parameterNames.get(i).equals("accountId"))) { // 파라미터이름들을 검사하도록 진입.
+                                    okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 1개라도 "boardId" 가 아니라면 false.
+                                    //만약 전부 "boardId" 가 맞다면 true.
+                                    break;
+                                }
+                            }
+
+                            if (okCheck1) { // 유저URL 입력이 =>   /posts/add?boardId=aaa&boardId=bbb ... 방식과 같은 입력만 여기에 진입함. &가 없어도됨.
+
+                                String accountIdValueString;
+                                Integer accountIdValueInteger;
+
+                                accountIdValueString = userInputParameterSplit.get(userInputParameterSplit.size() - 1);
+                                // 이렇게하면 맨마지막 boardId의 value만 가져올수있다. 입력 URL 파라미터에, 같은 이름의 파라미터가 여러개있을때 맨 마지막 값만 활용하고싶었다.
+
+                                try {
+                                    accountIdValueInteger = Integer.parseInt(accountIdValueString);
+                                    okCheck2 = true;
+                                } //오류안나면 true
+                                // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
+                                // 우선유저가  /posts/add?boardId=1  이런식으로 게시판의 순서를 입력하길원함.
+                                // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판의 게시글 작성모드로 진입할수있는것이다.
+                                catch (NumberFormatException e) {
+                                    //맨밑쯤 출력처리.
+                                }
+
+                                if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
+
+                                    accountIdValueInteger = Integer.parseInt(accountIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
+
+                                    if (accountIdValueInteger > 0 && accountIdValueInteger <= userAccount.size()) { // 드디어 진입. /accounts/edit?accountId=1 같은 형식과 같음.
+                                        //  /accounts/edit?accountId=1&accountId=7... 형식이면 맨 마지막 7로 활용됨.
+                                        // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 계정번호가 실제 생성되어있는 계정번호이면 진입.
+
+                                        String thisAccount = userAccount.get(accountIdValueInteger-1); // 해당 계정이름.
+                                        String newPassword;
+                                        String newEmail;
+
+                                        System.out.printf("[%s] 계정 정보를 수정합니다.", thisAccount);
+                                        System.out.println();
+
+                                        System.out.print("바꿀 비밀번호를 입력해주세요 :");
+                                        newPassword = sc.nextLine();
+
+                                        System.out.println("바꿀 이메일을 입력해주세요 :");
+                                        newEmail = sc.nextLine();
+
+                                        userPassword.remove(accountIdValueInteger-1); //해당회원번호의 비밀번호 저장소에서 기존 값을 삭제
+                                        userEmail.remove(accountIdValueInteger-1); // 해당회원번호의 이메일 저장소에서 기존 값을 삭제
+                                        userEditDay.remove(accountIdValueInteger-1); // 해당회원번호의 수정일 저장소에 기존 null값을 삭제
+
+                                        userPassword.add(accountIdValueInteger-1,newPassword); //다시 그곳에 비밀번호 저장
+                                        userEmail.add(accountIdValueInteger-1,newEmail); //다시 그곳에 이메일 저장
+                                        userEditDay.add(accountIdValueInteger-1, LocalDate.now()); //다시 그곳에 수정일 저장
+
+                                        System.out.println();
+                                        System.out.printf("[%s] 계정 정보가 수정되었습니다.", thisAccount);
+                                        System.out.println();
+                                        elseCheck1 = true; //출력 처리
+
+                                    }
+                                }
+                            }
+                        }
+
+                    } else if (userInputPath[1].equals("accounts") &&
+                            userInputCrud[0].equals("remove") && userInputCrud.length == 2) {  //   해당 게시판의 게시글작성 진입시도.
+
+                        //   지금까지 테스트해본결과로는 /posts/add?abc 여기까지는 확정되어야 진입가능하다. 물론 /posts/add?abc? 같은 입력도 들어와지긴한다. 그 이후의 값들은 이 밑에서부터 필터링해야겠다.
+                        //  userInputCrud.length == 2 가 true 라는건 ?가 무조건 있는거기때문에 이걸활용해 예외없이 원하는 입력을 받을수있을것같다.
+
+                        int splitLimit = userInputCrud[1].split("&").length;
+                        userInputParameter = userInputCrud[1].split("&",splitLimit);
+
+                        try { // 만약입력값이 /boards/edit?aaa&bbb=bbb&ccc 같다면 for문 내에서 예외가 발생한다.
+                            for (int i = 0; i < userInputParameter.length; i++) { // 필터링전의 필요한 값을 갖기위한 반복문.
+                                //userInputParameter.length() 는 최소 1이상 일수밖에없다. 이전의 조건때문이다.
+                                //따라서 for에 도달하면 무조건 한번은 실행된다.
+                                // userInputParameter[0] 은 ?뒤부터 & 이전까지.
+
+                                temporaryParameterSplit = userInputParameter[i].split("=",2); // limit 2를 준이유는 abc=abc= 처럼 맨끝에 =를붙이면 필터하기위해.
+                                userInputParameterSplit.add(temporaryParameterSplit[0]);
+                                userInputParameterSplit.add(temporaryParameterSplit[1]); // 만약 ?aaa&bbb=bbb&ccc=ccc 라면 여기서 예외가 발생.
+                                // 테스트결과 매 반복마다 userInputParameterSplit은 새로운 배열로 덮어씌워지기때문에 따로 저장해놓을 링크드리스트에 저장.
+
+                                //정상 입력이라면
+                                //userInputParameterSplit.get(0) => boardId 부분
+                                //userInputParameterSplit.get(1) => 1 부분
+                                //          ...
+
+                            } //   어떤 값이 왔더라도 userInputParameterSplit.size()는 무조건 2이상일것이다.
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            //맨밑쯤 출력처리함.
+                        }
+
+                        //이제 위에서 발견한, 원하는 입력값들의 공통점을 활용해서 아래 if문으로 더 필터링한다.
+                        if ((userInputParameter.length) * 2 == (userInputParameterSplit.size())) { //여기 진입하는것은 /posts/add?abc=aaa&bbb=bbb... 이런식으로 입력 받은것들이다.
+                            //만약 맨끝이 &이어도 여길 통과한다. 그러나 위쪽 int splitLimit 변수로 맨마지막 &를 필터한뒤에 더 아래쪽에서 필터링하게끔 만들었다.
+                            //그리고 이 시점부턴 userInputParameterSplit 에 드디어 파라미터값과, =뒤의 값만 따로따로 순차적으로 존재하게됐다.
+                            //원하는것: /posts/add?boardId=1...   => 처럼 입력받으면 해당 게시판에서 게시글 작성모드로 진입하게끔하고싶은것이다.
+                            // 분석중에 또다른 공통점 발견: 여기 진입한 입력값의 파라미터의 이름값들은 전부 split의 짝수에 저장됨.(get(0)을 포함)  ex) get(0),get(2),get(4) ....
+
+                            LinkedList<String> parameterNames = new LinkedList<>();
+
+                            for (int i = 0; i < userInputParameterSplit.size(); i += 2) { //파라미터 이름이 저장되는 parameterNames 에 짝수만 뽑아 저장한다.
+                                // 이 위 조건문들에따라 userInputParameterSplit.size() 는 무조건 2이상일것이다.
+
+                                parameterNames.add(userInputParameterSplit.get(i));
+
+                            } // 이제 userInputParameterSplit 에서 파라미터 이름들만 다 뽑아서 parameterNames 라는 링크드리스트에 저장끝.
+
+                            boolean okCheck1 = true; // parameterNames 링크드리스트에 저장한 파라미터네임들이 전부 "boardId" 인지 확인하기위해서 만듬.
+                            boolean okCheck2 = false; // 파라미터 value들이 숫자인지(?번 게시판) 확인하기위해서 만듬.
+
+                            for (int i = 0; i < parameterNames.size(); i++) { // parameterNames.size() 는 최소한 1이다. 최소 aaa라는 파라미터네임1개.
+
+                                if (!(parameterNames.get(i).equals("accountId"))) { // 파라미터이름들을 검사하도록 진입.
+                                    okCheck1 = false; // parameterNames 링크드리스트에 저장한 파라미터네임들중에 1개라도 "boardId" 가 아니라면 false.
+                                    //만약 전부 "boardId" 가 맞다면 true.
+                                    break;
+                                }
+                            }
+
+                            if (okCheck1) { // 유저URL 입력이 =>   /posts/add?boardId=aaa&boardId=bbb ... 방식과 같은 입력만 여기에 진입함. &가 없어도됨.
+
+                                String accountIdValueString;
+                                Integer accountIdValueInteger;
+
+                                accountIdValueString = userInputParameterSplit.get(userInputParameterSplit.size() - 1);
+                                // 이렇게하면 맨마지막 boardId의 value만 가져올수있다. 입력 URL 파라미터에, 같은 이름의 파라미터가 여러개있을때 맨 마지막 값만 활용하고싶었다.
+
+                                try {
+                                    accountIdValueInteger = Integer.parseInt(accountIdValueString);
+                                    okCheck2 = true;
+                                } //오류안나면 true
+                                // 유저가 밸류에 숫자입력을 안했으면 오류가능성 있음. 나중에 예외 관리하기.
+                                // 우선유저가  /posts/add?boardId=1  이런식으로 게시판의 순서를 입력하길원함.
+                                // 그럼 이제 userBoardIdValueInteger 는 뭐냐면, 게시판의 번호인것이고, 존재한다면 해당 게시판의 게시글 작성모드로 진입할수있는것이다.
+                                catch (NumberFormatException e) {
+                                    //맨밑쯤 출력처리.
+                                }
+
+                                if (okCheck2) { //오류가 안나야 true. try블록안에서 오류코드 다음의 코드는 진행이 안되는것을 활용.
+
+                                    accountIdValueInteger = Integer.parseInt(accountIdValueString); //다시 적은이유 => 이걸안하면 if문안의 변수가 초기화안됐다며 오류가뜸.
+
+                                    if (accountIdValueInteger > 0 && accountIdValueInteger <= userAccount.size()) { // 드디어 진입. /accounts/edit?accountId=1 같은 형식과 같음.
+                                        //  /accounts/edit?accountId=1&accountId=7... 형식이면 맨 마지막 7로 활용됨.
+                                        // 입력 value값이 숫자이고, 그것이 0이 아니고, 입력 계정번호가 실제 생성되어있는 계정번호이면 진입.
+
+                                        String thisAccount = userAccount.get(accountIdValueInteger-1); // 해당 계정이름.
+
+                                        if(loginCheck1) { //로그인 되어있는 상태에서 remove 진입하면 여기에 진입.
+
+                                            loginCheck1 = false; // 최상위 스코프에서 로그아웃처리.
+                                            loginingAccount = null; // 로그아웃처리했으니 이 변수도 재할당.
+
+                                            System.out.println("[" + thisAccount + "] 계정이 로그아웃 되었습니다.");
+                                        }
+
+                                        userAccount.remove(accountIdValueInteger-1); // 해당회원번호의 계정 저장소에서 기존 값을 삭제
+                                        userPassword.remove(accountIdValueInteger-1); //해당회원번호의 비밀번호 저장소에서 기존 값을 삭제
+                                        userEmail.remove(accountIdValueInteger-1); // 해당회원번호의 이메일 저장소에서 기존 값을 삭제
+                                        userName.remove(accountIdValueInteger-1); // 해당회원번호의 이름 저장소에서 기존 값을 삭제
+                                        userNickname.remove(accountIdValueInteger-1); // 해당회원번호의 닉네임 저장소에서 기존 값을 삭제
+                                        userSignUpDay.remove(accountIdValueInteger-1); // 해당회원번호의 가입일 저장소에서 기존 값을 삭제
+                                        userEditDay.remove(accountIdValueInteger-1); // 해당회원번호의 수정일 저장소에 기존 null값을 삭제
+
+                                        System.out.printf("[%s] 계정이 삭제되었습니다.", thisAccount); // 스트링 객체를 참조하고있으니 널포인트가 아님.
+                                        System.out.println();
+
+                                        elseCheck1 = true; //출력 처리
+
+                                    }
+                                }
+                            }
+                        }
+
                     }
+
+
+
+
+
 
 
 
@@ -1138,11 +1696,13 @@ public class UserInput {
                 }
                 if(!elseCheck1){ // 이걸안하면 정상입력인 경우에도 밑내용이 출력돼서 elseCheck1이 false일때만 통과하게 만들었다.
                     System.out.println("유효하지 않은 URL 입니다.");
-                }// 입력이 "종료"가 아닌 경우엔 무조건 이 공간에 도달한다.
+
+                } // 입력이 "종료"가 아닌 경우엔 무조건 이 공간에 도달한다.
 
                 userInput = "시작"; // 안에서 혹시나 userInput이 "종료"라고 할당되어있는 경우, 종료하지않기 위해서 "시작"으로 다시 재할당해준다.
 
-            } // 입력이 "종료" 일때만 바로 이 공간에 진입.
+            }
+            // 입력이 "종료" 일때만 바로 이 공간에 진입.
 
         } while (!userInput.equals("종료"));
 
