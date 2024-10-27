@@ -3,7 +3,6 @@ import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.*;
 
-//241024_18:37~ 2단계3 예외빼고 마무리.
 public class qwer2 {
 
     public static void main(String[] args) {
