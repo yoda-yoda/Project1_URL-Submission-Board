@@ -12,12 +12,13 @@ public class qwer {
 
     public static void main(String[] args) {
 
-        LinkedList<LocalDate> aaa = new LinkedList<>();
-        aaa.add(null);
-        aaa.add(null);
 
-        System.out.println(aaa.size());
-        System.out.println(aaa.get(0));
+                if(true && true && true && (false || true)){
+                    System.out.println("ㅇ");
+
+                }
+
+
 
 
         /*Scanner sc = new Scanner(System.in);
