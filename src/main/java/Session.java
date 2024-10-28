@@ -9,6 +9,4 @@ public class Session<T> extends Request<T> {
         super(arg);
     }
 
-
-
 }
