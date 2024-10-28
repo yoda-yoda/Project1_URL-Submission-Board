@@ -12,7 +12,7 @@
   
   
 
-* 게시글 추가는 `/posts/add=boardId=1` 과 같습니다.
+* 게시글 추가는 `/posts/add?boardId=1` 과 같습니다.
 * 게시글 수정은 `/posts/edit?postId=1&boardId=1` 과 같은 형식입니다.
 * 게시글 확인(view)은 `/posts/view?postId=1&boardId=1` 과 같은 형식입니다.
   
