@@ -1,4 +1,4 @@
-# URL 입력 게시판 만들기  
+# URL 입력 게시판 만들기 (URL-Submission-Board)
 
 정해진 URL 입력에 따라 CRUD (생성, 조회, 수정, 삭제)
 동작을 하는 게시판을 구현한다.  
