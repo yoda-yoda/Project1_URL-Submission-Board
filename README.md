@@ -1,4 +1,4 @@
-# URL 입력 게시판 프로젝트 (URL-Submission-Board Project)
+# URL 입력 게시판 프로젝트 (url-submission-board project)
 
 정해진 URL 입력에 따라 CRUD (생성, 조회, 수정, 삭제)
 동작을 하는 게시판을 구현한다.
