@@ -355,6 +355,7 @@ split의 limit을 정해줌으로써 맨뒤에 기호가 추가되어도 진입�
 
 이것은 입력 형태가 같은 다른 진입점에도 적용하였다.
 
+
 ### 2-(3)
 
 - 요구사항:
@@ -365,20 +366,27 @@ split의 limit을 정해줌으로써 맨뒤에 기호가 추가되어도 진입�
     
 - 해결:
 
-```
-
-```
-
 여기서 부터는 파라미터값이 하나더 추가됐다.
 그래서 전 단계보다 더 깊은 필터링 단계를 만들었다.
 
 결과적으로 `remove` 의 경우
 
-`/posts/remove?postId=1&boardId=1`  과 같은 형태를 입력 받을수있다.  또한
+```jsx
+/posts/remove?postId=1&boardId=1 
+```
 
-`/posts/remove?postId=1&boardId=2...&boardId=100` 이렇게 `boardId=숫자` 형태가 반복되는 경우는 맨마지막 `boardId`의 value `100`만 입력받게 하였다.
+ 과 같은 형태를 입력 받을수있다.  또한
+
+```jsx
+/posts/remove?postId=1&boardId=2...&boardId=100 
+```
+
+이렇게 `boardId=숫자` 형태가 반복되는 경우는 맨마지막 `boardId`의 value `100`만 입력받게 하였다.
 
 이것은 입력 형태가 같은 다른 진입점에도 적용하였다.
+
+
+
 
 ### 2-(4)
 
